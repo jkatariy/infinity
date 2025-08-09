@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -13,12 +14,14 @@ interface RecommendedSolution {
 
 interface PackagingSolution {
   title: string;
+  imageUrl: string;
   recommendedSolutions: RecommendedSolution[];
 }
 
 const packagingSolutions: PackagingSolution[] = [
   {
     title: 'Pouch-into-Pouch',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBP120_edbexr.png',
     recommendedSolutions: [
       { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
       { name: 'IBS-200', model: 'ibs-200', category: 'bundling-wrapping' },
@@ -27,6 +30,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Pouch-into-Bundle',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ISP_120_lvdiwf.png',
     recommendedSolutions: [
       { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
       { name: 'IMS-800', model: 'ims-800', category: 'bundling-wrapping' },
@@ -35,6 +39,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Bottle-into-Bottle',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBL500_jsneot.png',
     recommendedSolutions: [
       { name: 'IWB-200', model: 'iwb-200', category: 'bundling-wrapping' },
       { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
@@ -43,6 +48,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Pouch-into-Carton',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ACM100_zoxmwz.png',
     recommendedSolutions: [
       { name: 'ACM-40', model: 'acm-40', category: 'cartoning' },
       { name: 'ACM-100', model: 'acm-100', category: 'cartoning' },
@@ -51,6 +57,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Bottle-into-Bundle',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBG_H8_V8_iv4gin.png',
     recommendedSolutions: [
       { name: 'IWB-200', model: 'iwb-200', category: 'bundling-wrapping' },
       { name: 'IMS-800', model: 'ims-800', category: 'bundling-wrapping' },
@@ -59,6 +66,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Blister Pack into Carton',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ACM100_zoxmwz.png',
     recommendedSolutions: [
       { name: 'ACM-40', model: 'acm-40', category: 'cartoning' },
       { name: 'ACM-100', model: 'acm-100', category: 'cartoning' },
@@ -67,6 +75,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Kit Assembly',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ICP120_moud1x.png',
     recommendedSolutions: [
       { name: 'ICP-120', model: 'icp-120', category: 'case-packers' },
       { name: 'ICB-120', model: 'icb-120', category: 'case-packers' },
@@ -75,6 +84,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Case Packing and Palletizing',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ICS200_ibzmih.png',
     recommendedSolutions: [
       { name: 'ICS-200', model: 'ics-200', category: 'case-packers' },
       { name: 'Case Sealer', model: 'case-sealer', category: 'case-packers' },
@@ -160,10 +170,16 @@ const ExploreByIndustry = () => {
                   <div className="absolute top-0 left-0 w-full h-0.5 bg-gray-200 group-hover:bg-blue-500 transition-colors duration-300" />
 
                   <div className="flex flex-col items-center justify-center h-full text-center">
-                    <div className="text-4xl mb-3 text-gray-400 group-hover:text-blue-600 transition-colors duration-300">📦</div>
-                    <h3 className="text-base font-semibold text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
-                      {solution.title}
-                    </h3>
+                    <div className="relative w-full h-32 mb-3">
+                      <Image
+                        src={solution.imageUrl}
+                        alt={solution.title}
+                        fill
+                        sizes="(max-width: 768px) 260px, 320px"
+                        className="object-contain"
+                      />
+                    </div>
+                    <span className="sr-only">{solution.title}</span>
                   </div>
 
                   {/* Click indicator */}
@@ -236,12 +252,16 @@ const ExploreByIndustry = () => {
                           
                           {/* Content */}
                           <div className="flex flex-col items-center justify-center h-full text-center">
-                            <div className="text-4xl mb-4 text-gray-400 group-hover:text-blue-600 transition-colors duration-300">
-                              📦
+                            <div className="relative w-full h-36 mb-4">
+                              <Image
+                                src={solution.imageUrl}
+                                alt={solution.title}
+                                fill
+                                sizes="(max-width: 1024px) 45vw, 25vw"
+                                className="object-contain"
+                              />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
-                              {solution.title}
-                            </h3>
+                            <span className="sr-only">{solution.title}</span>
                           </div>
                           
                           {/* Click indicator */}
@@ -300,7 +320,15 @@ const ExploreByIndustry = () => {
 
               {/* Modal content */}
               <div className="text-center mb-6">
-                <div className="text-4xl mb-4">📦</div>
+                <div className="relative w-full h-32 mb-4">
+                  <Image
+                    src={selectedSolution.imageUrl}
+                    alt={selectedSolution.title}
+                    fill
+                    sizes="(max-width: 480px) 90vw, 420px"
+                    className="object-contain"
+                  />
+                </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedSolution.title}</h3>
                 <p className="text-lg font-semibold text-blue-600 mb-6">Recommended Solutions</p>
               </div>
