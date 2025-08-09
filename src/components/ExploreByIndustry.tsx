@@ -170,13 +170,13 @@ const ExploreByIndustry = () => {
                   <div className="absolute top-0 left-0 w-full h-0.5 bg-gray-200 group-hover:bg-blue-500 transition-colors duration-300" />
 
                   <div className="flex flex-col items-center justify-center h-full text-center">
-                    <div className="relative w-full h-32 mb-3">
+                    <div className="relative w-full h-32 mb-3 overflow-hidden">
                       <Image
                         src={solution.imageUrl}
                         alt={solution.title}
                         fill
                         sizes="(max-width: 768px) 260px, 320px"
-                        className="object-contain"
+                        className="object-contain scale-110 origin-center"
                       />
                     </div>
                     <span className="sr-only">{solution.title}</span>
@@ -252,13 +252,13 @@ const ExploreByIndustry = () => {
                           
                           {/* Content */}
                           <div className="flex flex-col items-center justify-center h-full text-center">
-                            <div className="relative w-full h-36 mb-4">
+                            <div className="relative w-full h-36 mb-4 overflow-hidden">
                               <Image
                                 src={solution.imageUrl}
                                 alt={solution.title}
                                 fill
                                 sizes="(max-width: 1024px) 45vw, 25vw"
-                                className="object-contain"
+                                className="object-contain scale-110 origin-center"
                               />
                             </div>
                             <span className="sr-only">{solution.title}</span>

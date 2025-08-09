@@ -318,6 +318,27 @@ export type Database = {
           user_id?: string | null
         }
       }
+      ticker_messages: {
+        Row: {
+          position: number
+          text: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          position: number
+          text: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          position?: number
+          text?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
     }
   }
 }
@@ -334,4 +355,7 @@ export type ProductType = Database['public']['Tables']['product_types']['Row']
 export type PackagingType = Database['public']['Tables']['packaging_types']['Row']
 export type Machine = Database['public']['Tables']['machines']['Row']
 export type MachinePackagingType = Database['public']['Tables']['machine_packaging_types']['Row']
-export type SavedSelection = Database['public']['Tables']['saved_selections']['Row'] 
+export type SavedSelection = Database['public']['Tables']['saved_selections']['Row']
+export type TickerMessage = Database['public']['Tables']['ticker_messages']['Row']
+export type TickerMessageInsert = Database['public']['Tables']['ticker_messages']['Insert']
+export type TickerMessageUpdate = Database['public']['Tables']['ticker_messages']['Update'] 

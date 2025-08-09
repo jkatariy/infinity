@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
 
 export default function TickerAnimation() {
-  const messages = useMemo(() => [
+  const fallbackMessages = useMemo(() => [
     "India's First Secondary Packaging Machine Manufacturer",
     "We are going to Anuga Food Tech 2025",
     "90% of Spices in India are Packed by Our Machines",
@@ -15,42 +16,65 @@ export default function TickerAnimation() {
     "Serving Food, FMCG, Personal Care & Pharmaceuticals"
   ], []);
 
+  const [messages, setMessages] = useState<string[]>(fallbackMessages);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
-    const currentMessage = messages[currentMessageIndex];
-    
+    let isMounted = true;
+
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from('ticker_messages')
+        .select('position, text')
+        .order('position', { ascending: true });
+
+      if (!error && isMounted && data && data.length > 0) {
+        const sorted = data
+          .sort((a: any, b: any) => a.position - b.position)
+          .map((row: any) => row.text);
+        setMessages(sorted);
+        // Reset ticker to start
+        setCurrentMessageIndex(0);
+        setDisplayedText('');
+        setIsTyping(true);
+      }
+    };
+
+    fetchMessages();
+
+    return () => { isMounted = false; };
+  }, [fallbackMessages]);
+
+  useEffect(() => {
+    const currentMessage = messages[currentMessageIndex] ?? '';
     if (isTyping) {
       if (displayedText.length < currentMessage.length) {
         const timer = setTimeout(() => {
           setDisplayedText(currentMessage.slice(0, displayedText.length + 1));
-        }, 75); // Slower, more elegant typing speed
+        }, 75);
         return () => clearTimeout(timer);
       } else {
-        // Message complete, wait then start erasing
         const timer = setTimeout(() => {
           setIsTyping(false);
-        }, 3000); // Longer display duration for readability
+        }, 3000);
         return () => clearTimeout(timer);
       }
     } else {
       if (displayedText.length > 0) {
         const timer = setTimeout(() => {
           setDisplayedText(displayedText.slice(0, -1));
-        }, 25); // Slightly faster erasing for smooth transition
+        }, 25);
         return () => clearTimeout(timer);
       } else {
-        // Move to next message
         setCurrentMessageIndex((prev) => (prev + 1) % messages.length);
         setIsTyping(true);
       }
     }
   }, [displayedText, isTyping, currentMessageIndex, messages]);
 
-  // Cursor blinking effect - more elegant timing
   useEffect(() => {
     const timer = setInterval(() => {
       setShowCursor(prev => !prev);
@@ -63,26 +87,14 @@ export default function TickerAnimation() {
       {/* Subtle animated background pattern */}
       <motion.div
         className="absolute inset-0 opacity-5"
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%'],
-        }}
-        transition={{
-          duration: 30,
-          ease: "linear",
-          repeat: Infinity,
-        }}
+        animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
+        transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
         style={{
-          backgroundImage: `repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 15px,
-            rgba(255,255,255,0.08) 15px,
-            rgba(255,255,255,0.08) 30px
-          )`,
+          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,0.08) 15px, rgba(255,255,255,0.08) 30px)`,
           backgroundSize: '60px 60px'
         }}
       />
-      
+
       {/* Main ticker content */}
       <div className="relative z-10 h-16 flex items-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto w-full">
@@ -100,7 +112,7 @@ export default function TickerAnimation() {
                 </span>
               </div>
             </div>
-            
+
             {/* Subtle message counter */}
             <div className="flex-shrink-0 ml-6 hidden lg:flex items-center">
               <div className="text-white/60 text-xs font-medium font-product-sans">
@@ -110,11 +122,11 @@ export default function TickerAnimation() {
           </div>
         </div>
       </div>
-      
+
       {/* Elegant border effects */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-      
+
       {/* Subtle side fade */}
       <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/5 to-transparent pointer-events-none"></div>
       <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-black/5 to-transparent pointer-events-none"></div>
