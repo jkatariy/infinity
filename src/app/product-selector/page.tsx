@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import PageContainer from '@/components/PageContainer';
+import Image from 'next/image';
 
 // Enhanced types for comprehensive solution selection
 type Industry = {
@@ -244,6 +245,19 @@ const packagingSolutions: PackagingSolution[] = [
     speedRange: 'Variable speed with VFD control'
   }
 ];
+
+// Map certain solutions to illustrative images (fallback to icon/text for others)
+const solutionImageMap: Record<string, string> = {
+  'pouch-to-pouch': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBP120_edbexr.png',
+  'pouch-to-shrink': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ISP_120_lvdiwf.png',
+  'product-to-carton': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ACM100_zoxmwz.png',
+  'pouch-to-bale': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBL500_jsneot.png',
+  'pouch-to-hdpe': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBG_H8_V8_iv4gin.png',
+  'case-packing': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ICP120_moud1x.png',
+  // Bottle-into-Shrink image not provided → fallback to icon
+  // Strip-into-Pouch image not provided → fallback to icon
+  // quality-control (checkweighers) and material-handling (conveying) intentionally excluded
+};
 
 // Comprehensive product models database with actual specifications
 const productModels: ProductModel[] = [
@@ -1046,7 +1060,20 @@ export default function ProductSelectorPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className="text-3xl mb-4">{solution.icon}</div>
+                      {/* Visual: prefer image where available, exclude for checkweighers and conveying */}
+                      {solutionImageMap[solution.id] ? (
+                        <div className="relative w-full h-36 mb-4 overflow-hidden">
+                          <Image
+                            src={solutionImageMap[solution.id]}
+                            alt={solution.name}
+                            fill
+                            sizes="(max-width: 1024px) 45vw, 25vw"
+                            className="object-contain scale-110 origin-center"
+                          />
+                        </div>
+                      ) : (
+                        <div className="text-3xl mb-4">{solution.icon}</div>
+                      )}
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {solution.name}
                       </h3>
