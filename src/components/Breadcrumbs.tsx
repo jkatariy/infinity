@@ -17,6 +17,20 @@ function toTitleCaseFromSlug(slug: string): string {
     .join(' ');
 }
 
+function formatModelFromSlug(slug: string): string {
+  // Split on hyphens/underscores, uppercase model-like tokens, title-case others
+  return slug
+    .replace(/[-_]+/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map((token) => {
+      const isModely = /^(?:[a-z]{1,4}\d+[a-z0-9]*|\d+[a-z]+|[a-z]{1,4})$/i.test(token) || token.length <= 4;
+      if (isModely) return token.toUpperCase();
+      return token.charAt(0).toUpperCase() + token.slice(1);
+    })
+    .join(' ');
+}
+
 export default function Breadcrumbs({ currentLabel, hideOnHome = true }: BreadcrumbsProps) {
   const pathname = usePathname();
   if (!pathname) return null;
@@ -29,7 +43,17 @@ export default function Breadcrumbs({ currentLabel, hideOnHome = true }: Breadcr
     ...segments.map((segment, index) => {
       const href = '/' + segments.slice(0, index + 1).join('/');
       const isLast = index === segments.length - 1;
-      const label = isLast && currentLabel ? currentLabel : toTitleCaseFromSlug(segment);
+      let label: string;
+      if (isLast && currentLabel) {
+        label = currentLabel;
+      } else if (
+        // When on a product detail page, format the last segment as a model code (e.g., IBP 120)
+        isLast && segments.length >= 3 && segments[0] === 'products'
+      ) {
+        label = formatModelFromSlug(segment);
+      } else {
+        label = toTitleCaseFromSlug(segment);
+      }
       return { href, label };
     }),
   ];
@@ -37,7 +61,7 @@ export default function Breadcrumbs({ currentLabel, hideOnHome = true }: Breadcr
   return (
     <nav
       aria-label="Breadcrumb"
-      className="mb-4 sm:mb-6 text-xs sm:text-sm"
+      className="hidden sm:block mb-4 sm:mb-6 text-xs sm:text-sm"
       itemScope
       itemType="https://schema.org/BreadcrumbList"
     >

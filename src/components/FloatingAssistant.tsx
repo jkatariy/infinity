@@ -81,7 +81,7 @@ const industries = [
   'E-commerce & Fulfillment',
 ];
 
-type Step = 'closed' | 'industry' | 'category' | 'model' | 'action' | 'contact' | 'submitted';
+type Step = 'closed' | 'industry' | 'category' | 'model' | 'lead' | 'action';
 
 type ChatMessage = {
   id: string;
@@ -95,9 +95,8 @@ export default function FloatingAssistant() {
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey | ''>('');
   const [selectedModel, setSelectedModel] = useState<ModelLink | null>(null);
-  const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [contact, setContact] = useState({ name: '', email: '', phone: '', company: '', requirements: '' });
+  const [leadError, setLeadError] = useState<string | null>(null);
+  const [lead, setLead] = useState({ name: '', email: '', phone: '' });
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -110,8 +109,8 @@ export default function FloatingAssistant() {
     setSelectedIndustry('');
     setSelectedCategory('');
     setSelectedModel(null);
-    setContact({ name: '', email: '', phone: '', company: '', requirements: '' });
-    setFormError(null);
+    setLead({ name: '', email: '', phone: '' });
+    setLeadError(null);
     setMessages([]);
     setStep('industry');
     // seed intro
@@ -137,58 +136,11 @@ export default function FloatingAssistant() {
     setStep('closed');
   };
 
-  const handleAction = (action: 'video' | 'view' | 'quote') => {
+  const handleAction = (action: 'video' | 'view') => {
     if (!selectedModel) return;
-    if (action === 'view' || action === 'video') {
-      window.open(selectedModel.href, '_blank');
-      pushMessage({ role: 'user', text: action === 'view' ? 'View product page' : 'Watch video' });
-      pushMessage({ role: 'bot', text: 'Opened in a new tab. Anything else I can help with?' });
-      return;
-    }
-    if (action === 'quote') {
-      pushMessage({ role: 'user', text: 'Request a quote' });
-      pushMessage({ role: 'bot', text: 'Sure, please share your contact details.' });
-      setStep('contact');
-    }
-  };
-
-  const submitLead = async () => {
-    if (!selectedModel) return;
-    setFormLoading(true);
-    setFormError(null);
-    try {
-      // basic validation for required short answers
-      if (!contact.company || !contact.requirements || !contact.email || !contact.name || !contact.phone) {
-        setFormError('Please fill in all fields: name, email, phone, company, and a short requirement.');
-        setFormLoading(false);
-        return;
-      }
-      const res = await fetch('/api/zoho-crm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: contact.name,
-          email: contact.email,
-          phone: contact.phone,
-          company: contact.company,
-          selectedModel: selectedModel.name,
-          requirements: `${contact.requirements}\nLead from Infinity Assistant | Industry: ${selectedIndustry} | Category: ${selectedCategory}`,
-          leadSource: 'Floating Assistant',
-          productInterest: selectedModel.name,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data?.error || 'Submission failed');
-      }
-      pushMessage({ role: 'user', text: `Submitted details for ${selectedModel.name}` });
-      pushMessage({ role: 'bot', text: 'Thank you! Our team will reach out shortly.' });
-      setStep('submitted');
-    } catch (err: any) {
-      setFormError(err.message || 'Something went wrong');
-    } finally {
-      setFormLoading(false);
-    }
+    window.open(selectedModel.href, '_blank');
+    pushMessage({ role: 'user', text: action === 'view' ? 'View product page' : 'Watch video' });
+    pushMessage({ role: 'bot', text: 'Opened in a new tab. Anything else I can help with?' });
   };
 
   // Auto-scroll on new messages
@@ -215,7 +167,7 @@ export default function FloatingAssistant() {
 
       {/* Popup Panel */}
       {open && (
-        <div className="fixed bottom-24 right-5 z-50 w-[92vw] max-w-md animate-scaleIn">
+        <div className="fixed bottom-24 right-4 left-4 md:left-auto md:right-5 z-50 w-auto max-w-md animate-scaleIn">
           <div className="relative rounded-2xl bg-white shadow-2xl overflow-hidden border" style={{ borderColor: `${BRAND_COLORS.primary.blue}26` }}>
             {/* Header */}
             <div
@@ -254,7 +206,7 @@ export default function FloatingAssistant() {
             </div>
 
             {/* Chat Body */}
-            <div className="flex flex-col" style={{ height: '24rem' }}>
+            <div className="flex flex-col h-[65vh] md:h-96">
               {/* Messages */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
                 {messages.map((m) => (
@@ -276,10 +228,10 @@ export default function FloatingAssistant() {
                   </div>
                 ))}
 
-                {formError && (
+                {leadError && (
                   <div className="flex justify-start">
                     <div className="max-w-[80%] rounded-2xl px-3 py-2 text-sm bg-red-50 text-red-700 border border-red-200">
-                      {formError}
+                      {leadError}
                     </div>
                   </div>
                 )}
@@ -335,8 +287,8 @@ export default function FloatingAssistant() {
                         onClick={() => {
                           setSelectedModel(m);
                           pushMessage({ role: 'user', text: m.label });
-                          pushMessage({ role: 'bot', text: 'What would you like to do next?' });
-                          setStep('action');
+                          pushMessage({ role: 'bot', text: 'Before we proceed, please share your name, email, and phone.' });
+                          setStep('lead');
                         }}
                         className="w-full text-xs sm:text-sm px-3 py-2 rounded-lg border text-left hover:bg-gray-50"
                         style={{ borderColor: '#e5e7eb', color: '#111827' }}
@@ -347,6 +299,50 @@ export default function FloatingAssistant() {
                   </div>
                 )}
 
+                {step === 'lead' && selectedModel && (
+                  <div className="space-y-2">
+                    <div className="text-xs text-gray-600">For {selectedModel.name}</div>
+                    <input
+                      placeholder="Full Name"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                      value={lead.name}
+                      onChange={(e) => setLead({ ...lead, name: e.target.value })}
+                    />
+                    <input
+                      placeholder="Email"
+                      type="email"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                      value={lead.email}
+                      onChange={(e) => setLead({ ...lead, email: e.target.value })}
+                    />
+                    <input
+                      placeholder="Phone"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                      value={lead.phone}
+                      onChange={(e) => setLead({ ...lead, phone: e.target.value })}
+                    />
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        onClick={() => {
+                          if (!lead.name || !lead.email || !lead.phone) {
+                            setLeadError('Please fill in name, email, and phone.');
+                            return;
+                          }
+                          setLeadError(null);
+                          pushMessage({ role: 'user', text: `${lead.name} • ${lead.email} • ${lead.phone}` });
+                          pushMessage({ role: 'bot', text: 'Thanks! What would you like to do next?' });
+                          setStep('action');
+                        }}
+                        className="flex-1 px-4 py-2 rounded-lg text-white text-sm hover:opacity-95"
+                        style={{ backgroundColor: BRAND_COLORS.primary.blue }}
+                      >
+                        Continue
+                      </button>
+                      <button onClick={() => setStep('model')} className="px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50">Back</button>
+                    </div>
+                  </div>
+                )}
+
                 {step === 'action' && selectedModel && (
                   <div className="grid grid-cols-1 gap-2">
                     <button onClick={() => handleAction('video')} className="px-4 py-2.5 rounded-lg border text-left hover:bg-gray-50 text-sm" style={{ borderColor: '#e5e7eb' }}>
@@ -354,71 +350,6 @@ export default function FloatingAssistant() {
                     </button>
                     <button onClick={() => handleAction('view')} className="px-4 py-2.5 rounded-lg border text-left hover:bg-gray-50 text-sm" style={{ borderColor: '#e5e7eb' }}>
                       🔍 View Product Page
-                    </button>
-                    <button onClick={() => handleAction('quote')} className="px-4 py-2.5 rounded-lg border text-left hover:bg-gray-50 text-sm" style={{ borderColor: '#e5e7eb' }}>
-                      🧾 Request Quote
-                    </button>
-                  </div>
-                )}
-
-                {step === 'contact' && selectedModel && (
-                  <div className="space-y-2">
-                    <div className="text-xs text-gray-600">For {selectedModel.name}</div>
-                    <input
-                      placeholder="Full Name"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={contact.name}
-                      onChange={(e) => setContact({ ...contact, name: e.target.value })}
-                    />
-                    <input
-                      placeholder="Email"
-                      type="email"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={contact.email}
-                      onChange={(e) => setContact({ ...contact, email: e.target.value })}
-                    />
-                    <input
-                      placeholder="Phone"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={contact.phone}
-                      onChange={(e) => setContact({ ...contact, phone: e.target.value })}
-                    />
-                    <input
-                      placeholder="Company"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={contact.company}
-                      onChange={(e) => setContact({ ...contact, company: e.target.value })}
-                    />
-                    <textarea
-                      placeholder="Briefly describe your requirement (e.g., speeds, formats, constraints)"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm min-h-20"
-                      value={contact.requirements}
-                      onChange={(e) => setContact({ ...contact, requirements: e.target.value })}
-                    />
-                    <div className="flex gap-2 pt-1">
-                      <button
-                        onClick={submitLead}
-                        disabled={formLoading}
-                        className={`flex-1 px-4 py-2 rounded-lg text-white text-sm ${formLoading ? 'bg-brand-blue-400' : 'hover:opacity-95'}`}
-                        style={{ backgroundColor: BRAND_COLORS.primary.blue }}
-                      >
-                        {formLoading ? 'Submitting...' : 'Submit'}
-                      </button>
-                      <button onClick={() => setStep('action')} className="px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50">Back</button>
-                    </div>
-                  </div>
-                )}
-
-                {step === 'submitted' && (
-                  <div className="space-y-3 text-center">
-                    <div className="mx-auto w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <p className="text-sm font-semibold text-gray-900">Thanks! We will reach out shortly.</p>
-                    <button onClick={handleClose} className="mt-1 px-4 py-2 rounded-lg text-white text-sm w-full hover:opacity-95" style={{ backgroundColor: BRAND_COLORS.primary.blue }}>
-                      Close
                     </button>
                   </div>
                 )}
