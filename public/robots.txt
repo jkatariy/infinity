@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and authentication pages
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /signup/
+Disallow: /api/
+
+# Allow specific API routes
+Allow: /api/sitemap.xml
+
+# Sitemap location
+Sitemap: https://infinitysols.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1 
