@@ -967,14 +967,24 @@ export default function ProductSelectorPage() {
             <div className="flex items-center justify-between mb-2">
               {[1, 2, 3, 4, 5].map((step) => (
                 <div key={step} className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold
-                    ${step <= stage ? 'bg-blue-600 text-white' : 
-                      step === stage + 1 ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-400'}`}>
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200
+                      ${step <= stage
+                        ? 'bg-brand-blue-500 text-white shadow ring-2 ring-white/60'
+                        : step === stage + 1
+                          ? 'bg-brand-blue-100 text-brand-blue-700 border border-brand-blue-200'
+                          : 'bg-gray-100 text-gray-400 border border-gray-200'}`}
+                    aria-current={step === stage ? 'step' : undefined}
+                  >
                     {step}
                   </div>
                   {step < 5 && (
-                    <div className={`w-16 md:w-24 h-1 mx-2 
-                      ${step < stage ? 'bg-blue-600' : 'bg-gray-200'}`} />
+                    <div
+                      className={`w-16 md:w-24 h-1.5 mx-2 rounded-full transition-colors duration-200
+                        ${step < stage
+                          ? 'bg-gradient-to-r from-brand-blue-500 to-brand-green-500'
+                          : 'bg-gray-200/80 border border-white/40'}`}
+                    />
                   )}
                 </div>
               ))}

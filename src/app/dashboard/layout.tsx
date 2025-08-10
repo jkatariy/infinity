@@ -184,7 +184,7 @@ export default function DashboardLayout({
           x: sidebarOpen ? 0 : '-100%',
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed inset-y-0 left-0 z-60 w-64 bg-white shadow-lg transform lg:hidden"
+        className="fixed inset-y-0 left-0 z-[60] w-64 bg-white shadow-lg transform lg:hidden"
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
