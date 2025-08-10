@@ -183,6 +183,10 @@ const ExploreByIndustry = () => {
                   </div>
 
                   {/* Click indicator */}
+                  {/* Bottom label near info icon */}
+                  <div className="absolute bottom-3 right-9 text-[10px] sm:text-xs font-medium text-gray-600 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded border border-gray-200 group-hover:text-blue-700 group-hover:border-blue-300 transition-colors duration-300">
+                    {solution.title}
+                  </div>
                   <div className="absolute bottom-3 right-3 text-gray-300 group-hover:text-blue-500 transition-colors duration-300">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -265,6 +269,10 @@ const ExploreByIndustry = () => {
                           </div>
                           
                           {/* Click indicator */}
+                          {/* Bottom label near info icon */}
+                          <div className="absolute bottom-4 right-12 text-xs font-medium text-gray-600 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded border border-gray-200 group-hover:text-blue-700 group-hover:border-blue-300 transition-colors duration-300">
+                            {solution.title}
+                          </div>
                           <div className="absolute bottom-4 right-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
