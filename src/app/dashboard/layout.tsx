@@ -314,7 +314,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Page content - properly positioned without conflicting padding */}
-        <main className="flex-1 relative overflow-y-auto focus:outline-none">
+        <main id="main-content" role="main" tabIndex={-1} className="flex-1 relative overflow-y-auto focus:outline-none">
           <div className="py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {children}

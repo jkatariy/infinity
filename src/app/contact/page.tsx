@@ -246,6 +246,7 @@ export default function Contact() {
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
+            title="Infinity Automated Solutions Location"
           />
         </div>
         <a

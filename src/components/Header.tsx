@@ -359,6 +359,7 @@ const Header = () => {
     <>
       {/* Enhanced Mobile-First Responsive Navbar */}
       <motion.header
+        role="banner"
         className={`fixed w-full top-0 z-50 transition-gpu ${
           isScrolled 
             ? 'bg-white/90 backdrop-blur-[8px] shadow-lg border-b border-white/20' 
@@ -390,7 +391,7 @@ const Header = () => {
 
             {/* Optimized Search and Menu */}
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="relative">
+              <div className="relative" role="search">
                 <motion.form
                   onSubmit={handleSearch}
                   animate={{ 
@@ -409,6 +410,8 @@ const Header = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     disabled={isSearching}
                     onKeyDown={handleKeyDown}
+                    aria-label="Search products"
+                    id="site-search-input"
                     animate={{ 
                       width: isSearchExpanded ? '100%' : '0%',
                       padding: isSearchExpanded ? '0.5rem 2.5rem 0.5rem 1rem' : '0'
@@ -426,6 +429,8 @@ const Header = () => {
                       isSearchExpanded ? 'absolute right-2' : 'p-2'
                     } rounded-full transition-gpu`}
                     aria-label={isSearchExpanded ? 'Search' : 'Open search'}
+                    aria-expanded={isSearchExpanded}
+                    aria-controls="site-search-input"
                   >
                     <MagnifyingGlassIcon 
                       className={`h-4 w-4 sm:h-5 sm:w-5 ${
@@ -506,6 +511,8 @@ const Header = () => {
                          border border-white/30 transition-all duration-200 transform-gpu 
                          hover:bg-white/80 hover:scale-105 active:scale-95"
                 aria-label="Toggle menu"
+                aria-expanded={isMenuOpen}
+                aria-controls="main-menu-drawer"
               >
                 {isMenuOpen ? (
                   <XMarkIcon className="h-5 w-5 sm:h-6 sm:w-6 text-gray-700 transition-gpu" />
@@ -537,6 +544,8 @@ const Header = () => {
               transition={{ type: 'tween', duration: 0.3 }}
               className="fixed top-0 right-0 h-full w-full max-w-sm sm:max-w-md md:max-w-lg 
                          bg-white/95 backdrop-blur-[8px] shadow-xl z-50 overflow-y-auto transform-gpu"
+              role="dialog" aria-modal="true" aria-label="Main menu"
+              id="main-menu-drawer"
               style={{
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.95) 100%)',
               }}
@@ -554,7 +563,7 @@ const Header = () => {
                 </div>
               </div>
 
-              <nav className="p-4">
+              <nav className="p-4" role="navigation" aria-label="Primary">
                 {navItems.map((item) => (
                   <div key={item.name} className="mb-2">
                     {item.submenu ? (

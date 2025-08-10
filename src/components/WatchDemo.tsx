@@ -135,6 +135,7 @@ export default function WatchDemo({ videoId = 'DEFAULT_VIDEO_ID', title }: Watch
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               referrerPolicy="strict-origin-when-cross-origin"
+              loading="lazy"
               onLoad={() => setIsLoading(false)}
               onError={() => {
                 setIsLoading(false);

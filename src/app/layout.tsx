@@ -70,6 +70,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.youtube-nocookie.com" crossOrigin="anonymous" />
@@ -80,10 +81,12 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//i.ytimg.com" />
         <meta name="theme-color" content="#0f4277" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="color-scheme" content="light" />
         <link rel="preload" as="image" href="/videos/videoplayback-poster.jpg" />
         <link rel="preload" as="image" href="/logos/logo.png" />
       </head>
       <body className={inter.className + ' antialiased'} suppressHydrationWarning>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-white focus:text-blue-700 focus:px-3 focus:py-2 focus:rounded">Skip to main content</a>
         <Defer timeoutMs={1500}>
           <GoogleAnalytics />
         </Defer>

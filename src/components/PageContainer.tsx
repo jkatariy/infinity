@@ -13,7 +13,7 @@ interface PageContainerProps {
 
 export default function PageContainer({ children, title, subtitle, hideTitle = false, breadcrumbLabel }: PageContainerProps) {
   return (
-    <div className="pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16 md:pb-20 bg-white">
+    <div id="main-content" role="main" tabIndex={-1} className="pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16 md:pb-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Breadcrumbs currentLabel={breadcrumbLabel}
           />

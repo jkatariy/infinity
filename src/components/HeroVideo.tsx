@@ -39,7 +39,7 @@ export default function HeroVideo() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/30 z-10" />
         <Image
           src="/videos/videoplayback-poster.jpg"
-          alt="Background"
+          alt="Packaging automation hero background"
           fill
           className="object-cover"
           priority
@@ -99,7 +99,7 @@ export default function HeroVideo() {
           <>
             <Image
               src="/videos/videoplayback-poster.jpg"
-              alt="Background"
+              alt="Packaging automation hero background"
               fill
               className={`object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}
               priority
@@ -141,7 +141,7 @@ export default function HeroVideo() {
         ) : (
           <Image
             src="/videos/videoplayback-poster.jpg"
-            alt="Background"
+            alt="Packaging automation hero background"
             fill
             className="object-cover"
             priority

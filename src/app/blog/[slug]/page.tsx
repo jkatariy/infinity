@@ -186,6 +186,20 @@ export default function BlogPostPage() {
           )}
         </motion.div>
       </article>
+      {/* Article structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: post.title,
+            datePublished: post.created_at,
+            author: { '@type': 'Organization', name: 'Infinity Automated Solutions' },
+            image: post.featured_image ? [post.featured_image] : undefined,
+          }),
+        }}
+      />
     </PageContainer>
   );
 } 

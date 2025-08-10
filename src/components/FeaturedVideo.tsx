@@ -100,6 +100,7 @@ const FeaturedVideo = () => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
+                loading="lazy"
               />
             </div>
           </div>

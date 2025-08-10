@@ -25,7 +25,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-gray-900 font-product-sans text-white">
+    <footer role="contentinfo" className="relative overflow-hidden bg-gray-900 font-product-sans text-white">
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:py-12 sm:px-6 lg:px-8">
         
         {/* Mobile Layout - Single Column */}
