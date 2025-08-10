@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import PageContainer from './PageContainer';
+import StructuredData, { generateProductSchema, generateBreadcrumbSchema } from './StructuredData';
 
 import WatchDemo from './WatchDemo';
 import ShareProduct from './ShareProduct';
@@ -210,8 +211,30 @@ export default function ProductDetailPage({
     (specifications && specifications.length > 0)
   );
 
+  // Generate structured data
+  const productData = {
+    id,
+    title,
+    description,
+    image,
+    category,
+    slug,
+    specifications,
+    applications
+  };
+
+  const breadcrumbs = [
+    { name: 'Home', url: 'https://infinitysols.com' },
+    { name: 'Solutions', url: 'https://infinitysols.com/products' },
+    { name: category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()), url: `https://infinitysols.com/products/${category}` },
+    { name: title, url: `https://infinitysols.com/${slug}` }
+  ];
+
   return (
     <PageContainer title={title} subtitle={subtitle} hideTitle={true}>
+      {/* Structured Data */}
+      <StructuredData type="Product" data={generateProductSchema(productData)} />
+      <StructuredData type="BreadcrumbList" data={generateBreadcrumbSchema(breadcrumbs)} />
       {/* Enhanced Hero Section with Featured Model Showcase */}
       <div className="relative overflow-hidden">
         {/* Background Pattern */}

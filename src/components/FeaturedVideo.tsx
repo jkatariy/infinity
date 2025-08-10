@@ -6,7 +6,7 @@ import { useState } from 'react';
 const FeaturedVideo = () => {
   // Remove isPlaying state since we'll autoplay immediately
   return (
-    <section className="py-20 bg-gray-50 font-product-sans relative overflow-hidden">
+    <section className="py-20 bg-gray-50 font-product-sans relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:1px_800px]">
       {/* Subtle background dots - much less visible */}
       <div className="absolute inset-0 opacity-10">
         <motion.div 

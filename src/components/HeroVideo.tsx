@@ -43,6 +43,7 @@ export default function HeroVideo() {
           fill
           className="object-cover"
           priority
+          fetchPriority="high"
         />
         <div className="absolute inset-0 flex items-center justify-center z-20">
           <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-6xl">
@@ -103,6 +104,7 @@ export default function HeroVideo() {
               fill
               className={`object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}
               priority
+              fetchPriority="high"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
             />
             <video

@@ -44,7 +44,7 @@ const Clientele = () => {
   const duplicatedLogos = [...clientLogos, ...clientLogos];
 
   return (
-    <section className="relative overflow-hidden bg-gray-50 py-20">
+    <section className="relative overflow-hidden bg-gray-50 py-20 [content-visibility:auto] [contain-intrinsic-size:1px_600px]">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <motion.div

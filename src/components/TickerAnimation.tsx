@@ -16,7 +16,8 @@ export default function TickerAnimation() {
     "Serving Food, FMCG, Personal Care & Pharmaceuticals"
   ], []);
 
-  const [messages, setMessages] = useState<string[]>(fallbackMessages);
+  // Start with no messages to avoid showing fallback text before we know DB state
+  const [messages, setMessages] = useState<string[]>([]);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
@@ -37,15 +38,22 @@ export default function TickerAnimation() {
           const sorted = data
             .sort((a: any, b: any) => a.position - b.position)
             .map((row: any) => row.text)
-            .filter((text: string) => text && text.trim().length > 0); // Filter out empty messages
-          
+            .filter((text: string) => text && text.trim().length > 0);
           if (sorted.length > 0) {
             setMessages(sorted);
-            // Reset ticker to start
-            setCurrentMessageIndex(0);
-            setDisplayedText('');
-            setIsTyping(true);
+          } else {
+            setMessages(fallbackMessages);
           }
+          // Reset ticker to start
+          setCurrentMessageIndex(0);
+          setDisplayedText('');
+          setIsTyping(true);
+        } else if (isMounted) {
+          // On error or empty response, use fallback after fetch completes
+          setMessages(fallbackMessages);
+          setCurrentMessageIndex(0);
+          setDisplayedText('');
+          setIsTyping(true);
         }
       } catch (error) {
         console.warn('Failed to fetch ticker messages, using fallback:', error);
@@ -64,7 +72,7 @@ export default function TickerAnimation() {
 
   useEffect(() => {
     // Safety check for empty messages array
-    if (messages.length === 0) return;
+    if (isLoading || messages.length === 0) return;
     
     const currentMessage = messages[currentMessageIndex] ?? '';
     
@@ -140,12 +148,16 @@ export default function TickerAnimation() {
             <div className="text-center flex-1 flex items-center justify-center">
               <div className="text-white text-lg md:text-xl lg:text-2xl font-bold font-product-sans tracking-wide">
                 <span className="inline-flex items-center">
-                  {displayedText}
-                  <motion.span
-                    animate={{ opacity: showCursor ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="inline-block w-0.5 h-5 md:h-6 lg:h-7 bg-white ml-1.5"
-                  />
+                  {!isLoading && (
+                    <>
+                      {displayedText}
+                      <motion.span
+                        animate={{ opacity: showCursor ? 1 : 0 }}
+                        transition={{ duration: 0.15 }}
+                        className="inline-block w-0.5 h-5 md:h-6 lg:h-7 bg-white ml-1.5"
+                      />
+                    </>
+                  )}
                 </span>
               </div>
             </div>

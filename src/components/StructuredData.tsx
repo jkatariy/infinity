@@ -1,7 +1,7 @@
 'use client';
 
 interface StructuredDataProps {
-  type: 'Organization' | 'Product' | 'Article' | 'LocalBusiness' | 'WebSite';
+  type: 'Organization' | 'Product' | 'Article' | 'LocalBusiness' | 'WebSite' | 'BreadcrumbList';
   data: Record<string, any>;
 }
 
@@ -92,4 +92,62 @@ export const localBusinessSchema = {
     latitude: '18.6698',
     longitude: '73.7527'
   }
-}; 
+};
+
+// Helper function to generate product schema
+export const generateProductSchema = (product: {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  slug: string;
+  specifications?: Array<{ label: string; value: string }>;
+  applications?: string[];
+}) => ({
+  name: product.title,
+  description: product.description,
+  image: [product.image],
+  brand: {
+    '@type': 'Brand',
+    name: 'Infinity Automated Solutions'
+  },
+  manufacturer: {
+    '@type': 'Organization',
+    name: 'Infinity Automated Solutions',
+    url: 'https://infinitysols.com'
+  },
+  sku: product.id,
+  mpn: product.id.toUpperCase(),
+  category: product.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+  url: `https://infinitysols.com/${product.slug}`,
+  offers: {
+    '@type': 'Offer',
+    availability: 'https://schema.org/InStock',
+    priceCurrency: 'INR',
+    seller: {
+      '@type': 'Organization',
+      name: 'Infinity Automated Solutions'
+    }
+  },
+  ...(product.applications && {
+    applicationCategory: product.applications.slice(0, 5)
+  }),
+  ...(product.specifications && {
+    additionalProperty: product.specifications.slice(0, 10).map(spec => ({
+      '@type': 'PropertyValue',
+      name: spec.label,
+      value: spec.value
+    }))
+  })
+});
+
+// Helper function to generate breadcrumb schema
+export const generateBreadcrumbSchema = (breadcrumbs: Array<{ name: string; url: string }>) => ({
+  itemListElement: breadcrumbs.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.name,
+    item: crumb.url
+  }))
+}); 

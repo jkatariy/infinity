@@ -384,6 +384,7 @@ const Header = () => {
                   fill
                   className="object-contain"
                   priority
+                  fetchPriority="high"
                   sizes="(max-width: 640px) 192px, 256px"
                 />
               </div>

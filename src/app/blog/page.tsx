@@ -1,22 +1,40 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { Metadata } from 'next';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import PageContainer from '@/components/PageContainer';
-import { supabase } from '@/lib/supabase';
+import { getBlogPosts, type Post } from '@/lib/supabase-server';
 
-type Post = {
-  id: string;
-  created_at: string;
-  title: string;
-  content: string;
-  author_id: string;
-  published: boolean;
-  slug: string;
-  featured_image?: string;
+// Enable ISR with 30 minutes revalidation for blog listing
+export const revalidate = 1800;
+
+export const metadata: Metadata = {
+  title: 'Blog - Packaging Automation Insights | Infinity Automated Solutions',
+  description: 'Discover insights, ideas, and perspectives on the future of packaging automation, industrial solutions, and manufacturing technology from Infinity Automated Solutions.',
+  keywords: 'packaging automation blog, industrial automation insights, manufacturing technology, FMCG packaging, automation trends, Infinity Automated Solutions',
+  openGraph: {
+    title: 'Blog - Packaging Automation Insights | Infinity Automated Solutions',
+    description: 'Discover insights, ideas, and perspectives on the future of packaging automation, industrial solutions, and manufacturing technology.',
+    images: [
+      {
+        url: 'https://infinitysols.com/logos/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Infinity Automated Solutions Blog',
+      },
+    ],
+    url: 'https://infinitysols.com/blog',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog - Packaging Automation Insights | Infinity Automated Solutions',
+    description: 'Discover insights, ideas, and perspectives on the future of packaging automation, industrial solutions, and manufacturing technology.',
+    images: ['https://infinitysols.com/logos/logo.png'],
+  },
+  alternates: {
+    canonical: 'https://infinitysols.com/blog',
+  },
 };
 
 // Helper function to generate a color from a string
@@ -64,63 +82,106 @@ const getExcerpt = (content: string, maxLength: number = 250) => {
   return plain.substring(0, lastSpace) + '...';
 };
 
-export default function BlogPage() {
-  const router = useRouter();
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface BlogCardProps {
+  post: Post;
+  index: number;
+}
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .eq('published', true)
-          .order('created_at', { ascending: false });
+function BlogCard({ post, index }: BlogCardProps) {
+  const color1 = stringToColor(post.id);
+  const color2 = stringToColor(post.title);
+  const readingTime = getReadingTime(post.content);
+  const excerpt = getExcerpt(post.content);
 
-        if (error) throw error;
-        setPosts(data || []);
-      } catch (err) {
-        console.error('Error fetching posts:', err);
-        setError('Failed to load blog posts');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="animate-pulse bg-gray-100 h-10 w-1/4 mb-8 rounded"></div>
-        {[1, 2, 3].map((n) => (
-          <div key={n} className="animate-pulse mb-8">
-            <div className="h-40 bg-gray-100 rounded mb-2"></div>
-            <div className="h-6 bg-gray-100 w-3/4 mb-2 rounded"></div>
-            <div className="h-4 bg-gray-100 w-1/4 mb-4 rounded"></div>
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative bg-white border border-gray-200 rounded-2xl transition-all duration-300 hover:shadow-xl group [content-visibility:auto] [contain-intrinsic-size:1px_400px]"
+    >
+      <Link href={`/blog/${post.slug}`} className="block">
+        {/* Engineering corner accents */}
+        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
+        <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
+        <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
+        <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
+          
+        {/* Featured Image */}
+        {post.featured_image && (
+          <div className="relative h-64 w-full overflow-hidden rounded-t-2xl">
+            <Image
+              src={post.featured_image}
+              alt={post.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
-        ))}
-      </div>
-    );
-  }
+        )}
+        
+        <div className={`${post.featured_image ? 'p-6' : 'p-8'}`}>
+          {!post.featured_image && (
+            <div 
+              className="h-2 w-full rounded-full mb-8"
+              style={{
+                backgroundImage: `linear-gradient(45deg, ${color1}, ${color2})`,
+              }}
+            ></div>
+          )}
 
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
-          {error}
-          <button
-            onClick={() => window.location.reload()}
-            className="ml-2 text-red-500 underline"
-          >
-            Retry
-          </button>
+          <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
+            <time dateTime={post.created_at}>
+              {new Date(post.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            <span>•</span>
+            <span>{readingTime} min read</span>
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-200">
+            {post.title}
+          </h2>
+
+          <p className="text-gray-600 mb-6 line-clamp-3">
+            {excerpt}
+          </p>
+
+          <div className="flex items-center text-blue-600">
+            <span className="font-semibold">Read More</span>
+            <svg
+              className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
-      </div>
+      </Link>
+    </motion.article>
+  );
+}
+
+export default async function BlogPage() {
+  const posts = await getBlogPosts();
+
+  if (posts.length === 0) {
+    return (
+      <PageContainer
+        title="From the Blog"
+        subtitle="Insights, ideas, and perspectives on the future of packaging automation."
+      >
+        <div className="text-center py-12">
+          <p className="text-gray-600 text-lg">No blog posts available at the moment.</p>
+          <p className="text-gray-500 mt-2">Check back soon for the latest insights on packaging automation.</p>
+        </div>
+      </PageContainer>
     );
   }
 
@@ -130,92 +191,10 @@ export default function BlogPage() {
       subtitle="Insights, ideas, and perspectives on the future of packaging automation."
     >
       <div className="grid grid-cols-1 gap-12">
-        {posts.map((post, index) => {
-          const color1 = stringToColor(post.id);
-          const color2 = stringToColor(post.title);
-          const readingTime = getReadingTime(post.content);
-          const excerpt = getExcerpt(post.content);
-          
-          return (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative bg-white border border-gray-200 rounded-2xl transition-all duration-300 group-hover:shadow-xl block group cursor-pointer"
-              onClick={() => router.push(`/blog/${post.slug}`)}
-            >
-              {/* Engineering corner accents */}
-              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
-              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
-              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
-              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
-                
-                {/* Featured Image */}
-                {post.featured_image && (
-                  <div className="relative h-64 w-full overflow-hidden rounded-t-2xl">
-                    <Image
-                      src={post.featured_image}
-                      alt={post.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  </div>
-                )}
-                
-                <div className={`${post.featured_image ? 'p-6' : 'p-8'}`}>
-                  {!post.featured_image && (
-                    <div 
-                      className="h-2 w-full rounded-full mb-8"
-                      style={{
-                        backgroundImage: `linear-gradient(45deg, ${color1}, ${color2})`,
-                      }}
-                    ></div>
-                  )}
-
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                    <time dateTime={post.created_at}>
-                      {new Date(post.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </time>
-                    <span>•</span>
-                    <span>{readingTime} min read</span>
-                  </div>
-
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-200">
-                    {post.title}
-                  </h2>
-
-                  <p className="text-gray-600 mb-6 line-clamp-3">
-                    {excerpt}
-                  </p>
-
-                  <div className="flex items-center text-blue-600">
-                    <span className="font-semibold">Read More</span>
-                    <svg
-                      className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform duration-200"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </motion.article>
-          );
-        })}
+        {posts.map((post, index) => (
+          <BlogCard key={post.id} post={post} index={index} />
+        ))}
       </div>
     </PageContainer>
   );
-} 
+}

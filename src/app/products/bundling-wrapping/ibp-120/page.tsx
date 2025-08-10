@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import ProductDetailPage from '@/components/ProductDetailPage';
 
 const features = [
@@ -183,6 +184,35 @@ const certifications = [
   'ISO 9001:2015',
   'FDA Compatible Materials'
 ];
+
+export const metadata: Metadata = {
+  title: 'IBP-120 Secondary Packaging Machine | Infinity Automated Solutions',
+  description: 'IBP-120 high-speed bundling machine for single pouches (50g-200g). Advanced secondary packaging solution with dual servo technology, reducing manual intervention and boosting efficiency for FMCG, food & beverage industries.',
+  keywords: 'IBP-120, secondary packaging, bundling machine, pouch packaging, FMCG automation, dual servo, high-speed packaging, Infinity Automated Solutions',
+  openGraph: {
+    title: 'IBP-120 Secondary Packaging Machine | Infinity Automated Solutions',
+    description: 'Advanced secondary packaging solution for efficient bundling of single pouches (50g-200g). High-speed system with dual servo technology for FMCG and food & beverage industries.',
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBP120_lsu8jq.png',
+        width: 1200,
+        height: 630,
+        alt: 'IBP-120 Secondary Packaging Machine for Pouch Bundling',
+      },
+    ],
+    url: 'https://infinitysols.com/products/bundling-wrapping/ibp-120',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'IBP-120 Secondary Packaging Machine | Infinity Automated Solutions',
+    description: 'Advanced secondary packaging solution for efficient bundling of single pouches (50g-200g). High-speed system with dual servo technology.',
+    images: ['https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBP120_lsu8jq.png'],
+  },
+  alternates: {
+    canonical: 'https://infinitysols.com/products/bundling-wrapping/ibp-120',
+  },
+};
 
 export default function IBP120Page() {
   return (

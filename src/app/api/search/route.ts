@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-// Make this route dynamic
-export const dynamic = 'force-dynamic';
+// Cache search results for 1 hour
+export const revalidate = 3600;
 
 interface SearchResult {
   id: string;
@@ -446,6 +446,12 @@ export async function GET(request: NextRequest) {
       results,
       meta,
       success: true
+    }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        'CDN-Cache-Control': 'public, s-maxage=3600',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=3600',
+      }
     });
   } catch (error) {
     console.error('Search error:', error);
