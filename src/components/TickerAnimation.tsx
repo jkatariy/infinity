@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 
@@ -21,25 +21,39 @@ export default function TickerAnimation() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showCursor, setShowCursor] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchMessages = async () => {
-      const { data, error } = await supabase
-        .from('ticker_messages')
-        .select('position, text')
-        .order('position', { ascending: true });
+      try {
+        const { data, error } = await supabase
+          .from('ticker_messages')
+          .select('position, text')
+          .order('position', { ascending: true });
 
-      if (!error && isMounted && data && data.length > 0) {
-        const sorted = data
-          .sort((a: any, b: any) => a.position - b.position)
-          .map((row: any) => row.text);
-        setMessages(sorted);
-        // Reset ticker to start
-        setCurrentMessageIndex(0);
-        setDisplayedText('');
-        setIsTyping(true);
+        if (!error && isMounted && data && data.length > 0) {
+          const sorted = data
+            .sort((a: any, b: any) => a.position - b.position)
+            .map((row: any) => row.text)
+            .filter((text: string) => text && text.trim().length > 0); // Filter out empty messages
+          
+          if (sorted.length > 0) {
+            setMessages(sorted);
+            // Reset ticker to start
+            setCurrentMessageIndex(0);
+            setDisplayedText('');
+            setIsTyping(true);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to fetch ticker messages, using fallback:', error);
+        // Fallback messages are already set in initial state
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -49,7 +63,30 @@ export default function TickerAnimation() {
   }, [fallbackMessages]);
 
   useEffect(() => {
+    // Safety check for empty messages array
+    if (messages.length === 0) return;
+    
     const currentMessage = messages[currentMessageIndex] ?? '';
+    
+    // Skip empty messages but prevent infinite loops
+    if (!currentMessage.trim()) {
+      const nextIndex = (currentMessageIndex + 1) % messages.length;
+      // Check if we've cycled through all messages and all are empty
+      if (nextIndex === 0) {
+        // If all messages are empty, fallback to fallback messages
+        const validFallbacks = fallbackMessages.filter(msg => msg.trim().length > 0);
+        if (validFallbacks.length > 0) {
+          setMessages(validFallbacks);
+          setCurrentMessageIndex(0);
+          setDisplayedText('');
+          setIsTyping(true);
+          return;
+        }
+      }
+      setCurrentMessageIndex(nextIndex);
+      return;
+    }
+    
     if (isTyping) {
       if (displayedText.length < currentMessage.length) {
         const timer = setTimeout(() => {
@@ -73,7 +110,7 @@ export default function TickerAnimation() {
         setIsTyping(true);
       }
     }
-  }, [displayedText, isTyping, currentMessageIndex, messages]);
+  }, [displayedText, isTyping, currentMessageIndex, messages, fallbackMessages]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -107,7 +144,7 @@ export default function TickerAnimation() {
                   <motion.span
                     animate={{ opacity: showCursor ? 1 : 0 }}
                     transition={{ duration: 0.15 }}
-                    className="inline-block w-0.5 h-6 bg-white ml-1.5"
+                    className="inline-block w-0.5 h-5 md:h-6 lg:h-7 bg-white ml-1.5"
                   />
                 </span>
               </div>

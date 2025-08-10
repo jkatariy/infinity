@@ -50,7 +50,19 @@ export default function TickerEditorPage() {
   const save = async () => {
     setSaving(true);
     try {
-      const payload = lines.map((text, idx) => ({ position: idx + 1, text }));
+      // Filter out empty messages and ensure at least one message exists
+      const validLines = lines.filter(text => text && text.trim().length > 0);
+      if (validLines.length === 0) {
+        alert('Please add at least one message before saving.');
+        setSaving(false);
+        return;
+      }
+      
+      const payload = lines.map((text, idx) => ({ 
+        position: idx + 1, 
+        text: text.trim() // Trim whitespace
+      }));
+      
       const { error } = await supabase.from('ticker_messages').upsert(payload, { onConflict: 'position' });
       if (error) throw error;
       setSavedAt(new Date());
