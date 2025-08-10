@@ -157,7 +157,6 @@ export default function Industries() {
   return (
     <PageContainer
       title="Industries We Serve"
-      subtitle="At Infinity Automated Solutions, we understand that every industry has different packaging needs. That's why we offer smart, flexible, and easy-to-use secondary packaging systems."
     >
       {/* Main Industries Grid */}
       <div className="mb-20">
@@ -166,9 +165,6 @@ export default function Industries() {
             Industries We Serve
             <div className="absolute -top-2 left-0 right-0 h-0.5 bg-blue-500/30"></div>
           </h2>
-          <p className="text-gray-600 max-w-3xl mx-auto">
-            Infinity Automated Solutions offers tailored secondary packaging systems for key sectors
-          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -45,6 +45,15 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start t
     }
   }, [sanitizedValue]);
 
+  // Ensure new lines create proper paragraphs instead of bare divs
+  useEffect(() => {
+    try {
+      document.execCommand('defaultParagraphSeparator', false, 'p');
+    } catch (_) {
+      // noop if unsupported
+    }
+  }, []);
+
   const exec = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     // Emit sanitized html
@@ -62,6 +71,22 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start t
       ALLOWED_ATTR: ['href', 'target', 'rel', 'style'],
     });
     onChange(html);
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    // Normalize pasted content to paragraphs and line breaks
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain');
+    const paragraphHtml = text
+      .split(/\n{2,}/) // split on blank lines
+      .map((block) => {
+        const safe = DOMPurify.sanitize(block);
+        const withBreaks = safe.replace(/\n/g, '<br>');
+        return `<p>${withBreaks}</p>`;
+      })
+      .join('');
+    document.execCommand('insertHTML', false, paragraphHtml);
+    handleInput();
   };
 
   const applyLink = () => {
@@ -135,6 +160,7 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start t
         contentEditable
         suppressContentEditableWarning
         onInput={handleInput}
+        onPaste={handlePaste}
         className="min-h-40 w-full rounded-md border border-gray-300 bg-white p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         data-placeholder={placeholder}
         style={{ whiteSpace: 'pre-wrap' }}
