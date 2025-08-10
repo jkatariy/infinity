@@ -29,14 +29,18 @@ export default function TickerEditorPage() {
         .select('position, text')
         .order('position', { ascending: true });
 
-      if (!error && data && data.length > 0 && isMounted) {
-        const arr = Array.from({ length: 8 }, (_, i) => {
-          const found = data.find((d: any) => d.position === i + 1);
-          return found?.text ?? DEFAULTS[i];
-        });
-        setLines(arr);
+      if (isMounted) {
+        if (!error && data && data.length > 0) {
+          const sorted = data
+            .sort((a: any, b: any) => a.position - b.position)
+            .map((row: any) => row.text);
+          setLines(sorted);
+        } else {
+          // Fallback to defaults if nothing in DB
+          setLines(DEFAULTS);
+        }
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchTicker();
@@ -47,24 +51,46 @@ export default function TickerEditorPage() {
     setLines(prev => prev.map((v, idx) => (idx === i ? val : v)));
   };
 
+  const addLine = () => {
+    setLines(prev => [...prev, '']);
+  };
+
+  const removeLine = (indexToRemove: number) => {
+    setLines(prev => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
   const save = async () => {
     setSaving(true);
     try {
       // Filter out empty messages and ensure at least one message exists
-      const validLines = lines.filter(text => text && text.trim().length > 0);
+      const validLines = lines
+        .map(t => (t ?? '').trim())
+        .filter(text => text.length > 0);
+
       if (validLines.length === 0) {
         alert('Please add at least one message before saving.');
         setSaving(false);
         return;
       }
-      
-      const payload = lines.map((text, idx) => ({ 
-        position: idx + 1, 
-        text: text.trim() // Trim whitespace
+
+      const payload = validLines.map((text, idx) => ({
+        position: idx + 1,
+        text,
       }));
-      
-      const { error } = await supabase.from('ticker_messages').upsert(payload, { onConflict: 'position' });
-      if (error) throw error;
+
+      // Upsert current list with sequential positions
+      const { error: upsertError } = await supabase
+        .from('ticker_messages')
+        .upsert(payload, { onConflict: 'position' });
+      if (upsertError) throw upsertError;
+
+      // Delete any old rows that are now beyond the new length
+      const { error: deleteError } = await supabase
+        .from('ticker_messages')
+        .delete()
+        .gt('position', validLines.length);
+      if (deleteError) throw deleteError;
+
       setSavedAt(new Date());
     } catch (e) {
       console.error('Failed to save ticker messages', e);
@@ -99,7 +125,7 @@ export default function TickerEditorPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {lines.map((value, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 10 }}
@@ -109,17 +135,37 @@ export default function TickerEditorPage() {
           >
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-gray-700">Line {i + 1}</label>
-              <span className="text-xs text-gray-400">{lines[i]?.length ?? 0}/200</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-400">{value?.length ?? 0}/200</span>
+                <button
+                  type="button"
+                  onClick={() => removeLine(i)}
+                  className="text-red-600 hover:text-red-700 text-xs font-medium"
+                  aria-label={`Remove line ${i + 1}`}
+                >
+                  Remove
+                </button>
+              </div>
             </div>
             <input
               type="text"
               maxLength={200}
-              value={lines[i] ?? ''}
+              value={value ?? ''}
               onChange={(e) => onChange(i, e.target.value)}
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </motion.div>
         ))}
+      </div>
+
+      <div>
+        <button
+          type="button"
+          onClick={addLine}
+          className="inline-flex items-center px-3 py-2 rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100"
+        >
+          + Add line
+        </button>
       </div>
 
       <div className="text-sm text-gray-500">
