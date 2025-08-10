@@ -1,4 +1,4 @@
-'use client';
+// Server component: no client runtime needed
 
 interface StructuredDataProps {
   type: 'Organization' | 'Product' | 'Article' | 'LocalBusiness' | 'WebSite' | 'BreadcrumbList';

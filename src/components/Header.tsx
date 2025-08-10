@@ -376,7 +376,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Optimized Logo */}
-            <Link href="/" className="flex-shrink-0">
+            <Link href="/" prefetch={false} className="flex-shrink-0">
               <div className="relative w-48 h-14 sm:w-64 sm:h-18 transform-gpu">
                 <Image
                   src="/logos/logo.png"

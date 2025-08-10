@@ -4,11 +4,13 @@ import HeroVideo from '@/components/HeroVideo';
 const TickerAnimation = dynamic(() => import('@/components/TickerAnimation'), { ssr: true, loading: () => null });
 const ExploreByIndustry = dynamic(() => import('@/components/ExploreByIndustry'), { ssr: true, loading: () => null });
 const AboutUs = dynamic(() => import('@/components/AboutUs'), { ssr: true, loading: () => null });
-const FeaturedVideo = dynamic(() => import('@/components/FeaturedVideo'), { ssr: true, loading: () => null });
+// Heavy media/iframes: safely hydrate on client only
+const FeaturedVideo = dynamic(() => import('@/components/FeaturedVideo'), { ssr: false, loading: () => null });
 const Testimonials = dynamic(() => import('@/components/Testimonials'), { ssr: true, loading: () => null });
 const FAQ = dynamic(() => import('@/components/FAQ'), { ssr: true, loading: () => null });
 const Clientele = dynamic(() => import('@/components/Clientele'), { ssr: true, loading: () => null });
-const MapSection = dynamic(() => import('@/components/MapSection'), { ssr: true, loading: () => null });
+// Map is heavy; hydrate client-side only
+const MapSection = dynamic(() => import('@/components/MapSection'), { ssr: false, loading: () => null });
 
 export const metadata: Metadata = {
   title: 'Packaging Automation Solutions | Infinity Automated Solutions',
@@ -28,14 +30,30 @@ export default function Home() {
   return (
     <main id="main-content" className="min-h-screen" tabIndex={-1}>
       <HeroVideo />
-      <TickerAnimation />
-      <ExploreByIndustry />
-      <AboutUs />
-      <FeaturedVideo />
-      <Clientele />
-      <Testimonials />
-      <FAQ />
-      <MapSection />
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_800px]">
+        <TickerAnimation />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_1200px]">
+        <ExploreByIndustry />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_900px]">
+        <AboutUs />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_900px]">
+        <FeaturedVideo />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_900px]">
+        <Clientele />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_900px]">
+        <Testimonials />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_700px]">
+        <FAQ />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_700px]">
+        <MapSection />
+      </div>
     </main>
   );
 }
