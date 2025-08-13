@@ -176,7 +176,7 @@ const ExploreByIndustry = () => {
                         alt={solution.title}
                         fill
                         sizes="(max-width: 768px) 260px, 320px"
-                        className="object-contain scale-110 origin-center"
+                        className="object-contain scale-125 origin-center"
                       />
                     </div>
                     <span className="sr-only">{solution.title}</span>
@@ -262,7 +262,7 @@ const ExploreByIndustry = () => {
                                 alt={solution.title}
                                 fill
                                 sizes="(max-width: 1024px) 45vw, 25vw"
-                                className="object-contain scale-110 origin-center"
+                                className="object-contain scale-150 origin-center"
                               />
                             </div>
                             <span className="sr-only">{solution.title}</span>
