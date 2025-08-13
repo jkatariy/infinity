@@ -268,17 +268,7 @@ const Header = () => {
         },
         {
           name: 'Conveying Solutions',
-          href: '/products/conveying',
-          submenu: [
-            { name: 'Flat Belt Conveyors', href: '/products/conveying/flat-belt' },
-            { name: 'Modular Conveyors', href: '/products/conveying/modular-conveyor' },
-            { name: 'Roller Conveyors', href: '/products/conveying/roller-conveyor' },
-            { name: 'Compression Conveyors', href: '/products/conveying/compression-conveyor' },
-            { name: 'Z-Type Bucket Elevator (ZB)', href: '/products/conveying/z-bucket-elevator' },
-            { name: 'Crate Lifters', href: '/products/conveying/crate-lifter' },
-            { name: 'Box Lifters', href: '/products/conveying/box-lifter' },
-            { name: 'Spiral Conveyors', href: '/products/conveying/spiral-conveyor' }
-          ]
+          href: '/products/conveying'
         }
       ]
     },
@@ -324,7 +314,7 @@ const Header = () => {
             { name: 'Pouch Baling (IBL-500)', href: '/products/pouch-baler/ibl-500' },
             { name: 'Case Packing (ICP-120)', href: '/products/case-packers/icp-120' },
             { name: 'Heavy Checkweighing (ICW-25K/50K)', href: '/products/checkweighers/icw-series' },
-            { name: 'Industrial Conveyors', href: '/products/conveying/modular-conveyor' }
+            { name: 'Industrial Conveyors', href: '/products/conveying' }
           ]
         },
         {
@@ -332,7 +322,7 @@ const Header = () => {
           href: '/industries/automotive',
           submenu: [
             { name: 'Heavy Case Packing', href: '/products/case-packers/icb-120' },
-            { name: 'Industrial Conveyors', href: '/products/conveying/roller-conveyor' },
+            { name: 'Industrial Conveyors', href: '/products/conveying' },
             { name: 'Vision Inspection', href: '/products/inspection/vision-systems' },
             { name: 'Heavy Checkweighing', href: '/products/checkweighers/icw-series' }
           ]
@@ -343,7 +333,7 @@ const Header = () => {
           submenu: [
             { name: 'Pouch Bagging (IBG-H8/V8)', href: '/products/pouch-baler/ibg-h8-v8' },
             { name: 'Case Erectors & Sealers', href: '/products/case-packers/case-erector' },
-            { name: 'Conveying Solutions', href: '/products/conveying/flat-belt' },
+            { name: 'Conveying Solutions', href: '/products/conveying' },
             { name: 'Checkweighing (ICW Series)', href: '/products/checkweighers/icw-series' }
           ]
         }

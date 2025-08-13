@@ -52,7 +52,7 @@ const solutions = [
       'Washdown design'
     ],
     image: '/images/products/conveying.jpg',
-            href: '/products/conveying/modular-conveyor'
+    href: '/products/conveying'
   }
 ];
 

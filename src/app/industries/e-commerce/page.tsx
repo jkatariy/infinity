@@ -40,7 +40,7 @@ const solutions = [
       'Gentle handling'
     ],
     image: '/images/products/conveying.jpg',
-    href: '/products/conveying/flat-belt'
+    href: '/products/conveying'
   },
   {
     name: 'Checkweighing (ICW Series)',

@@ -820,7 +820,7 @@ const productModels: ProductModel[] = [
     ],
     industries: ['food-beverage', 'pharmaceuticals', 'dairy-beverages', 'textiles-apparel'],
     matchScore: 0,
-    productUrl: '/products/conveying/flat-belt',
+      productUrl: '/products/conveying',
     technicalHighlights: ['Food grade belt', 'VFD control', 'Adjustable guards']
   }
 ];

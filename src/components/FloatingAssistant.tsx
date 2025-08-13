@@ -60,14 +60,7 @@ const allModels: Record<CategoryKey, ModelLink[]> = {
     { name: 'Vision Systems', label: 'Automated Vision Inspection', href: '/products/inspection/vision-systems' },
   ],
   conveying: [
-    { name: 'Flat Belt', label: 'Flat Belt Conveyor', href: '/products/conveying/flat-belt' },
-    { name: 'Modular Conveyor', label: 'Modular Belt Conveyor', href: '/products/conveying/modular-conveyor' },
-    { name: 'Roller Conveyor', label: 'Roller Conveyor', href: '/products/conveying/roller-conveyor' },
-    { name: 'Compression Conveyor', label: 'Compression Conveyor', href: '/products/conveying/compression-conveyor' },
-    { name: 'Z Type Bucket Elevator', label: 'Z Type Bucket Elevator', href: '/products/conveying/z-bucket-elevator' },
-    { name: 'Crate Lifter', label: 'Vertical Crate/Box Lifter', href: '/products/conveying/crate-lifter' },
-    { name: 'Spiral Conveyor', label: 'Spiral Conveyor', href: '/products/conveying/spiral-conveyor' },
-    { name: 'Box Lifter', label: 'Box Lifter', href: '/products/conveying/box-lifter' },
+    { name: 'Conveying Solutions', label: 'Material Handling & Conveying', href: '/products/conveying' },
   ],
 };
 

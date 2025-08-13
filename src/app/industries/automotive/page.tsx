@@ -28,7 +28,7 @@ const solutions = [
       'Integration ready'
     ],
     image: '/images/products/conveying.jpg',
-            href: '/products/conveying/roller-conveyor'
+            href: '/products/conveying'
   },
   {
     name: 'Vision Inspection',
