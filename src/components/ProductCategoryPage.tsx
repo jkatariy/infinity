@@ -99,14 +99,14 @@ const allModels: Record<string, ProductModel[]> = {
     { name: 'Vision Systems', title: 'Automated Vision Inspection Systems', subtitle: 'AI-Powered Quality Control & Defect Detection', href: '/products/inspection/vision-systems', image: '/images/products/inspection/vision-systems.jpg', highlight: 'AI Technology' }
   ],
   'conveying': [
-    { name: 'Flat Belt', title: 'Flat Belt Conveyor', subtitle: 'Seamless Product Movement', href: '/products/conveying/flat-belt', image: '/images/products/conveying/flat-belt.jpg', highlight: 'Versatile' },
-    { name: 'Modular', title: 'Modular Conveyor', subtitle: 'Flexible Configuration System', href: '/products/conveying/modular-conveyor', image: '/images/products/conveying/modular.jpg', highlight: 'Modular' },
-    { name: 'Roller', title: 'Roller Conveyor', subtitle: 'Heavy Duty Material Handling', href: '/products/conveying/roller-conveyor', image: '/images/products/conveying/roller.jpg', highlight: 'Heavy Duty' },
-    { name: 'Compression', title: 'Compression Conveyor', subtitle: 'Space-Efficient Transport', href: '/products/conveying/compression-conveyor', image: '/images/products/conveying/compression.jpg', highlight: 'Compact' },
-    { name: 'Spiral', title: 'Spiral Conveyor', subtitle: 'Vertical Space Optimization', href: '/products/conveying/spiral-conveyor', image: '/images/products/conveying/spiral.jpg', highlight: 'Vertical' },
-    { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', subtitle: 'Vertical Material Lifting', href: '/products/conveying/z-bucket-elevator', image: '/images/products/conveying/z-bucket.jpg', highlight: 'Lifting' },
-    { name: 'Crate Lifter', title: 'Vertical Crate Lifter', subtitle: 'Heavy Container Handling', href: '/products/conveying/crate-lifter', image: '/images/products/conveying/crate-lifter.jpg', highlight: 'Container' },
-    { name: 'Box Lifter', title: 'Box Lifter System', subtitle: 'Automated Box Handling', href: '/products/conveying/box-lifter', image: '/images/products/conveying/box-lifter.jpg', highlight: 'Automated' }
+    { name: 'Flat Belt', title: 'Flat Belt Conveyor', subtitle: 'Seamless Product Movement', href: '/products/conveying', image: '/images/products/conveying/flat-belt.jpg', highlight: 'Versatile' },
+    { name: 'Modular', title: 'Modular Conveyor', subtitle: 'Flexible Configuration System', href: '/products/conveying', image: '/images/products/conveying/modular.jpg', highlight: 'Modular' },
+    { name: 'Roller', title: 'Roller Conveyor', subtitle: 'Heavy Duty Material Handling', href: '/products/conveying', image: '/images/products/conveying/roller.jpg', highlight: 'Heavy Duty' },
+    { name: 'Compression', title: 'Compression Conveyor', subtitle: 'Space-Efficient Transport', href: '/products/conveying', image: '/images/products/conveying/compression.jpg', highlight: 'Compact' },
+    { name: 'Spiral', title: 'Spiral Conveyor', subtitle: 'Vertical Space Optimization', href: '/products/conveying', image: '/images/products/conveying/spiral.jpg', highlight: 'Vertical' },
+    { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', subtitle: 'Vertical Material Lifting', href: '/products/conveying', image: '/images/products/conveying/z-bucket.jpg', highlight: 'Lifting' },
+    { name: 'Crate Lifter', title: 'Vertical Crate Lifter', subtitle: 'Heavy Container Handling', href: '/products/conveying', image: '/images/products/conveying/crate-lifter.jpg', highlight: 'Container' },
+    { name: 'Box Lifter', title: 'Box Lifter System', subtitle: 'Automated Box Handling', href: '/products/conveying', image: '/images/products/conveying/box-lifter.jpg', highlight: 'Automated' }
   ]
 } as const;
 

@@ -95,14 +95,14 @@ const allModels = {
     { name: 'Vision Systems', title: 'Automated Vision Inspection Systems', href: '/products/inspection/vision-systems', image: '/images/products/inspection/vision-systems.jpg' }
   ],
   'conveying': [
-    { name: 'Flat Belt', title: 'Flat Belt Conveyor', href: '/products/conveying/flat-belt', image: '/images/products/conveying/flat-belt.jpg' },
-    { name: 'Modular', title: 'Modular Conveyor', href: '/products/conveying/modular-conveyor', image: '/images/products/conveying/modular.jpg' },
-    { name: 'Roller', title: 'Roller Conveyor', href: '/products/conveying/roller-conveyor', image: '/images/products/conveying/roller.jpg' },
-    { name: 'Compression', title: 'Compression Conveyor', href: '/products/conveying/compression-conveyor', image: '/images/products/conveying/compression.jpg' },
-    { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', href: '/products/conveying/z-bucket-elevator', image: '/images/products/conveying/z-bucket.jpg' },
-    { name: 'Crate Lifter', title: 'Vertical Crate Lifter', href: '/products/conveying/crate-lifter', image: '/images/products/conveying/crate-lifter.jpg' },
-    { name: 'Box Lifter', title: 'Box Lifter', href: '/products/conveying/box-lifter', image: '/images/products/conveying/box-lifter.jpg' },
-    { name: 'Spiral', title: 'Spiral Conveyor', href: '/products/conveying/spiral-conveyor', image: '/images/products/conveying/spiral.jpg' }
+    { name: 'Flat Belt', title: 'Flat Belt Conveyor', href: '/products/conveying', image: '/images/products/conveying/flat-belt.jpg' },
+    { name: 'Modular', title: 'Modular Conveyor', href: '/products/conveying', image: '/images/products/conveying/modular.jpg' },
+    { name: 'Roller', title: 'Roller Conveyor', href: '/products/conveying', image: '/images/products/conveying/roller.jpg' },
+    { name: 'Compression', title: 'Compression Conveyor', href: '/products/conveying', image: '/images/products/conveying/compression.jpg' },
+    { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', href: '/products/conveying', image: '/images/products/conveying/z-bucket.jpg' },
+    { name: 'Crate Lifter', title: 'Vertical Crate Lifter', href: '/products/conveying', image: '/images/products/conveying/crate-lifter.jpg' },
+    { name: 'Box Lifter', title: 'Box Lifter', href: '/products/conveying', image: '/images/products/conveying/box-lifter.jpg' },
+    { name: 'Spiral', title: 'Spiral Conveyor', href: '/products/conveying', image: '/images/products/conveying/spiral.jpg' }
   ]
 } as const;
 

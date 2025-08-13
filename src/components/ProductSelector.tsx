@@ -60,14 +60,14 @@ const productCategories = {
   'conveying': {
     title: 'Conveying Solutions',
     models: [
-      { name: 'Flat Belt Conveyor', href: '/products/conveying/flat-belt', shortName: 'Flat Belt' },
-      { name: 'Modular Conveyor', href: '/products/conveying/modular-conveyor', shortName: 'Modular' },
-      { name: 'Roller Conveyor', href: '/products/conveying/roller-conveyor', shortName: 'Roller' },
-      { name: 'Compression Conveyor', href: '/products/conveying/compression-conveyor', shortName: 'Compression' },
-      { name: 'Z Type Bucket Elevator', href: '/products/conveying/z-bucket-elevator', shortName: 'Z-Bucket' },
-      { name: 'Crate Lifter', href: '/products/conveying/crate-lifter', shortName: 'Crate Lifter' },
-      { name: 'Box Lifter', href: '/products/conveying/box-lifter', shortName: 'Box Lifter' },
-      { name: 'Spiral Conveyor', href: '/products/conveying/spiral-conveyor', shortName: 'Spiral' }
+      { name: 'Flat Belt Conveyor', href: '/products/conveying', shortName: 'Flat Belt' },
+      { name: 'Modular Conveyor', href: '/products/conveying', shortName: 'Modular' },
+      { name: 'Roller Conveyor', href: '/products/conveying', shortName: 'Roller' },
+      { name: 'Compression Conveyor', href: '/products/conveying', shortName: 'Compression' },
+      { name: 'Z Type Bucket Elevator', href: '/products/conveying', shortName: 'Z-Bucket' },
+      { name: 'Crate Lifter', href: '/products/conveying', shortName: 'Crate Lifter' },
+      { name: 'Box Lifter', href: '/products/conveying', shortName: 'Box Lifter' },
+      { name: 'Spiral Conveyor', href: '/products/conveying', shortName: 'Spiral' }
     ]
   }
 };

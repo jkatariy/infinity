@@ -69,6 +69,15 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Conveying subpages consolidated to a single page
+      { source: '/products/conveying/flat-belt', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/modular-conveyor', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/roller-conveyor', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/compression-conveyor', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/spiral-conveyor', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/z-bucket-elevator', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/crate-lifter', destination: '/products/conveying', permanent: true },
+      { source: '/products/conveying/box-lifter', destination: '/products/conveying', permanent: true },
     ];
   },
   webpack: (config, { isServer }) => {

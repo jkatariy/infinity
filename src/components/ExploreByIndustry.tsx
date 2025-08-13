@@ -99,6 +99,9 @@ const ExploreByIndustry = () => {
 
   const itemsPerSlide = 4;
   const totalSlides = Math.ceil(packagingSolutions.length / itemsPerSlide);
+  // Build a cyclic list so the last slide is filled by looping from the start
+  const fullItemCount = totalSlides * itemsPerSlide;
+  const cyclicSolutions = Array.from({ length: fullItemCount }, (_, i) => packagingSolutions[i % packagingSolutions.length]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % totalSlides);
@@ -202,8 +205,7 @@ const ExploreByIndustry = () => {
           <div className="absolute top-1/2 -translate-y-1/2 -left-4 z-10">
             <button
               onClick={prevSlide}
-              disabled={currentSlide === 0}
-              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 transition-all duration-300"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -214,8 +216,7 @@ const ExploreByIndustry = () => {
           <div className="absolute top-1/2 -translate-y-1/2 -right-4 z-10">
             <button
               onClick={nextSlide}
-              disabled={currentSlide === totalSlides - 1}
-              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 transition-all duration-300"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -232,7 +233,7 @@ const ExploreByIndustry = () => {
               {Array.from({ length: totalSlides }).map((_, slideIndex) => (
                 <div key={slideIndex} className="w-full flex-shrink-0">
                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                    {packagingSolutions
+                    {cyclicSolutions
                       .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
                       .map((solution, index) => (
                         <motion.div
