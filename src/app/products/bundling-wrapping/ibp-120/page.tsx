@@ -194,7 +194,7 @@ export const metadata: Metadata = {
     description: 'Advanced secondary packaging solution for efficient bundling of single pouches (50g-200g). High-speed system with dual servo technology for FMCG and food & beverage industries.',
     images: [
       {
-        url: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBP120_lsu8jq.png',
+        url: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/hjmnoiqzl3fosroitm4q.png',
         width: 1200,
         height: 630,
         alt: 'IBP-120 Secondary Packaging Machine for Pouch Bundling',
@@ -207,7 +207,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'IBP-120 Secondary Packaging Machine | Infinity Automated Solutions',
     description: 'Advanced secondary packaging solution for efficient bundling of single pouches (50g-200g). High-speed system with dual servo technology.',
-    images: ['https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBP120_lsu8jq.png'],
+    images: ['https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/hjmnoiqzl3fosroitm4q.png'],
   },
   alternates: {
     canonical: 'https://infinitysols.com/products/bundling-wrapping/ibp-120',
@@ -225,7 +225,7 @@ export default function IBP120Page() {
       models={models}
       applications={applications}
       category="bundling-wrapping"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBP120_lsu8jq.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/hjmnoiqzl3fosroitm4q.png"
       slug="products/bundling-wrapping/ibp-120"
       videoId="NgeT9rPPSB4"
       specifications={specifications}

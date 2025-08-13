@@ -154,7 +154,7 @@ export default function CaseErectorPage() {
       models={models}
       applications={applications}
       category="case-packers"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/Automatic_Case_erecters_and_sealers_lrilix.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098774/nu2tjyq4jfbjxoeisycb.png"
       slug="products/case-packers/case-erector"
       videoId="ojZUYCiRVEV"
       specifications={specifications}

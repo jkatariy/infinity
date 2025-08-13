@@ -65,46 +65,46 @@ interface ProductModel {
 // Complete model mapping for all categories
 const allModels: Record<string, ProductModel[]> = {
   'bundling-wrapping': [
-    { name: 'IBP-120', title: 'IBP-120 High-Speed Secondary Packaging Machine', subtitle: 'Single Pouches 50g-200g', href: '/products/bundling-wrapping/ibp-120', image: '/images/products/bundling-wrapping/ibp-120.jpg', highlight: 'Most Popular' },
+    { name: 'IBP-120', title: 'IBP-120 High-Speed Secondary Packaging Machine', subtitle: 'Single Pouches 50g-200g', href: '/products/bundling-wrapping/ibp-120', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/hjmnoiqzl3fosroitm4q.png', highlight: 'Most Popular' },
     { name: 'IBS-200', title: 'IBS-200 High-Speed Secondary Packaging Machine', subtitle: 'Strips of Pouches 50g-200g', href: '/products/bundling-wrapping/ibs-200', image: '/images/products/bundling-wrapping/ibs-200.jpg', highlight: 'Strip Processing' },
     { name: 'ISP-120', title: 'ISP-120 Automatic Shrink Wrapping Machine', subtitle: 'Professional Secondary Packaging', href: '/products/bundling-wrapping/isp-120', image: '/images/products/bundling-wrapping/isp-120.jpg', highlight: 'Premium Wrapping' },
     { name: 'IMS-800/600', title: 'IMS-800/600 Automated Secondary Packaging', subtitle: 'Multitrack VFFS Systems', href: '/products/bundling-wrapping/ims-800', image: '/images/products/bundling-wrapping/ims-800.jpg', highlight: 'Multi-Track' },
-    { name: 'IWB-200', title: 'IWB-200 Automatic Shrink Wrapping Machine', subtitle: 'Bottles & Rigid Containers', href: '/products/bundling-wrapping/iwb-200', image: '/images/products/bundling-wrapping/iwb-200.jpg', highlight: 'Bottle Wrapping' },
+    { name: 'IWB-200', title: 'IWB-200 Automatic Shrink Wrapping Machine', subtitle: 'Bottles & Rigid Containers', href: '/products/bundling-wrapping/iwb-200', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098781/vmqgtzrzrbs8jiekt61w.png', highlight: 'Bottle Wrapping' },
     { name: 'ISB-120', title: 'ISB-120 Shrink Wrapping for Bottles', subtitle: 'Rigid Products & PET Bottles', href: '/products/bundling-wrapping/isb-120', image: '/images/products/bundling-wrapping/isb-120.jpg', highlight: 'High-Speed' }
   ],
   'pouch-baler': [
-    { name: 'IBL-500', title: 'IBL-500 Automatic Baler Machine for Pouches', subtitle: 'Large Pouches 200g-2kg', href: '/products/pouch-baler/ibl-500', image: '/images/products/pouch-baler/ibl-500.jpg', highlight: 'High Volume' },
-    { name: 'IBG-H8', title: 'IBG-H8 Automatic Bagging Machine', subtitle: 'Horizontal Model 0.2kg-5kg', href: '/products/pouch-baler/ibg-h8-v8', image: '/images/products/pouch-baler/ibg-h8.jpg', highlight: 'Horizontal' },
-    { name: 'IBG-V8', title: 'IBG-V8 Automatic Bagging Machine', subtitle: 'Vertical Model 0.2kg-5kg', href: '/products/pouch-baler/ibg-h8-v8', image: '/images/products/pouch-baler/ibg-v8.jpg', highlight: 'Vertical' }
+    { name: 'IBL-500', title: 'IBL-500 Automatic Baler Machine for Pouches', subtitle: 'Large Pouches 200g-2kg', href: '/products/pouch-baler/ibl-500', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098786/q9cecrkqu85kbd95t05o.png', highlight: 'High Volume' },
+    { name: 'IBG-H8', title: 'IBG-H8 Automatic Bagging Machine', subtitle: 'Horizontal Model 0.2kg-5kg', href: '/products/pouch-baler/ibg-h8-v8', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098777/pzq3lbtsywtsrulw5xgp.png', highlight: 'Horizontal' },
+    { name: 'IBG-V8', title: 'IBG-V8 Automatic Bagging Machine', subtitle: 'Vertical Model 0.2kg-5kg', href: '/products/pouch-baler/ibg-h8-v8', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098788/fycdkeggbzabb7ngmdje.jpg', highlight: 'Vertical' }
   ],
   'cartoning': [
-    { name: 'ACM-100', title: 'ACM-100 Automatic Cartoning Machine', subtitle: 'Continuous Motion Horizontal System', href: '/products/cartoning/acm-100', image: '/images/products/cartoning/acm-100.jpg', highlight: 'Continuous Motion' },
-    { name: 'ACM-40', title: 'ACM-40 Semi Automatic Cartoning Machine', subtitle: 'Intermittent Motion Horizontal System', href: '/products/cartoning/acm-40', image: '/images/products/cartoning/acm-40.jpg', highlight: 'Semi-Automatic' }
+    { name: 'ACM-100', title: 'ACM-100 Automatic Cartoning Machine', subtitle: 'Continuous Motion Horizontal System', href: '/products/cartoning/acm-100', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098774/sqcbuioldiwnkfxjxo3l.png', highlight: 'Continuous Motion' },
+    { name: 'ACM-40', title: 'ACM-40 Semi Automatic Cartoning Machine', subtitle: 'Intermittent Motion Horizontal System', href: '/products/cartoning/acm-40', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098784/qhdjxx3v1xynhdhzrj1e.png', highlight: 'Semi-Automatic' }
   ],
   'case-packers': [
     { name: 'ICP-120', title: 'ICP-120 Automated Case Packer for Pouches', subtitle: 'High-Performance End-of-Line Solution', href: '/products/case-packers/icp-120', image: '/images/products/case-packers/icp-120.jpg', highlight: 'Automated' },
-    { name: 'ICS-200', title: 'ICS-200 Automated Case Packer for Strip Pouches', subtitle: 'Strip Pouches with Zig-Zag Folding', href: '/products/case-packers/ics-200', image: '/images/products/case-packers/ics-200.jpg', highlight: 'Strip Processing' },
+    { name: 'ICS-200', title: 'ICS-200 Automated Case Packer for Strip Pouches', subtitle: 'Strip Pouches with Zig-Zag Folding', href: '/products/case-packers/ics-200', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098778/icqycnzcjm2caqhemj5x.png', highlight: 'Strip Processing' },
     { name: 'ICP-B200', title: 'ICP-B200 Automated Case Packer for Bottles', subtitle: 'High-Speed Servo-Driven Technology', href: '/products/case-packers/icp-b200', image: '/images/products/case-packers/icp-b200.jpg', highlight: 'Bottle Packing' },
-    { name: 'Case Erector', title: 'Automatic Case Erectors', subtitle: 'High-Speed Case Formation', href: '/products/case-packers/case-erector', image: '/images/products/case-packers/case-erector.jpg', highlight: 'Case Formation' },
-    { name: 'Case Sealer', title: 'Automatic Case Sealers', subtitle: 'Secure Case Closure Systems', href: '/products/case-packers/case-sealer', image: '/images/products/case-packers/case-sealer.jpg', highlight: 'Sealing' }
+    { name: 'Case Erector', title: 'Automatic Case Erectors', subtitle: 'High-Speed Case Formation', href: '/products/case-packers/case-erector', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098774/nu2tjyq4jfbjxoeisycb.png', highlight: 'Case Formation' },
+    { name: 'Case Sealer', title: 'Automatic Case Sealers', subtitle: 'Secure Case Closure Systems', href: '/products/case-packers/case-sealer', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/lphxuwk9yeykyaojtmxx.png', highlight: 'Sealing' }
   ],
   'checkweighers': [
-    { name: 'ICW-600', title: 'ICW-600 Precision Checkweigher', subtitle: 'Light Duty - Products 10g to 600g', href: '/products/checkweighers/icw-600', image: '/images/products/checkweighers/icw-600.jpg', highlight: 'Light Duty' },
-    { name: 'ICW-1200', title: 'ICW-1200 Standard Checkweigher', subtitle: 'Medium Duty - Products up to 1.2kg', href: '/products/checkweighers/icw-1200', image: '/images/products/checkweighers/icw-1200.jpg', highlight: 'Standard' },
+    { name: 'ICW-600', title: 'ICW-600 Precision Checkweigher', subtitle: 'Light Duty - Products 10g to 600g', href: '/products/checkweighers/icw-600', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098780/ojxj2meqqjouthgdbncd.png', highlight: 'Light Duty' },
+    { name: 'ICW-1200', title: 'ICW-1200 Standard Checkweigher', subtitle: 'Medium Duty - Products up to 1.2kg', href: '/products/checkweighers/icw-1200', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/nsj6z12d9kqpgeklswgq.png', highlight: 'Standard' },
     { name: 'ICW-6000', title: 'ICW-6000 Heavy Duty Checkweigher', subtitle: 'Heavy Duty - Products up to 6kg', href: '/products/checkweighers/icw-6000', image: '/images/products/checkweighers/icw-6000.jpg', highlight: 'Heavy Duty' },
     { name: 'ICW-25K', title: 'ICW-25K Industrial Checkweigher', subtitle: 'Industrial Grade - Products up to 25kg', href: '/products/checkweighers/icw-25k', image: '/images/products/checkweighers/icw-25k.jpg', highlight: 'Industrial' },
     { name: 'ICW-50K', title: 'ICW-50K Extra Heavy Checkweigher', subtitle: 'Extra Heavy - Products up to 50kg', href: '/products/checkweighers/icw-50k', image: '/images/products/checkweighers/icw-50k.jpg', highlight: 'Extra Heavy' }
   ],
   'inspection': [
-    { name: 'Vision Systems', title: 'Automated Vision Inspection Systems', subtitle: 'AI-Powered Quality Control & Defect Detection', href: '/products/inspection/vision-systems', image: '/images/products/inspection/vision-systems.jpg', highlight: 'AI Technology' }
+    { name: 'Vision Systems', title: 'Automated Vision Inspection Systems', subtitle: 'AI-Powered Quality Control & Defect Detection', href: '/products/inspection/vision-systems', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098783/eyabelg0f9lzx5kl5hms.png', highlight: 'AI Technology' }
   ],
   'conveying': [
-    { name: 'Flat Belt', title: 'Flat Belt Conveyor', subtitle: 'Seamless Product Movement', href: '/products/conveying', image: '/images/products/conveying/flat-belt.jpg', highlight: 'Versatile' },
-    { name: 'Modular', title: 'Modular Conveyor', subtitle: 'Flexible Configuration System', href: '/products/conveying', image: '/images/products/conveying/modular.jpg', highlight: 'Modular' },
-    { name: 'Roller', title: 'Roller Conveyor', subtitle: 'Heavy Duty Material Handling', href: '/products/conveying', image: '/images/products/conveying/roller.jpg', highlight: 'Heavy Duty' },
-    { name: 'Compression', title: 'Compression Conveyor', subtitle: 'Space-Efficient Transport', href: '/products/conveying', image: '/images/products/conveying/compression.jpg', highlight: 'Compact' },
-    { name: 'Spiral', title: 'Spiral Conveyor', subtitle: 'Vertical Space Optimization', href: '/products/conveying', image: '/images/products/conveying/spiral.jpg', highlight: 'Vertical' },
-    { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', subtitle: 'Vertical Material Lifting', href: '/products/conveying', image: '/images/products/conveying/z-bucket.jpg', highlight: 'Lifting' },
+    { name: 'Flat Belt', title: 'Flat Belt Conveyor', subtitle: 'Seamless Product Movement', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098776/q3pwiyd6fgtpsmtfzk7x.png', highlight: 'Versatile' },
+    { name: 'Modular', title: 'Modular Conveyor', subtitle: 'Flexible Configuration System', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098787/bavrvl5lxecse2d4nsl6.png', highlight: 'Modular' },
+    { name: 'Roller', title: 'Roller Conveyor', subtitle: 'Heavy Duty Material Handling', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098782/qxhnotoahwot8qbmshvi.png', highlight: 'Heavy Duty' },
+    { name: 'Compression', title: 'Compression Conveyor', subtitle: 'Space-Efficient Transport', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/mujhcs3birsdowgnofjw.png', highlight: 'Compact' },
+    { name: 'Spiral', title: 'Spiral Conveyor', subtitle: 'Vertical Space Optimization', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098782/yzhxpcgteq0sl0rc6ugd.png', highlight: 'Vertical' },
+    { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', subtitle: 'Vertical Material Lifting', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098783/ca3y8dxlglvf3wrivxlz.png', highlight: 'Lifting' },
     { name: 'Crate Lifter', title: 'Vertical Crate Lifter', subtitle: 'Heavy Container Handling', href: '/products/conveying', image: '/images/products/conveying/crate-lifter.jpg', highlight: 'Container' },
     { name: 'Box Lifter', title: 'Box Lifter System', subtitle: 'Automated Box Handling', href: '/products/conveying', image: '/images/products/conveying/box-lifter.jpg', highlight: 'Automated' }
   ]

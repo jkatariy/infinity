@@ -327,7 +327,7 @@ function ICWSeriesPage() {
       models={models}
       applications={applications}
       category="checkweighers"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/commoncheckweigher_odgutf.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098786/kqahbwtwb9qj0s89rrpq.png"
       slug="products/checkweighers/icw-series"
       videoId="AtdiRp4W4K8"
       specifications={currentModel.specifications}

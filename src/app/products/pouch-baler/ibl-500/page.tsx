@@ -188,7 +188,7 @@ export default function IBL500Page() {
       models={models}
       applications={applications}
       category="pouch-baler"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945422/IBL500_au8npt.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098786/q9cecrkqu85kbd95t05o.png"
       slug="products/pouch-baler/ibl-500"
       videoId="6r6ZZAkpCoU"
       specifications={specifications}

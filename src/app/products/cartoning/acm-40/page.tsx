@@ -191,7 +191,7 @@ export default function ACM40Page() {
       models={models}
       applications={applications}
       category="cartoning"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/ACM40_szjx7l.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098784/qhdjxx3v1xynhdhzrj1e.png"
       slug="products/cartoning/acm-40"
       videoId="PM7We6vN5bo"
       specifications={specifications}

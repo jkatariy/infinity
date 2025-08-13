@@ -164,7 +164,7 @@ export default function VisionSystemsPage() {
       models={models}
       applications={applications}
       category="inspection"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/Automated_Vision_inspection_systems_btmpwk.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098783/eyabelg0f9lzx5kl5hms.png"
       slug="products/inspection/vision-systems"
       specifications={specifications}
       keyFeatures={keyFeatures}

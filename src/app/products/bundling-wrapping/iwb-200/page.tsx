@@ -177,7 +177,7 @@ export default function IWB200Page() {
       models={models}
       applications={applications}
       category="bundling-wrapping"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945430/IWB-200_qwnu0h.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098781/vmqgtzrzrbs8jiekt61w.png"
       slug="products/bundling-wrapping/iwb-200"
       videoId="NgeT9rPPSB4"
       specifications={specifications}

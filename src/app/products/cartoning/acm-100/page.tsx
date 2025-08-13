@@ -191,7 +191,7 @@ export default function ACM100Page() {
       models={models}
       applications={applications}
       category="cartoning"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/acm100_gzxghe.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098774/sqcbuioldiwnkfxjxo3l.png"
       slug="products/cartoning/acm-100"
       videoId="q9WknXtU4g4"
       specifications={specifications}

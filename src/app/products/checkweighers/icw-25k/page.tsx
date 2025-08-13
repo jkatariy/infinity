@@ -149,7 +149,7 @@ export default function ICW25KPage() {
       models={models}
       applications={applications}
       category="checkweighers"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/commoncheckweigher_odgutf.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/to7gc0wb5jq8dzm3bojs.png"
       slug="products/checkweighers/icw-25k"
       videoId="AtdiRp4W4K8"
       specifications={specifications}

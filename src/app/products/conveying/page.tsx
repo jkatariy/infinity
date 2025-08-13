@@ -15,7 +15,7 @@ const conveyingModels = [
     subtitle: 'Versatile Product Transfer and Connection System',
     description:
       'Engineered for versatile product transfer applications, connecting primary production lines with downstream operations. Features ergonomic design, two-stage height adjustment, and variable speed control with batching capabilities.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/flatbelt_conveyer_ojukjf.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098776/q3pwiyd6fgtpsmtfzk7x.png'
   },
   {
     key: 'modular-conveyor',
@@ -23,7 +23,7 @@ const conveyingModels = [
     subtitle: 'High-Capacity Interlocked Plastic Segment Conveyor',
     description:
       'Conveys high loads at high speed using interlocked plastic segments that are easily replaceable. Available in multiple chain widths and styles with robust MS/SS construction.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945423/modular_conveyer_stiian.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098787/bavrvl5lxecse2d4nsl6.png'
   },
   {
     key: 'roller-conveyor',
@@ -31,7 +31,7 @@ const conveyingModels = [
     subtitle: 'Power Roller Conveyor for High-End Automation',
     description:
       'Designed for product handling and interconnecting products during automation with ergonomic features, variable speed control, and durable construction.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945423/roller_conveyer_bbe3q5.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098782/qxhnotoahwot8qbmshvi.png'
   },
   {
     key: 'compression-conveyor',
@@ -39,7 +39,7 @@ const conveyingModels = [
     subtitle: 'Air Removal and Pouch Flattening System',
     description:
       'Removes excess air from packed pouches and flattens them for compact, uniform handling. Dual parallel conveyors with adjustable compression gap for consistent results.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945422/compression_conveyer_jybkxc.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/mujhcs3birsdowgnofjw.png'
   },
   {
     key: 'spiral-conveyor',
@@ -47,7 +47,7 @@ const conveyingModels = [
     subtitle: 'Space-Efficient Gravity-Driven Conveying Solution',
     description:
       'Space-saving vertical conveying with gravity-driven continuous flow for cartons, cases, trays, and packaged goods. Faster and more reliable than lifts.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945428/spiral_conveyers_rm914h.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098782/yzhxpcgteq0sl0rc6ugd.png'
   },
   {
     key: 'z-bucket-elevator',
@@ -55,7 +55,7 @@ const conveyingModels = [
     subtitle: 'Silent Operation Vertical Conveying Solution',
     description:
       'Versatile vertical conveying for grains, snacks, and crystalline non-sticky materials with VFD control and food-grade construction options.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945428/Z_bucket_elevator_jb7yxi.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098783/ca3y8dxlglvf3wrivxlz.png'
   },
   {
     key: 'crate-lifter',
