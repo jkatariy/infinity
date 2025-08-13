@@ -20,75 +20,73 @@ interface PackagingSolution {
 
 const packagingSolutions: PackagingSolution[] = [
   {
-    title: 'Pouch-into-Pouch',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/uyph9ght8mxfopcxjaf6.png',
-    recommendedSolutions: [
-      { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
-      { name: 'IBS-200', model: 'ibs-200', category: 'bundling-wrapping' },
-      { name: 'ISB-120', model: 'isb-120', category: 'bundling-wrapping' }
-    ]
-  },
-  {
-    title: 'Pouch-into-Bundle',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/uyph9ght8mxfopcxjaf6.png',
-    recommendedSolutions: [
-      { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
-      { name: 'IMS-800', model: 'ims-800', category: 'bundling-wrapping' },
-      { name: 'ISP-120', model: 'isp-120', category: 'bundling-wrapping' }
-    ]
-  },
-  {
-    title: 'Bottle-into-Bottle',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/mr8jazsh0r0nk3jkukkt.png',
-    recommendedSolutions: [
-      { name: 'IWB-200', model: 'iwb-200', category: 'bundling-wrapping' },
-      { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
-      { name: 'ICW-600', model: 'icw-600', category: 'checkweighers' }
-    ]
-  },
-  {
-    title: 'Pouch-into-Carton',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/mvqwctriwg6aslhkktgx.png',
-    recommendedSolutions: [
-      { name: 'ACM-40', model: 'acm-40', category: 'cartoning' },
-      { name: 'ACM-100', model: 'acm-100', category: 'cartoning' },
-      { name: 'ICW-1200', model: 'icw-1200', category: 'checkweighers' }
-    ]
-  },
-  {
-    title: 'Bottle-into-Bundle',
+    title: 'Pouch into Carton',
     imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/qrj4n9yks1hdlbkm0g9g.png',
     recommendedSolutions: [
-      { name: 'IWB-200', model: 'iwb-200', category: 'bundling-wrapping' },
-      { name: 'IMS-800', model: 'ims-800', category: 'bundling-wrapping' },
-      { name: 'Case Erector', model: 'case-erector', category: 'case-packers' }
+      { name: 'ICP-120 – Robotic Case Packer for Pouches', model: 'icp-120', category: 'case-packers' }
     ]
   },
   {
-    title: 'Blister Pack into Carton',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/lrgipcq21vhydfnrrrlw.png',
-    recommendedSolutions: [
-      { name: 'ACM-40', model: 'acm-40', category: 'cartoning' },
-      { name: 'ACM-100', model: 'acm-100', category: 'cartoning' },
-      { name: 'Vision Systems', model: 'vision-systems', category: 'inspection' }
-    ]
-  },
-  {
-    title: 'Kit Assembly',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/rgoqtzs5cxl9joyva9ry.png',
-    recommendedSolutions: [
-      { name: 'ICP-120', model: 'icp-120', category: 'case-packers' },
-      { name: 'ICB-120', model: 'icb-120', category: 'case-packers' },
-      { name: 'Modular Conveyor', model: 'modular-conveyor', category: 'conveying' }
-    ]
-  },
-  {
-    title: 'Case Packing and Palletizing',
+    title: 'Pouch into Pouch',
     imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/urcsh6rzbenrjr1kdfun.png',
     recommendedSolutions: [
-      { name: 'ICS-200', model: 'ics-200', category: 'case-packers' },
-      { name: 'Case Sealer', model: 'case-sealer', category: 'case-packers' },
-      { name: 'IBG-H8-V8', model: 'ibg-h8-v8', category: 'pouch-baler' }
+      { name: 'IBP-120 – High Speed Bundler', model: 'ibp-120', category: 'bundling-wrapping' },
+      { name: 'IBS-200 – Strip Packaging Machine', model: 'ibs-200', category: 'bundling-wrapping' }
+    ]
+  },
+  {
+    title: 'Pouch into Bag',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/mvqwctriwg6aslhkktgx.png',
+    recommendedSolutions: [
+      { name: 'IBG-H8 – Horizontal Baler', model: 'ibg-h8-v8', category: 'pouch-baler' },
+      { name: 'IBG-V8 – Vertical Baler', model: 'ibg-h8-v8', category: 'pouch-baler' },
+      { name: 'IBG-H8-V8 – Combined Bagging Machines', model: 'ibg-h8-v8', category: 'pouch-baler' }
+    ]
+  },
+  {
+    title: 'Strip into Carton',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/rv3yfohc5ghnwom8zzjc.png',
+    recommendedSolutions: [
+      { name: 'ICS-200 – Case Packer for Strip of Pouches', model: 'ics-200', category: 'case-packers' }
+    ]
+  },
+  {
+    title: 'Pouch into Bale',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/lrgipcq21vhydfnrrrlw.png',
+    recommendedSolutions: [
+      { name: 'IBL-500 – Automatic Baler', model: 'ibl-500', category: 'pouch-baler' }
+    ]
+  },
+  {
+    title: 'Product into Carton',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/rgoqtzs5cxl9joyva9ry.png',
+    recommendedSolutions: [
+      { name: 'ACM-100 – Automatic Cartoning Machine', model: 'acm-100', category: 'cartoning' },
+      { name: 'ACM-40 – Semi-Automatic Cartoning Machine', model: 'acm-40', category: 'cartoning' }
+    ]
+  },
+  {
+    title: 'Bottle into Carton',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/uyph9ght8mxfopcxjaf6.png',
+    recommendedSolutions: [
+      { name: 'ICB-120 – Case Packer for Bottles', model: 'icb-120', category: 'case-packers' }
+    ]
+  },
+  {
+    title: 'Strip into Pouch',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/mr8jazsh0r0nk3jkukkt.png',
+    recommendedSolutions: [
+      { name: 'IBS-200 – Strip Packaging Machine', model: 'ibs-200', category: 'bundling-wrapping' },
+      { name: 'IMS-800/600 – Multitrack VFFS Integration', model: 'ims-800', category: 'bundling-wrapping' }
+    ]
+  },
+  {
+    title: 'Shrink Wrapping',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755099163/xkq0ua5zarxplallh51w.png',
+    recommendedSolutions: [
+      { name: 'ISP-120 – Shrink Wrapping for Pouches', model: 'isp-120', category: 'bundling-wrapping' },
+      { name: 'IWB-200 – Shrink Wrapping for Bottles', model: 'iwb-200', category: 'bundling-wrapping' },
+      { name: 'ISB-120 – Shrink Wrapping for Bottles', model: 'isb-120', category: 'bundling-wrapping' }
     ]
   }
 ];
