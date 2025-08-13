@@ -21,7 +21,7 @@ interface PackagingSolution {
 const packagingSolutions: PackagingSolution[] = [
   {
     title: 'Pouch-into-Pouch',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBP120_edbexr.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/uyph9ght8mxfopcxjaf6.png',
     recommendedSolutions: [
       { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
       { name: 'IBS-200', model: 'ibs-200', category: 'bundling-wrapping' },
@@ -30,7 +30,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Pouch-into-Bundle',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ISP_120_lvdiwf.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/uyph9ght8mxfopcxjaf6.png',
     recommendedSolutions: [
       { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
       { name: 'IMS-800', model: 'ims-800', category: 'bundling-wrapping' },
@@ -39,7 +39,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Bottle-into-Bottle',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBL500_jsneot.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086735/mr8jazsh0r0nk3jkukkt.png',
     recommendedSolutions: [
       { name: 'IWB-200', model: 'iwb-200', category: 'bundling-wrapping' },
       { name: 'IBP-120', model: 'ibp-120', category: 'bundling-wrapping' },
@@ -48,7 +48,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Pouch-into-Carton',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ACM100_zoxmwz.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/mvqwctriwg6aslhkktgx.png',
     recommendedSolutions: [
       { name: 'ACM-40', model: 'acm-40', category: 'cartoning' },
       { name: 'ACM-100', model: 'acm-100', category: 'cartoning' },
@@ -57,7 +57,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Bottle-into-Bundle',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBG_H8_V8_iv4gin.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/qrj4n9yks1hdlbkm0g9g.png',
     recommendedSolutions: [
       { name: 'IWB-200', model: 'iwb-200', category: 'bundling-wrapping' },
       { name: 'IMS-800', model: 'ims-800', category: 'bundling-wrapping' },
@@ -66,7 +66,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Blister Pack into Carton',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ACM100_zoxmwz.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/lrgipcq21vhydfnrrrlw.png',
     recommendedSolutions: [
       { name: 'ACM-40', model: 'acm-40', category: 'cartoning' },
       { name: 'ACM-100', model: 'acm-100', category: 'cartoning' },
@@ -75,7 +75,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Kit Assembly',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ICP120_moud1x.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/rgoqtzs5cxl9joyva9ry.png',
     recommendedSolutions: [
       { name: 'ICP-120', model: 'icp-120', category: 'case-packers' },
       { name: 'ICB-120', model: 'icb-120', category: 'case-packers' },
@@ -84,7 +84,7 @@ const packagingSolutions: PackagingSolution[] = [
   },
   {
     title: 'Case Packing and Palletizing',
-    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/ICS200_ibzmih.png',
+    imageUrl: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755086734/urcsh6rzbenrjr1kdfun.png',
     recommendedSolutions: [
       { name: 'ICS-200', model: 'ics-200', category: 'case-packers' },
       { name: 'Case Sealer', model: 'case-sealer', category: 'case-packers' },
