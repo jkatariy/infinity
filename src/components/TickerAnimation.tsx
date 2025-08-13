@@ -118,7 +118,7 @@ export default function TickerAnimation() {
         setIsTyping(true);
       }
     }
-  }, [displayedText, isTyping, currentMessageIndex, messages, fallbackMessages]);
+  }, [displayedText, isTyping, currentMessageIndex, messages, fallbackMessages, isLoading]);
 
   useEffect(() => {
     const timer = setInterval(() => {

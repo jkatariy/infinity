@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 import Image from 'next/image';
 import PageContainer from '@/components/PageContainer';
 
@@ -93,12 +93,7 @@ export default function ConveyingPage() {
           ></div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative"
-        >
+        <div className="relative">
           <div className="flex items-center justify-center mb-6">
             <div
               className="inline-flex items-center px-6 py-2 rounded-full text-sm font-semibold tracking-wide"
@@ -113,19 +108,14 @@ export default function ConveyingPage() {
             </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-center mb-10"
-          >
+          <div className="text-center mb-10">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
               <span style={{ color: categoryColors.accent }}>Conveying</span> Solutions
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mt-4">
               {description}
             </p>
-          </motion.div>
+          </div>
 
           <div className="mx-auto max-w-7xl">
             <div className="flex items-center justify-between mb-4 px-1">
@@ -134,11 +124,8 @@ export default function ConveyingPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {conveyingModels.map((m, index) => (
-                <motion.div
+                <div
                   key={m.key}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
                   className="group relative rounded-2xl border bg-white transition-all duration-300 hover:shadow-lg"
                   style={{ borderColor: `${categoryColors.accent}15` }}
                 >
@@ -164,7 +151,7 @@ export default function ConveyingPage() {
                       {m.description}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -184,7 +171,7 @@ export default function ConveyingPage() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </PageContainer>
   );

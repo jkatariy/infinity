@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -36,8 +36,7 @@ export default function SearchPage() {
   const router = useRouter();
 
   // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (searchQuery: string, filter: string) => {
+  const debouncedSearch = useMemo(() => debounce(async (searchQuery: string, filter: string) => {
       if (!searchQuery.trim()) {
         setResults([]);
         setMeta(null);
@@ -82,9 +81,7 @@ export default function SearchPage() {
       } finally {
         setLoading(false);
       }
-    }, 300),
-    []
-  );
+    }, 300), []);
 
   // Effect to trigger search
   useEffect(() => {
