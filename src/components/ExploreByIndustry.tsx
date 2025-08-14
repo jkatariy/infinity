@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface RecommendedSolution {
   name: string;
@@ -127,6 +127,23 @@ const ExploreByIndustry = () => {
     closeModal();
   };
 
+  // Prevent background scroll/jitter when modal is open (especially on iOS Safari)
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalTouchAction = (document.body.style as any).touchAction;
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+      (document.body.style as any).touchAction = 'none';
+    } else {
+      document.body.style.overflow = originalOverflow || '';
+      (document.body.style as any).touchAction = originalTouchAction || '';
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow || '';
+      (document.body.style as any).touchAction = originalTouchAction || '';
+    };
+  }, [showModal]);
+
   // Mobile slider: treat as a click only if the finger didn't move (avoid accidental taps during horizontal swipe)
   const handlePointerDown = (e: React.PointerEvent) => {
     pointerStartRef.current = { x: e.clientX, y: e.clientY };
@@ -171,7 +188,7 @@ const ExploreByIndustry = () => {
         {/* Packaging Solutions Slider */}
         {/* Mobile: single-line horizontal slider */}
         <div className="md:hidden">
-          <div className="overflow-x-auto no-scrollbar" style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' }}>
+          <div className="overflow-x-auto no-scrollbar" style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' as any }}>
             <div className="flex gap-4 px-1 snap-x snap-mandatory">
               {packagingSolutions.map((solution, index) => (
                 <motion.div
