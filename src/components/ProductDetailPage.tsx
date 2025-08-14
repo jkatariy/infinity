@@ -143,6 +143,7 @@ interface ProductDetailPageProps {
   image: string;
   slug: string;
   videoId?: string;
+  videoIds?: string[];
   specifications?: Specification[];
   keyFeatures?: string[];
   technicalData?: {
@@ -167,6 +168,7 @@ export default function ProductDetailPage({
   image,
   slug,
   videoId,
+  videoIds,
   specifications = [],
   keyFeatures = [],
   technicalData,
@@ -489,7 +491,7 @@ export default function ProductDetailPage({
       </div>
 
       {/* Watch Demo Video Section - Clean, Harmonious Layout */}
-      {videoId && (
+      {(videoIds && videoIds.length > 0) || videoId ? (
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -504,18 +506,30 @@ export default function ProductDetailPage({
               <div className="absolute -top-3 -left-3 w-7 h-7 border-t-4 border-l-4 rounded-tl-xl" style={{ borderColor: colors.accent }}></div>
               <div className="absolute -bottom-3 -right-3 w-7 h-7 border-b-4 border-r-4 rounded-br-xl" style={{ borderColor: colors.accent }}></div>
               <div className="bg-white rounded-2xl shadow-lg px-0 py-0 sm:px-6 sm:py-6">
-                <div className="flex flex-col md:flex-row md:items-center md:gap-12">
-                  <div className="w-full flex justify-center">
-                    <div className="max-w-2xl w-full">
-                      <WatchDemo videoId={videoId} title={title} />
+                {videoIds && videoIds.length >= 2 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {videoIds.slice(0, 2).map((vid) => (
+                      <div key={vid} className="w-full flex justify-center">
+                        <div className="max-w-xl w-full">
+                          <WatchDemo videoId={vid} title={title} hideTitle={true} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col md:flex-row md:items-center md:gap-12">
+                    <div className="w-full flex justify-center">
+                      <div className="max-w-2xl w-full">
+                        <WatchDemo videoId={videoId} title={title} />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
         </motion.section>
-      )}
+      ) : null}
 
       {/* Model Selector Section - Below Video */}
       {modelSelector && (

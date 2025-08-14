@@ -154,7 +154,8 @@ export default function CaseSealerPage() {
       category="case-packers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/lphxuwk9yeykyaojtmxx.png"
       slug="products/case-packers/case-sealer"
-      videoId="ojZUYCiRVEV"
+      videoId="ojzUYCiRvVE"
+      videoIds={["ojzUYCiRvVE", "MKtm_gZgRy0"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

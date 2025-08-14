@@ -151,7 +151,8 @@ export default function ICW6000Page() {
       category="checkweighers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178600/h99w6hq4fzdkuwv0mitr.png"
       slug="products/checkweighers/icw-6000"
-      videoId="AtdiRp4W4K8"
+      videoId="AcGw5jiQwa4"
+      videoIds={["AcGw5jiQwa4", "W8JTw3fxgO0"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

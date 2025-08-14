@@ -193,7 +193,8 @@ export default function ACM40Page() {
       category="cartoning"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098784/qhdjxx3v1xynhdhzrj1e.png"
       slug="products/cartoning/acm-40"
-      videoId="PM7We6vN5bo"
+      videoId="q9WkntXtug4"
+      videoIds={["q9WkntXtug4", "uU5H_GOv7tY"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

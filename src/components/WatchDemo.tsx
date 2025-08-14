@@ -6,9 +6,10 @@ import { motion } from 'framer-motion';
 interface WatchDemoProps {
   videoId?: string;
   title: string;
+  hideTitle?: boolean;
 }
 
-export default function WatchDemo({ videoId = 'DEFAULT_VIDEO_ID', title }: WatchDemoProps) {
+export default function WatchDemo({ videoId = 'DEFAULT_VIDEO_ID', title, hideTitle = false }: WatchDemoProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [videoError, setVideoError] = useState(false);
 
@@ -64,7 +65,9 @@ export default function WatchDemo({ videoId = 'DEFAULT_VIDEO_ID', title }: Watch
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Watch Demo</h2>
+      {!hideTitle && (
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Watch Demo</h2>
+      )}
       
       <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden group hover:border-blue-500/50 transition-all duration-300">
         {/* Engineering corner accents */}

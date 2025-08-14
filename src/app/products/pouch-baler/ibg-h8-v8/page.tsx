@@ -238,7 +238,8 @@ export default function IBGH8V8Page() {
       category="pouch-baler"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098788/fycdkeggbzabb7ngmdje.jpg"
       slug="products/pouch-baler/ibg-h8-v8"
-      videoId="binS8h_n1bU"
+      videoId="bins8h_n1bU"
+      videoIds={["bins8h_n1bU", "DOJaJa3Sak4"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

@@ -214,7 +214,8 @@ export default function IMS800Page() {
       category="bundling-wrapping"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/ilnnb2uya0xricuymb8d.png"
       slug="products/bundling-wrapping/ims-800"
-      videoId="NgeT9rPPSB4"
+      videoId="yM23R3a3sbs"
+      videoIds={["yM23R3a3sbs", "wUqS0YeglFI"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

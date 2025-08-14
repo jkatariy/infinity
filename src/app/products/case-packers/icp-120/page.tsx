@@ -147,7 +147,8 @@ export default function ICP120Page() {
       category="Case Packers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945423/icp-120_c9k0w8.png"
       slug="icp-120"
-      videoId="3nlr_Ju6hkw"
+      videoId="MKtm_gZgRy0"
+      videoIds={["MKtm_gZgRy0", "vLgF0k2zdVo"]}
       technicalData={technicalData}
     />
   );

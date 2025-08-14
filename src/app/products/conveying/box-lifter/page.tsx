@@ -89,7 +89,8 @@ export default function BoxLifterPage() {
       category="Conveying Solutions"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178596/lofywz27dqkb595tfhkd.png"
       slug="box-lifter"
-      videoId="AtdiRp4W4K8"
+      videoId="tMLaXUY9cJk"
+      videoIds={["tMLaXUY9cJk", "BPVQxTkLoZM"]}
     />
   );
 } 

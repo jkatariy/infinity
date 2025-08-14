@@ -150,7 +150,8 @@ export default function ICW1200Page() {
       category="checkweighers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/nsj6z12d9kqpgeklswgq.png"
       slug="products/checkweighers/icw-1200"
-      videoId="AtdiRp4W4K8"
+      videoId="AcGw5jiQwa4"
+      videoIds={["AcGw5jiQwa4", "W8JTw3fxgO0"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

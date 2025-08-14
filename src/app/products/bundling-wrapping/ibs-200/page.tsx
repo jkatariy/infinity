@@ -197,7 +197,8 @@ export default function IBS200Page() {
       category="bundling-wrapping"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/no7bf1acf58hgfrvwmnp.png"
       slug="products/bundling-wrapping/ibs-200"
-      videoId="NgeT9rPPSB4"
+      videoId="M_2HgD2j33Q"
+      videoIds={["M_2HgD2j33Q", "wUqS0YeglFI"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

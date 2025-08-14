@@ -166,7 +166,8 @@ export default function ICS200Page() {
       category="case-packers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098778/icqycnzcjm2caqhemj5x.png"
       slug="products/case-packers/ics-200"
-      videoId="vLgF0k2zdVo"
+      videoId="3n1r_Ju6khw"
+      videoIds={["3n1r_Ju6khw", "vLgF0k2zdVo"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

@@ -227,7 +227,8 @@ export default function IBP120Page() {
       category="bundling-wrapping"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/hjmnoiqzl3fosroitm4q.png"
       slug="products/bundling-wrapping/ibp-120"
-      videoId="NgeT9rPPSB4"
+      videoId="bfiBEKKy4tI"
+      videoIds={["bfiBEKKy4tI", "zWh1q4MoS8U"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

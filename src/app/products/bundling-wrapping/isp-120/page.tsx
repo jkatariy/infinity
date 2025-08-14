@@ -185,6 +185,7 @@ export default function ISP120Page() {
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/qw4z3foigvwo02hce7jp.png"
       slug="products/bundling-wrapping/isp-120"
       videoId="NgeT9rPPSB4"
+      videoIds={["NgeT9rPPSB4", "NMCs_fc0K2c"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

@@ -172,7 +172,8 @@ export default function ICB120Page() {
       category="case-packers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/ICB120_case_packer_bottles_mqhvdm.png"
       slug="products/case-packers/icb-120"
-      videoId="2RzZ5rGCq3A"
+      videoId="MKtm_gZgRy0"
+      videoIds={["MKtm_gZgRy0", "vLgF0k2zdVo"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

@@ -179,7 +179,8 @@ export default function IWB200Page() {
       category="bundling-wrapping"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098781/vmqgtzrzrbs8jiekt61w.png"
       slug="products/bundling-wrapping/iwb-200"
-      videoId="NgeT9rPPSB4"
+      videoId="NMCs_fc0K2c"
+      videoIds={["NMCs_fc0K2c", "NgeT9rPPSB4"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

@@ -156,7 +156,8 @@ export default function CaseErectorPage() {
       category="case-packers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098774/nu2tjyq4jfbjxoeisycb.png"
       slug="products/case-packers/case-erector"
-      videoId="ojZUYCiRVEV"
+      videoId="ojzUYCiRvVE"
+      videoIds={["ojzUYCiRvVE", "MKtm_gZgRy0"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}

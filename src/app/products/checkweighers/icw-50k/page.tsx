@@ -151,7 +151,8 @@ export default function ICW50KPage() {
       category="checkweighers"
       image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/qwdbgrhu0duvwvui6i3t.png"
       slug="products/checkweighers/icw-50k"
-      videoId="AtdiRp4W4K8"
+      videoId="AcGw5jiQwa4"
+      videoIds={["AcGw5jiQwa4", "W8JTw3fxgO0"]}
       specifications={specifications}
       keyFeatures={keyFeatures}
       technicalData={technicalData}
