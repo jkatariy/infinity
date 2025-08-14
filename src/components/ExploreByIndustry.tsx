@@ -124,23 +124,44 @@ const ExploreByIndustry = () => {
 
   const redirectToModel = (model: string, category: string) => {
     router.push(`/products/${category}/${model}`);
-    closeModal();
   };
 
   // Prevent background scroll/jitter when modal is open (especially on iOS Safari)
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    const originalTouchAction = (document.body.style as any).touchAction;
+    // Robust iOS-friendly scroll lock using fixed positioning
+    const { scrollY } = window;
     if (showModal) {
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-      (document.body.style as any).touchAction = 'none';
     } else {
-      document.body.style.overflow = originalOverflow || '';
-      (document.body.style as any).touchAction = originalTouchAction || '';
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (top) {
+        const y = parseInt(top, 10);
+        window.scrollTo(0, -y);
+      }
     }
     return () => {
-      document.body.style.overflow = originalOverflow || '';
-      (document.body.style as any).touchAction = originalTouchAction || '';
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (top) {
+        const y = parseInt(top, 10);
+        window.scrollTo(0, -y);
+      }
     };
   }, [showModal]);
 
@@ -347,15 +368,19 @@ const ExploreByIndustry = () => {
         {/* Modal */}
         {showModal && selectedSolution && (
           <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:backdrop-blur-sm"
+            style={{ overscrollBehavior: 'contain' as any }}
             onClick={closeModal}
+            role="dialog"
+            aria-modal="true"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
               className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 p-8 relative"
               onClick={(e) => e.stopPropagation()}
+              style={{ willChange: 'transform' as any }}
             >
               {/* Close button */}
               <button
@@ -385,32 +410,30 @@ const ExploreByIndustry = () => {
               {/* Recommended solutions */}
               <div className="space-y-3">
                 {selectedSolution.recommendedSolutions.map((machine, index) => (
-                  <motion.div
+                  <motion.button
                     key={machine.name}
+                    type="button"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
+                    onClick={() => redirectToModel(machine.model, machine.category)}
+                    onTouchEnd={(e) => { e.preventDefault(); redirectToModel(machine.model, machine.category); }}
+                    className="w-full text-left p-4 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-300 group"
                   >
-                    <Link
-                      href={`/products/${machine.category}/${machine.model}`}
-                      onClick={closeModal}
-                      className="w-full block text-left p-4 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-300 group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 group-hover:text-blue-900">
-                            {machine.name}
-                          </h4>
-                          <p className="text-sm text-gray-600 capitalize">
-                            {machine.category.replace('-', ' ')}
-                          </p>
-                        </div>
-                        <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 group-hover:text-blue-900">
+                          {machine.name}
+                        </h4>
+                        <p className="text-sm text-gray-600 capitalize">
+                          {machine.category.replace('-', ' ')}
+                        </p>
                       </div>
-                    </Link>
-                  </motion.div>
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </motion.button>
                 ))}
               </div>
 
