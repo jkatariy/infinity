@@ -146,7 +146,7 @@ export default function ISB120Page() {
       models={models}
       applications={applications}
       category="bundling-wrapping"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/commoncheckweigher_odgutf.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178600/vujuj4xsre8embtxwwdb.png"
       slug="products/bundling-wrapping/isb-120"
       videoId="NgeT9rPPSB4"
       specifications={specifications}

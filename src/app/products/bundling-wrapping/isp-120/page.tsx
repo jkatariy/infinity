@@ -182,7 +182,7 @@ export default function ISP120Page() {
       models={models}
       applications={applications}
       category="bundling-wrapping"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/ISP-120_hiu8xh.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/qw4z3foigvwo02hce7jp.png"
       slug="products/bundling-wrapping/isp-120"
       videoId="NgeT9rPPSB4"
       specifications={specifications}

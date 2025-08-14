@@ -195,7 +195,7 @@ export default function IBS200Page() {
       models={models}
       applications={applications}
       category="bundling-wrapping"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBS-200_y2muoe.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/no7bf1acf58hgfrvwmnp.png"
       slug="products/bundling-wrapping/ibs-200"
       videoId="NgeT9rPPSB4"
       specifications={specifications}

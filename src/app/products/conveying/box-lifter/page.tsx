@@ -87,7 +87,7 @@ export default function BoxLifterPage() {
       models={models}
       applications={applications}
       category="Conveying Solutions"
-      image="/images/products/box-lifter.jpg"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178596/lofywz27dqkb595tfhkd.png"
       slug="box-lifter"
       videoId="AtdiRp4W4K8"
     />

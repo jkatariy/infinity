@@ -149,7 +149,7 @@ export default function ICW6000Page() {
       models={models}
       applications={applications}
       category="checkweighers"
-      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1752945421/commoncheckweigher_odgutf.png"
+      image="https://res.cloudinary.com/dbogkgabu/image/upload/v1755178600/h99w6hq4fzdkuwv0mitr.png"
       slug="products/checkweighers/icw-6000"
       videoId="AtdiRp4W4K8"
       specifications={specifications}

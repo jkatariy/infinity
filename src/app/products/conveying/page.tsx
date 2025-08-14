@@ -63,7 +63,7 @@ const conveyingModels = [
     subtitle: 'Vertical Material Transfer Solution',
     description:
       'Efficient lifting of cartons or crates to specified height for loading into palletizers. VFD-controlled operation with robust construction.',
-    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/Vertical_crate_lifters_bovfwa.png'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/hgmojw4whm9xyqvuqjao.png'
   },
   {
     key: 'box-lifter',
@@ -71,7 +71,7 @@ const conveyingModels = [
     subtitle: 'High-Speed Vertical Material Transfer Solution',
     description:
       'Automatic up-and-down movement of boxes with throughput up to 50 crates per minute and discharge heights up to 12 meters.',
-    image: '/images/products/box-lifter.jpg'
+    image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178596/lofywz27dqkb595tfhkd.png'
   }
 ];
 
