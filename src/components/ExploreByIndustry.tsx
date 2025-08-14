@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface RecommendedSolution {
   name: string;
@@ -96,6 +96,7 @@ const ExploreByIndustry = () => {
   const [selectedSolution, setSelectedSolution] = useState<PackagingSolution | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const itemsPerSlide = 4;
   const totalSlides = Math.ceil(packagingSolutions.length / itemsPerSlide);
@@ -126,6 +127,26 @@ const ExploreByIndustry = () => {
     closeModal();
   };
 
+  // Mobile slider: treat as a click only if the finger didn't move (avoid accidental taps during horizontal swipe)
+  const handlePointerDown = (e: React.PointerEvent) => {
+    pointerStartRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerUp = (solution: PackagingSolution) => (e: React.PointerEvent) => {
+    const start = pointerStartRef.current;
+    pointerStartRef.current = null;
+    if (!start) return;
+    const dx = Math.abs(e.clientX - start.x);
+    const dy = Math.abs(e.clientY - start.y);
+    if (dx < 10 && dy < 10) {
+      openModal(solution);
+    }
+  };
+
+  const handlePointerCancel = () => {
+    pointerStartRef.current = null;
+  };
+
   return (
     <section className="bg-white py-20 font-product-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -150,7 +171,7 @@ const ExploreByIndustry = () => {
         {/* Packaging Solutions Slider */}
         {/* Mobile: single-line horizontal slider */}
         <div className="md:hidden">
-          <div className="overflow-x-auto no-scrollbar">
+          <div className="overflow-x-auto no-scrollbar" style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' }}>
             <div className="flex gap-4 px-1 snap-x snap-mandatory">
               {packagingSolutions.map((solution, index) => (
                 <motion.div
@@ -160,7 +181,11 @@ const ExploreByIndustry = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="relative bg-white border border-gray-200 p-6 h-56 min-w-[260px] snap-start group hover:border-blue-500/50 transition-all duration-300 cursor-pointer"
-                  onClick={() => openModal(solution)}
+                  onPointerDown={handlePointerDown}
+                  onPointerUp={handlePointerUp(solution)}
+                  onPointerCancel={handlePointerCancel}
+                  role="button"
+                  tabIndex={0}
                 >
                   {/* Engineering corner accents */}
                   <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300" />
