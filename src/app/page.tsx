@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import HeroVideo from '@/components/HeroVideo';
 const TickerAnimation = dynamic(() => import('@/components/TickerAnimation'), { ssr: true, loading: () => null });
-const ExploreByIndustry = dynamic(() => import('@/components/ExploreByIndustry'), { ssr: true, loading: () => null });
+const ExploreByIndustry = dynamic(() => import('@/components/ExploreByIndustry'), { ssr: false, loading: () => null });
 const AboutUs = dynamic(() => import('@/components/AboutUs'), { ssr: true, loading: () => null });
 // Heavy media/iframes: safely hydrate on client only
 const FeaturedVideo = dynamic(() => import('@/components/FeaturedVideo'), { ssr: false, loading: () => null });

@@ -254,9 +254,24 @@ const solutionImageMap: Record<string, string> = {
   'pouch-to-bale': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBL500_jsneot.png',
   'pouch-to-hdpe': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746229/IBG_H8_V8_iv4gin.png',
   'case-packing': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1754746230/ICP120_moud1x.png',
-  // Bottle-into-Shrink image not provided → fallback to icon
-  // Strip-into-Pouch image not provided → fallback to icon
-  // quality-control (checkweighers) and material-handling (conveying) intentionally excluded
+  'bottle-to-shrink': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098781/vmqgtzrzrbs8jiekt61w.png',
+  'strip-to-pouch': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/IBS-200_y2muoe.png',
+  'quality-control': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098786/kqahbwtwb9qj0s89rrpq.png',
+  'material-handling': 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098787/bavrvl5lxecse2d4nsl6.png',
+};
+
+// Preferred model mapping per solution to improve matching quality
+const solutionToPreferredModelIds: Record<string, string[]> = {
+  'pouch-to-pouch': ['ibp-120'],
+  'strip-to-pouch': ['ibs-200', 'ims-800'],
+  'pouch-to-shrink': ['isp-120'],
+  'bottle-to-shrink': ['iwb-120'],
+  'product-to-carton': ['acm-100', 'acm-40'],
+  'pouch-to-bale': ['ibl-500'],
+  'pouch-to-hdpe': ['ibg-h8', 'ibg-v8'],
+  'case-packing': ['icp-120', 'case-erector', 'case-sealer'],
+  'quality-control': ['icw-600', 'icw-1200', 'icw-6000', 'icw-25k', 'icw-50k'],
+  'material-handling': ['flat-belt-conveyor']
 };
 
 // Comprehensive product models database with actual specifications
@@ -841,7 +856,7 @@ export default function ProductSelectorPage() {
   });
   const [recommendations, setRecommendations] = useState<ProductModel[]>([]);
 
-  // Enhanced matching algorithm
+    // Enhanced matching algorithm
   const calculateRecommendations = () => {
     let scoredModels = productModels.map(model => {
       let score = 0;
@@ -856,7 +871,10 @@ export default function ProductSelectorPage() {
       // Solution compatibility (20% weight)
       maxScore += 20;
       const solution = packagingSolutions.find(s => s.id === selectedSolution);
-      if (solution && solution.productTypes.some(type => 
+      const preferredIds = selectedSolution ? solutionToPreferredModelIds[selectedSolution] : undefined;
+      if (preferredIds && preferredIds.includes(model.id)) {
+        score += 20;
+      } else if (solution && solution.productTypes.some(type => 
         model.specs.productType.some(modelType => 
           modelType.toLowerCase().includes(type.toLowerCase()) || 
           type.toLowerCase().includes(modelType.toLowerCase())
@@ -991,7 +1009,7 @@ export default function ProductSelectorPage() {
             </div>
             <div className="text-center text-sm text-gray-600">
               {stage === 1 && "Select Your Industry"}
-              {stage === 2 && "Choose Packaging Solution"}
+              {stage === 2 && "Packaging Solutions"}
               {stage === 3 && "Product Requirements"}
               {stage === 5 && "Recommended Solutions"}
             </div>
@@ -1050,9 +1068,12 @@ export default function ProductSelectorPage() {
             {/* Stage 2: Solution Selection */}
             {stage === 2 && (
               <div className="bg-white rounded-2xl shadow-xl p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                  What type of packaging solution do you need?
+                <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+                  Packaging Solutions
                 </h2>
+                <p className="text-gray-600 text-center mb-6">
+                  Explore our comprehensive packaging automation solutions designed for various product types and industry requirements.
+                </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {packagingSolutions
                     .filter(solution => 
