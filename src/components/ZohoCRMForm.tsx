@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuoteForm } from '@/hooks/useZohoIntegration';
 
 interface ZohoCRMFormProps {
   productName?: string;
@@ -46,13 +47,36 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
 }) => {
   const [formData, setFormData] = useState({
     firstName: '',
+    lastName: '',
     company: '',
     email: '',
     phone: '',
     selectedModel: productName || '',
     requirements: '',
+    budgetRange: '',
+    timeline: '',
   });
-  const [loading, setLoading] = useState(false);
+
+  // Use the Zoho integration hook
+  const { 
+    submitToZoho, 
+    isLoading, 
+    isAuthenticated, 
+    needsAuth, 
+    initiateAuth,
+    lastResponse 
+  } = useQuoteForm({
+    onSuccess: (response) => {
+      console.log('Quote submitted successfully:', response.zohoId);
+      setSubmitted(true);
+      if (onSuccess) onSuccess();
+    },
+    onError: (error) => {
+      console.error('Quote submission error:', error);
+      setError(error);
+    },
+  });
+
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,50 +91,54 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    try {
-      const response = await fetch('/api/chatbot-leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.firstName,
-          email: formData.email,
-          phone: formData.phone,
-          model_name: formData.selectedModel || productName || '',
-          model_label: formData.selectedModel || productName || 'General Inquiry',
-          category: currentCategory,
-          lead_source: leadSource,
-          notes: `Company: ${formData.company}\nRequirements: ${formData.requirements}`,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to submit form');
+    // Check authentication if needed
+    if (needsAuth) {
+      const shouldAuth = window.confirm(
+        'Admin authentication required for Zoho CRM integration. Would you like to authenticate now?'
+      );
+      if (shouldAuth) {
+        initiateAuth();
       }
-
-      setSubmitted(true);
-      if (onSuccess) onSuccess();
-    } catch (error: any) {
-      setError(error.message || 'An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    // Prepare data for Zoho CRM
+    const zohoData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName || 'Unknown', // Fallback for lastName
+      email: formData.email,
+      phone: formData.phone,
+      company: formData.company,
+      message: formData.requirements,
+      productInterest: formData.selectedModel || productName || 'General Inquiry',
+      machineType: formData.selectedModel || productName || '',
+      budgetRange: formData.budgetRange,
+      timeline: formData.timeline,
+      leadSource: leadSource,
+      inquiryType: 'Quote Request',
+      leadStatus: 'Quote Requested',
+      rating: 'Hot',
+      industry: currentCategory ? currentCategory.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : undefined,
+      description: `Quote request for ${formData.selectedModel || productName || 'packaging automation solution'}. Requirements: ${formData.requirements}`,
+      additionalRequirements: `Category: ${currentCategory}, Selected Model: ${formData.selectedModel}`,
+    };
+
+    await submitToZoho(zohoData);
   };
 
   const resetForm = () => {
     setFormData({
       firstName: '',
+      lastName: '',
       company: '',
       email: '',
       phone: '',
       selectedModel: productName || '',
       requirements: '',
+      budgetRange: '',
+      timeline: '',
     });
     setSubmitted(false);
     setError(null);
@@ -151,10 +179,15 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Thank You!</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">Quote Request Submitted!</h3>
           <p className="text-gray-600 mb-6">
-            Your inquiry has been submitted successfully. Our engineering team will contact you within 24 hours to discuss your requirements.
+            Your quote request has been successfully submitted to our Zoho CRM system. Our engineering team will contact you within 24 hours with detailed pricing and specifications.
           </p>
+          {lastResponse && lastResponse.zohoId && (
+            <p className="text-xs text-gray-500 mb-4">
+              Reference ID: {lastResponse.zohoId}
+            </p>
+          )}
           <div className="space-y-3">
             <button
               onClick={resetForm}
@@ -213,6 +246,26 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
             Product: {productName}
           </p>
         )}
+        
+        {/* Zoho CRM Status */}
+        <div className="mt-3 flex items-center space-x-2 text-xs">
+          {isAuthenticated === true && (
+            <div className="flex items-center text-green-600">
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Connected to Zoho CRM
+            </div>
+          )}
+          {isAuthenticated === false && (
+            <div className="flex items-center text-orange-600">
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              Admin authentication required
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Form */}
@@ -228,21 +281,39 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
-              style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-              placeholder="Enter your full name"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                First Name *
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
+                placeholder="First name"
+              />
+            </div>
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
+                placeholder="Last name"
+              />
+            </div>
           </div>
 
           <div>
@@ -339,9 +410,56 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
             </div>
           )}
 
+          {/* Budget and Timeline */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
+                Budget Range
+              </label>
+              <select
+                id="budgetRange"
+                name="budgetRange"
+                value={formData.budgetRange}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer"
+                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
+              >
+                <option value="">Select budget range...</option>
+                <option value="Under 5 Lakhs">Under ₹5 Lakhs</option>
+                <option value="5-10 Lakhs">₹5-10 Lakhs</option>
+                <option value="10-25 Lakhs">₹10-25 Lakhs</option>
+                <option value="25-50 Lakhs">₹25-50 Lakhs</option>
+                <option value="50 Lakhs - 1 Crore">₹50 Lakhs - 1 Crore</option>
+                <option value="Above 1 Crore">Above ₹1 Crore</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-2">
+                Project Timeline
+              </label>
+              <select
+                id="timeline"
+                name="timeline"
+                value={formData.timeline}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer"
+                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
+              >
+                <option value="">Select timeline...</option>
+                <option value="Immediate (Within 1 month)">Immediate (Within 1 month)</option>
+                <option value="1-3 months">1-3 months</option>
+                <option value="3-6 months">3-6 months</option>
+                <option value="6-12 months">6-12 months</option>
+                <option value="Beyond 12 months">Beyond 12 months</option>
+                <option value="Just researching">Just researching</option>
+              </select>
+            </div>
+          </div>
+
           <div>
             <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 mb-2">
-              Requirements *
+              Requirements & Specifications *
             </label>
             <textarea
               id="requirements"
@@ -358,31 +476,38 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
 
           <motion.button
             type="submit"
-            disabled={loading}
-            whileHover={{ scale: loading ? 1 : 1.02 }}
-            whileTap={{ scale: loading ? 1 : 0.98 }}
+            disabled={isLoading}
+            whileHover={{ scale: isLoading ? 1 : 1.02 }}
+            whileTap={{ scale: isLoading ? 1 : 0.98 }}
             className={`w-full px-6 py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 ${
-              loading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'
+              isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'
             }`}
             style={{ 
               backgroundColor: colors.accent,
               color: 'white'
             }}
           >
-            {loading ? (
+            {isLoading ? (
               <>
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Submitting...</span>
+                <span>Submitting to Zoho CRM...</span>
+              </>
+            ) : needsAuth ? (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>Authenticate Zoho CRM</span>
               </>
             ) : (
               <>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <span>Submit Inquiry</span>
+                <span>Submit Quote Request</span>
               </>
             )}
           </motion.button>
@@ -390,7 +515,7 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
 
         {/* Trust Indicators */}
         <div className="mt-6 pt-6 border-t border-gray-200">
-          <div className="grid grid-cols-3 gap-4 text-center text-sm">
+          <div className="grid grid-cols-4 gap-3 text-center text-sm">
             <div>
               <div className="font-semibold text-gray-900">24h</div>
               <div className="text-gray-600 text-xs">Response Time</div>
@@ -402,6 +527,10 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
             <div>
               <div className="font-semibold text-gray-900">ISO</div>
               <div className="text-gray-600 text-xs">9001:2015 Certified</div>
+            </div>
+            <div>
+              <div className="font-semibold text-gray-900">CRM</div>
+              <div className="text-gray-600 text-xs">Zoho Integrated</div>
             </div>
           </div>
         </div>
