@@ -243,5 +243,8 @@ Your quote request system is now powered by enterprise-grade CRM integration! �
 
 - **Authenticate Zoho**: Visit any quote form → Click authentication
 - **Test Quote Form**: `/products/cartoning/acm-100/` → Scroll to quote section
+- **Test Quote Form**: https://infinitysols.vercel.app/products/cartoning/acm-100/
+- **Zoho Test Page**: https://infinitysols.vercel.app/test-zoho
+- **Environment Debug**: https://infinitysols.vercel.app/debug-env
 - **Check CRM**: [Zoho CRM Leads Module](https://crm.zoho.com/crm/org/leads/Home/leads)
 - **API Documentation**: `/ZOHO_ENVIRONMENT_SETUP.md`
