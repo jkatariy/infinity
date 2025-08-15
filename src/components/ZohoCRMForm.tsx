@@ -71,15 +71,20 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
     setError(null);
 
     try {
-      const response = await fetch('/api/zoho-crm', {
+      const response = await fetch('/api/chatbot-leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
-          leadSource,
-          productInterest: formData.selectedModel || productName || 'General Inquiry',
+          name: formData.firstName,
+          email: formData.email,
+          phone: formData.phone,
+          model_name: formData.selectedModel || productName || '',
+          model_label: formData.selectedModel || productName || 'General Inquiry',
+          category: currentCategory,
+          lead_source: leadSource,
+          notes: `Company: ${formData.company}\nRequirements: ${formData.requirements}`,
         }),
       });
 

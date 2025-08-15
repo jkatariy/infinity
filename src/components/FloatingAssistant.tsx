@@ -316,15 +316,45 @@ export default function FloatingAssistant() {
                     />
                     <div className="flex gap-2 pt-1">
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           if (!lead.name || !lead.email || !lead.phone) {
                             setLeadError('Please fill in name, email, and phone.');
                             return;
                           }
                           setLeadError(null);
-                          pushMessage({ role: 'user', text: `${lead.name} • ${lead.email} • ${lead.phone}` });
-                          pushMessage({ role: 'bot', text: 'Thanks! What would you like to do next?' });
-                          setStep('action');
+                          
+                          try {
+                            // Submit lead to Supabase
+                            const response = await fetch('/api/chatbot-leads', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                name: lead.name,
+                                email: lead.email,
+                                phone: lead.phone,
+                                industry: selectedIndustry,
+                                category: selectedCategory,
+                                model_name: selectedModel?.name,
+                                model_label: selectedModel?.label,
+                                lead_source: 'Chatbot Assistant',
+                                notes: `Interested in ${selectedModel?.label} for ${selectedIndustry} industry`
+                              }),
+                            });
+
+                            const result = await response.json();
+
+                            if (!response.ok) {
+                              throw new Error(result.error || 'Failed to submit lead');
+                            }
+
+                            pushMessage({ role: 'user', text: `${lead.name} • ${lead.email} • ${lead.phone}` });
+                            pushMessage({ role: 'bot', text: 'Thanks! Your information has been saved. What would you like to do next?' });
+                            setStep('action');
+                          } catch (error: any) {
+                            setLeadError(error.message || 'Failed to save your information. Please try again.');
+                          }
                         }}
                         className="flex-1 px-4 py-2 rounded-lg text-white text-sm hover:opacity-95"
                         style={{ backgroundColor: BRAND_COLORS.primary.blue }}
