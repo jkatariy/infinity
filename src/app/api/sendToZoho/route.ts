@@ -123,18 +123,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Get access token from cookies
-    let accessToken = request.cookies.get('zoho_access_token')?.value;
+    let accessToken: string | undefined = request.cookies.get('zoho_access_token')?.value;
     const refreshToken = request.cookies.get('zoho_refresh_token')?.value;
 
     // If no access token, try to refresh
     if (!accessToken && refreshToken) {
-      accessToken = await refreshAccessToken(refreshToken);
-      if (!accessToken) {
+      const newAccessToken = await refreshAccessToken(refreshToken);
+      if (!newAccessToken) {
         return NextResponse.json(
           { error: 'Authentication required. Please reconnect to Zoho CRM.' },
           { status: 401 }
         );
       }
+      accessToken = newAccessToken;
     }
 
     if (!accessToken) {
@@ -209,7 +210,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Update access token cookie if we refreshed it
-      if (refreshToken && accessToken !== request.cookies.get('zoho_access_token')?.value) {
+      if (refreshToken && accessToken && accessToken !== request.cookies.get('zoho_access_token')?.value) {
         response.cookies.set('zoho_access_token', accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
