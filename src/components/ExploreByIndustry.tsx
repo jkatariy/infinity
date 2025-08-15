@@ -176,13 +176,23 @@ const ExploreByIndustry = () => {
     if (!start) return;
     const dx = Math.abs(e.clientX - start.x);
     const dy = Math.abs(e.clientY - start.y);
+    // Only treat as click if movement is minimal (threshold: 10px)
     if (dx < 10 && dy < 10) {
+      e.preventDefault();
+      e.stopPropagation();
       openModal(solution);
     }
   };
 
   const handlePointerCancel = () => {
     pointerStartRef.current = null;
+  };
+
+  // Desktop click handler - cleaner separation from mobile
+  const handleDesktopClick = (solution: PackagingSolution) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openModal(solution);
   };
 
   return (
@@ -218,12 +228,19 @@ const ExploreByIndustry = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="relative bg-white border border-gray-200 p-6 h-56 min-w-[260px] snap-start group hover:border-blue-500/50 transition-all duration-300 cursor-pointer"
+                  className="relative bg-white border border-gray-200 p-6 h-56 min-w-[260px] snap-start group hover:border-blue-500/50 hover:shadow-md transition-all duration-300 cursor-pointer touch-manipulation"
                   onPointerDown={handlePointerDown}
                   onPointerUp={handlePointerUp(solution)}
                   onPointerCancel={handlePointerCancel}
                   role="button"
                   tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openModal(solution);
+                    }
+                  }}
+                  aria-label={`View solutions for ${solution.title}`}
                 >
                   {/* Engineering corner accents */}
                   <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300" />
@@ -268,7 +285,8 @@ const ExploreByIndustry = () => {
           <div className="absolute top-1/2 -translate-y-1/2 -left-4 z-10">
             <button
               onClick={prevSlide}
-              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 transition-all duration-300"
+              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 focus:border-blue-500 focus:text-blue-600 transition-all duration-300"
+              aria-label="Previous solutions"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -279,7 +297,8 @@ const ExploreByIndustry = () => {
           <div className="absolute top-1/2 -translate-y-1/2 -right-4 z-10">
             <button
               onClick={nextSlide}
-              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 transition-all duration-300"
+              className="w-12 h-12 bg-white border border-gray-300 rounded-full shadow-lg flex items-center justify-center hover:border-blue-500 hover:text-blue-600 focus:border-blue-500 focus:text-blue-600 transition-all duration-300"
+              aria-label="Next solutions"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -295,7 +314,7 @@ const ExploreByIndustry = () => {
             >
               {Array.from({ length: totalSlides }).map((_, slideIndex) => (
                 <div key={slideIndex} className="w-full flex-shrink-0">
-                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                   <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
                     {cyclicSolutions
                       .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
                       .map((solution, index) => (
@@ -305,8 +324,17 @@ const ExploreByIndustry = () => {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ duration: 0.6, delay: index * 0.1 }}
-                          className="relative bg-white border border-gray-200 p-8 h-64 group hover:border-blue-500/50 transition-all duration-300 cursor-pointer"
-                          onClick={() => openModal(solution)}
+                          className="relative bg-white border border-gray-200 p-4 md:p-6 lg:p-8 h-56 md:h-64 group hover:border-blue-500/50 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                          onClick={handleDesktopClick(solution)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              openModal(solution);
+                            }
+                          }}
+                          aria-label={`View solutions for ${solution.title}`}
                         >
                           {/* Engineering corner accents */}
                           <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-blue-400 transition-colors duration-300"></div>
@@ -318,13 +346,13 @@ const ExploreByIndustry = () => {
                           
                           {/* Content */}
                           <div className="flex flex-col items-center justify-center h-full text-center">
-                            <div className="relative w-full h-36 mb-4 overflow-hidden">
+                            <div className="relative w-full h-32 md:h-36 mb-3 md:mb-4 overflow-hidden">
                               <Image
                                 src={solution.imageUrl}
                                 alt={solution.title}
                                 fill
-                                sizes="(max-width: 1024px) 45vw, 25vw"
-                                className="object-contain scale-150 origin-center"
+                                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 45vw, 25vw"
+                                className="object-contain scale-125 md:scale-150 origin-center"
                               />
                             </div>
                             <span className="sr-only">{solution.title}</span>
@@ -332,10 +360,10 @@ const ExploreByIndustry = () => {
                           
                           {/* Click indicator */}
                           {/* Bottom label near info icon */}
-                          <div className="absolute bottom-4 right-12 text-xs font-medium text-gray-600 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded border border-gray-200 group-hover:text-blue-700 group-hover:border-blue-300 transition-colors duration-300">
+                          <div className="absolute bottom-3 md:bottom-4 right-10 md:right-12 text-xs font-medium text-gray-600 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded border border-gray-200 group-hover:text-blue-700 group-hover:border-blue-300 transition-colors duration-300">
                             {solution.title}
                           </div>
-                          <div className="absolute bottom-4 right-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
+                          <div className="absolute bottom-3 md:bottom-4 right-3 md:right-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -370,9 +398,14 @@ const ExploreByIndustry = () => {
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:backdrop-blur-sm"
             style={{ overscrollBehavior: 'contain' as any }}
-            onClick={closeModal}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                closeModal();
+              }
+            }}
             role="dialog"
             aria-modal="true"
+            aria-labelledby="modal-title"
           >
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -384,8 +417,13 @@ const ExploreByIndustry = () => {
             >
               {/* Close button */}
               <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  closeModal();
+                }}
+                className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200 touch-manipulation"
+                aria-label="Close modal"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -403,7 +441,7 @@ const ExploreByIndustry = () => {
                     className="object-contain"
                   />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedSolution.title}</h3>
+                <h3 id="modal-title" className="text-2xl font-bold text-gray-900 mb-2">{selectedSolution.title}</h3>
                 <p className="text-lg font-semibold text-blue-600 mb-6">Recommended Solutions</p>
               </div>
 
@@ -416,9 +454,13 @@ const ExploreByIndustry = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    onClick={() => redirectToModel(machine.model, machine.category)}
-                    onTouchEnd={(e) => { e.preventDefault(); redirectToModel(machine.model, machine.category); }}
-                    className="w-full text-left p-4 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-300 group"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      redirectToModel(machine.model, machine.category);
+                    }}
+                    className="w-full text-left p-4 bg-gray-50 hover:bg-blue-50 focus:bg-blue-50 border border-gray-200 hover:border-blue-300 focus:border-blue-400 rounded-lg transition-all duration-300 group touch-manipulation"
+                    aria-label={`Go to ${machine.name}`}
                   >
                     <div className="flex items-center justify-between">
                       <div>
