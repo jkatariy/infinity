@@ -151,17 +151,6 @@ export async function POST(request: NextRequest) {
     let recordData: ZohoLead | ZohoContact;
 
     if (recordType === 'Leads') {
-      // Enhanced description with all important details
-      const enhancedDescription = [
-        body.message || body.description || '',
-        body.productInterest ? `Product Interest: ${body.productInterest}` : '',
-        body.machineType ? `Machine Type: ${body.machineType}` : '',
-        body.budgetRange ? `Budget Range: ${body.budgetRange}` : '',
-        body.timeline ? `Timeline: ${body.timeline}` : '',
-        body.inquiryType ? `Inquiry Type: ${body.inquiryType}` : '',
-        body.additionalRequirements ? `Additional Requirements: ${body.additionalRequirements}` : '',
-      ].filter(Boolean).join('\n');
-
       recordData = {
         Last_Name: body.lastName,
         First_Name: body.firstName || '',
@@ -169,7 +158,7 @@ export async function POST(request: NextRequest) {
         Phone: body.phone || '',
         Company: body.company || '',
         Lead_Source: body.leadSource || 'Website',
-        Description: enhancedDescription,
+        Description: body.message || body.description || '',
         Industry: body.industry || '',
         Annual_Revenue: body.annualRevenue || '',
         No_of_Employees: body.numberOfEmployees || '',
@@ -188,8 +177,6 @@ export async function POST(request: NextRequest) {
         Budget_Range: body.budgetRange || '',
         Timeline: body.timeline || '',
         Additional_Requirements: body.additionalRequirements || '',
-        // Also add to standard fields for better visibility
-        Secondary_Email: body.additionalRequirements ? `Requirements: ${body.additionalRequirements}` : '',
       };
     } else {
       recordData = {
