@@ -5,8 +5,8 @@ import { useState } from 'react';
 export default function SetupNewZoho() {
   const [step, setStep] = useState(1);
   const [credentials, setCredentials] = useState({
-    clientId: '',
-    clientSecret: ''
+    clientId: '1000.KPNB9RXVFZUD4HYFM8KZH32PF1MWDD',
+    clientSecret: '9939a4e704fcbe859813bc379d9b61d00af978d5a9'
   });
 
   const steps = [
