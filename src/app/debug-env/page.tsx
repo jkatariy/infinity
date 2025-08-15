@@ -4,14 +4,22 @@ import { useState } from 'react';
 
 export default function DebugEnvPage() {
   const [envInfo, setEnvInfo] = useState<any>(null);
+  const [oauthInfo, setOauthInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const checkEnvironment = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/debug-env');
-      const result = await response.json();
-      setEnvInfo(result);
+      const [envResponse, oauthResponse] = await Promise.all([
+        fetch('/api/debug-env'),
+        fetch('/api/debug-oauth')
+      ]);
+      
+      const envResult = await envResponse.json();
+      const oauthResult = await oauthResponse.json();
+      
+      setEnvInfo(envResult);
+      setOauthInfo(oauthResult);
     } catch (error) {
       console.error('Error:', error);
       setEnvInfo({ error: 'Failed to fetch environment info' });
@@ -52,6 +60,49 @@ export default function DebugEnvPage() {
               ))}
             </div>
           </div>
+
+          {oauthInfo && (
+            <div className="bg-red-50 border border-red-200 p-6 rounded-lg">
+              <h2 className="text-xl font-semibold mb-4 text-red-900">OAuth URL Debug</h2>
+              
+              {oauthInfo.success ? (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold mb-2">Generated OAuth URL:</h3>
+                    <div className="bg-white p-3 rounded border font-mono text-sm break-all">
+                      {oauthInfo.oauth_url}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-semibold mb-2">URL Components:</h3>
+                    <div className="space-y-1 text-sm">
+                      {Object.entries(oauthInfo.url_parts).map(([key, value]) => (
+                        <div key={key} className="flex">
+                          <span className="text-gray-600 w-32">{key}:</span>
+                          <span className="font-mono">{String(value)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <button
+                      onClick={() => window.open(oauthInfo.oauth_url, '_blank')}
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                      🔗 Test This OAuth URL
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-red-800">
+                  <p>❌ Error generating OAuth URL:</p>
+                  <p className="font-mono text-sm mt-2">{oauthInfo.error}</p>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="bg-blue-50 border border-blue-200 p-6 rounded-lg">
             <h3 className="font-semibold text-blue-900 mb-3">Expected URLs for Production:</h3>
