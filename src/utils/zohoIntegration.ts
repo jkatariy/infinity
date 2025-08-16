@@ -142,7 +142,7 @@ export function transformFormData(formData: any, formType: string): ZohoFormData
     phone: formData.phone,
     company: formData.company,
     message: formData.message,
-    leadSource: 'Website',
+    leadSource: formData.leadSource || 'Website',
     country: 'India',
     recordType: 'Leads',
   };

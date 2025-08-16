@@ -41,20 +41,13 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
   showCloseButton = false,
   title = 'Get In Touch',
   subtitle = 'Let our engineering experts help you find the perfect solution',
-  availableModels = [],
-  currentCategory = '',
   colors = defaultColors,
 }) => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    company: '',
+    name: '',
     email: '',
     phone: '',
-    selectedModel: productName || '',
-    requirements: '',
-    budgetRange: '',
-    timeline: '',
+    message: '',
   });
 
   // Use the Zoho integration hook
@@ -104,41 +97,25 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
       return;
     }
 
-    // Prepare data for Zoho CRM
-    const zohoData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName || 'Unknown', // Fallback for lastName
+    // Minimal data; hook will auto-transform for 'quote'
+    const minimalData = {
+      name: formData.name,
       email: formData.email,
       phone: formData.phone,
-      company: formData.company,
-      message: formData.requirements,
-      productInterest: formData.selectedModel || productName || 'General Inquiry',
-      machineType: formData.selectedModel || productName || '',
-      budgetRange: formData.budgetRange,
-      timeline: formData.timeline,
-      leadSource: leadSource,
-      inquiryType: 'Quote Request',
-      leadStatus: 'Quote Requested',
-      rating: 'Hot',
-      industry: currentCategory ? currentCategory.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : undefined,
-      description: `Quote request for ${formData.selectedModel || productName || 'packaging automation solution'}. Requirements: ${formData.requirements}`,
-      additionalRequirements: `Category: ${currentCategory}, Selected Model: ${formData.selectedModel}`,
+      message: formData.message,
+      product: productName,
+      leadSource,
     };
 
-    await submitToZoho(zohoData);
+    await submitToZoho(minimalData);
   };
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
-      company: '',
+      name: '',
       email: '',
       phone: '',
-      selectedModel: productName || '',
-      requirements: '',
-      budgetRange: '',
-      timeline: '',
+      message: '',
     });
     setSubmitted(false);
     setError(null);
@@ -281,55 +258,20 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                First Name *
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
-                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-                placeholder="First name"
-              />
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name *
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
-                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-                placeholder="Last name"
-              />
-            </div>
-          </div>
-
           <div>
-            <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-              Company Name *
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              Name *
             </label>
             <input
               type="text"
-              id="company"
-              name="company"
-              value={formData.company}
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
               style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-              placeholder="Enter your company name"
+              placeholder="Enter your full name"
             />
           </div>
 
@@ -367,110 +309,20 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
             />
           </div>
 
-          {/* Model Selection Dropdown */}
-          {availableModels.length > 0 && (
-            <div>
-              <label htmlFor="selectedModel" className="block text-sm font-medium text-gray-700 mb-2">
-                Product Model *
-              </label>
-              <div className="relative">
-                <select
-                  id="selectedModel"
-                  name="selectedModel"
-                  value={formData.selectedModel}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer"
-                  style={{ 
-                    '--focus-ring-color': colors.accent,
-                    'boxShadow': 'inset 0 1px 2px 0 rgb(0 0 0 / 0.05)'
-                  } as React.CSSProperties}
-                >
-                  <option value="">Select a model...</option>
-                  {availableModels.map((model) => (
-                    <option key={model.href} value={model.title}>
-                      {model.title}
-                    </option>
-                  ))}
-                  <option value="Multiple Models">Multiple Models</option>
-                  <option value="General Inquiry">General Inquiry</option>
-                </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-              {currentCategory && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Showing models from {currentCategory.replace('-', ' ')} category
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Budget and Timeline */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
-                Budget Range
-              </label>
-              <select
-                id="budgetRange"
-                name="budgetRange"
-                value={formData.budgetRange}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer"
-                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-              >
-                <option value="">Select budget range...</option>
-                <option value="Under 5 Lakhs">Under ₹5 Lakhs</option>
-                <option value="5-10 Lakhs">₹5-10 Lakhs</option>
-                <option value="10-25 Lakhs">₹10-25 Lakhs</option>
-                <option value="25-50 Lakhs">₹25-50 Lakhs</option>
-                <option value="50 Lakhs - 1 Crore">₹50 Lakhs - 1 Crore</option>
-                <option value="Above 1 Crore">Above ₹1 Crore</option>
-                <option value="Prefer not to say">Prefer not to say</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-2">
-                Project Timeline
-              </label>
-              <select
-                id="timeline"
-                name="timeline"
-                value={formData.timeline}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer"
-                style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-              >
-                <option value="">Select timeline...</option>
-                <option value="Immediate (Within 1 month)">Immediate (Within 1 month)</option>
-                <option value="1-3 months">1-3 months</option>
-                <option value="3-6 months">3-6 months</option>
-                <option value="6-12 months">6-12 months</option>
-                <option value="Beyond 12 months">Beyond 12 months</option>
-                <option value="Just researching">Just researching</option>
-              </select>
-            </div>
-          </div>
-
           <div>
-            <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 mb-2">
-              Requirements & Specifications *
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+              Descriptions *
             </label>
             <textarea
-              id="requirements"
-              name="requirements"
-              value={formData.requirements}
+              id="message"
+              name="message"
+              value={formData.message}
               onChange={handleChange}
               required
               rows={4}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 resize-none"
               style={{ '--focus-ring-color': colors.accent } as React.CSSProperties}
-              placeholder="Please describe your requirements, production needs, or any specific questions..."
+              placeholder="Please describe your requirements or questions"
             />
           </div>
 
