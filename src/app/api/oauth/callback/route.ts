@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 interface ZohoTokenResponse {
   access_token: string;
-  refresh_token: string;
+  refresh_token?: string;
   expires_in: number;
   token_type: string;
   scope: string;
@@ -87,13 +87,15 @@ export async function GET(request: NextRequest) {
       path: '/',
     });
 
-    response.cookies.set('zoho_refresh_token', tokenData.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-      path: '/',
-    });
+    if (tokenData.refresh_token) {
+      response.cookies.set('zoho_refresh_token', tokenData.refresh_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        path: '/',
+      });
+    }
 
     // Log successful authentication (remove in production)
     console.log('OAuth callback successful for client:', process.env.ZOHO_CLIENT_ID?.substring(0, 8) + '...');

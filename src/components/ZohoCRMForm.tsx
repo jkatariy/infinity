@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuoteForm } from '@/hooks/useZohoIntegration';
 
@@ -57,7 +57,8 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
     isAuthenticated, 
     needsAuth, 
     initiateAuth,
-    lastResponse 
+    lastResponse,
+    checkAuth,
   } = useQuoteForm({
     onSuccess: (response) => {
       console.log('Quote submitted successfully:', response.zohoId);
@@ -73,6 +74,11 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Check Zoho auth status on mount so the UI knows if authentication is needed
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
@@ -86,8 +92,9 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
     e.preventDefault();
     setError(null);
 
-    // Check authentication if needed
-    if (needsAuth) {
+    // Ensure authentication before submit (check live status)
+    const status = await checkAuth();
+    if (!status.authenticated) {
       const shouldAuth = window.confirm(
         'Admin authentication required for Zoho CRM integration. Would you like to authenticate now?'
       );
