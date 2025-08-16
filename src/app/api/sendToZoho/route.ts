@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  getAccessToken as getStoredAccessToken,
+  getRefreshToken as getStoredRefreshToken,
+  isAccessTokenValid,
+  setAccessToken as setStoredAccessToken,
+} from '@/server/zohoTokenStore';
 
 interface ZohoLead {
   Last_Name: string;
@@ -122,12 +128,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get access token from cookies
-    let accessToken: string | undefined = request.cookies.get('zoho_access_token')?.value;
-    const refreshToken = request.cookies.get('zoho_refresh_token')?.value;
+    // Prefer centrally stored tokens so users don't need to authenticate
+    let accessToken: string | undefined = getStoredAccessToken() || request.cookies.get('zoho_access_token')?.value;
+    const refreshToken = getStoredRefreshToken() || request.cookies.get('zoho_refresh_token')?.value;
 
-    // If no access token, try to refresh
-    if (!accessToken && refreshToken) {
+    // If no access token or likely expired, try to refresh
+    if ((!accessToken || !isAccessTokenValid()) && refreshToken) {
       const newAccessToken = await refreshAccessToken(refreshToken);
       if (!newAccessToken) {
         return NextResponse.json(
@@ -136,6 +142,7 @@ export async function POST(request: NextRequest) {
         );
       }
       accessToken = newAccessToken;
+      setStoredAccessToken(newAccessToken, 3600);
     }
 
     if (!accessToken) {
@@ -264,8 +271,8 @@ export async function POST(request: NextRequest) {
 // Handle GET request to check authentication status
 export async function GET(request: NextRequest) {
   try {
-    const accessToken = request.cookies.get('zoho_access_token')?.value;
-    const refreshToken = request.cookies.get('zoho_refresh_token')?.value;
+    const accessToken = getStoredAccessToken() || request.cookies.get('zoho_access_token')?.value;
+    const refreshToken = getStoredRefreshToken() || request.cookies.get('zoho_refresh_token')?.value;
 
     if (!accessToken && !refreshToken) {
       return NextResponse.json({
@@ -308,6 +315,7 @@ export async function GET(request: NextRequest) {
           maxAge: 3600, // 1 hour
           path: '/',
         });
+        setStoredAccessToken(newAccessToken, 3600);
 
         return response;
       }

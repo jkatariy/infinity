@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { setAccessToken, setRefreshToken } from '@/server/zohoTokenStore';
 
 interface ZohoTokenResponse {
   access_token: string;
@@ -78,23 +79,10 @@ export async function GET(request: NextRequest) {
       new URL('/dashboard?success=oauth_complete', request.url)
     );
 
-    // Set secure HTTP-only cookies for tokens (recommended approach)
-    response.cookies.set('zoho_access_token', tokenData.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: tokenData.expires_in,
-      path: '/',
-    });
-
+    // Also persist centrally so normal users don't need to authenticate
+    setAccessToken(tokenData.access_token, tokenData.expires_in);
     if (tokenData.refresh_token) {
-      response.cookies.set('zoho_refresh_token', tokenData.refresh_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 365, // 1 year
-        path: '/',
-      });
+      setRefreshToken(tokenData.refresh_token);
     }
 
     // Log successful authentication (remove in production)
