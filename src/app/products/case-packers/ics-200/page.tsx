@@ -147,11 +147,7 @@ const applications = [
   'Strip Packaging'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'FDA Compatible Materials',
-  'GMP Compliant'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function ICS200Page() {
   return (

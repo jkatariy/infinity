@@ -131,11 +131,7 @@ const applications = [
   'Production Monitoring'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'FDA Compliant Materials',
-  'IP54 Rated'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function ICW1200Page() {
   return (

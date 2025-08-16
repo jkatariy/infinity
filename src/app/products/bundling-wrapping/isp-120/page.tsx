@@ -165,11 +165,7 @@ const specifications = [
   { label: 'Operation', value: 'Eliminates manual secondary packing work completely' }
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'CE Marking',
-  'FDA Compatible Materials'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function ISP120Page() {
   return (

@@ -178,11 +178,7 @@ const specifications = [
   { label: 'Integration', value: 'Compatible with any VFFS or HFFS machine' }
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'CE Marking',
-  'FDA Compatible Materials'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function IBS200Page() {
   return (

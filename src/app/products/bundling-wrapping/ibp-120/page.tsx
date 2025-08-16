@@ -180,10 +180,7 @@ const applications = [
   'Dairy Products'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'FDA Compatible Materials'
-];
+const certifications = ['ISO 9001:2015'];
 
 export const metadata: Metadata = {
   title: 'IBP-120 Secondary Packaging Machine | Infinity Automated Solutions',

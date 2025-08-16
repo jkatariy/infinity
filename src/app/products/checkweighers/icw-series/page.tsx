@@ -281,12 +281,7 @@ const applications = [
   'Automated Packaging Lines'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'FDA Compliant Materials',
-  'IP54 Rated',
-  'CE Marking'
-];
+const certifications = ['ISO 9001:2015'];
 
 // Create a dynamic model structure for ProductDetailPage
 function ICWSeriesPage() {

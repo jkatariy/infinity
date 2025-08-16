@@ -165,7 +165,7 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
           </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-3">Quote Request Submitted!</h3>
           <p className="text-gray-600 mb-6">
-            Your quote request has been successfully submitted to our Zoho CRM system. Our engineering team will contact you within 24 hours with detailed pricing and specifications.
+            Your request has been sent successfully. Our engineering team will contact you within 24 hours with detailed pricing and specifications.
           </p>
           {lastResponse && lastResponse.zohoId && (
             <p className="text-xs text-gray-500 mb-4">
@@ -238,7 +238,7 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              Connected to Zoho CRM
+              Ready
             </div>
           )}
           {isAuthenticated === false && (
@@ -246,7 +246,7 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-              Admin authentication required
+              Authorization required
             </div>
           )}
         </div>
@@ -352,21 +352,21 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Submitting to Zoho CRM...</span>
+                <span>Sending...</span>
               </>
             ) : needsAuth ? (
               <>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <span>Authenticate Zoho CRM</span>
+                <span>Authorize</span>
               </>
             ) : (
               <>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <span>Submit Quote Request</span>
+                <span>Send</span>
               </>
             )}
           </motion.button>
@@ -388,8 +388,8 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
               <div className="text-gray-600 text-xs">9001:2015 Certified</div>
             </div>
             <div>
-              <div className="font-semibold text-gray-900">CRM</div>
-              <div className="text-gray-600 text-xs">Zoho Integrated</div>
+              <div className="font-semibold text-gray-900">Secure</div>
+              <div className="text-gray-600 text-xs">Encrypted Submission</div>
             </div>
           </div>
         </div>

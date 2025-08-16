@@ -194,7 +194,11 @@ export function transformFormData(formData: any, formType: string): ZohoFormData
       return {
         ...base,
         inquiryType: 'Chatbot Inquiry',
-        productInterest: formData.topic,
+        productInterest: undefined,
+        machineType: undefined,
+        budgetRange: undefined,
+        timeline: undefined,
+        additionalRequirements: undefined,
         leadSource: 'Chatbot',
         leadStatus: 'Chatbot Lead',
       };

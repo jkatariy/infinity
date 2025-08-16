@@ -196,10 +196,7 @@ const technicalData = {
   ]
 };
 
-const certifications = [
-  'ISO 9001:2015',
-  'FDA Compatible Materials'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function IMS800Page() {
   return (

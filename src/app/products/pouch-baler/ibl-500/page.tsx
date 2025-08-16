@@ -170,12 +170,7 @@ const applications = [
   'Pet Food Packaging'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  
-  'FDA Compatible Materials',
-  'GMP Compliant'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function IBL500Page() {
   return (

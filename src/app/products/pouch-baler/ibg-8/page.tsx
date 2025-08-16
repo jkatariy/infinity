@@ -137,11 +137,7 @@ const applications = [
   'Bulk Packaging'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'FDA Compatible Materials',
-  'Food Grade Certified'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function IBG8Page() {
   return (

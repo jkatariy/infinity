@@ -218,12 +218,7 @@ const specifications = [
   { label: 'Industries Served', value: 'Food, spices, dairy, pharmaceuticals, FMCG, industrial goods' }
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  'CE Marking',
-  'FDA Compatible Materials',
-  'GMP Compliant'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function IBGH8V8Page() {
   return (

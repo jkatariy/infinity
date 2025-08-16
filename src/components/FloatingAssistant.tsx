@@ -324,7 +324,7 @@ export default function FloatingAssistant() {
                           setLeadError(null);
                           
                           try {
-                            // Submit lead to Supabase
+                            // Submit minimal lead to Zoho via server API
                             const response = await fetch('/api/chatbot-leads', {
                               method: 'POST',
                               headers: {
@@ -334,12 +334,6 @@ export default function FloatingAssistant() {
                                 name: lead.name,
                                 email: lead.email,
                                 phone: lead.phone,
-                                industry: selectedIndustry,
-                                category: selectedCategory,
-                                model_name: selectedModel?.name,
-                                model_label: selectedModel?.label,
-                                lead_source: 'Chatbot Assistant',
-                                notes: `Interested in ${selectedModel?.label} for ${selectedIndustry} industry`
                               }),
                             });
 
@@ -350,7 +344,7 @@ export default function FloatingAssistant() {
                             }
 
                             pushMessage({ role: 'user', text: `${lead.name} • ${lead.email} • ${lead.phone}` });
-                            pushMessage({ role: 'bot', text: 'Thanks! Your information has been saved. What would you like to do next?' });
+                            pushMessage({ role: 'bot', text: 'Thanks! Your information has been shared with our team. What would you like to do next?' });
                             setStep('action');
                           } catch (error: any) {
                             setLeadError(error.message || 'Failed to save your information. Please try again.');

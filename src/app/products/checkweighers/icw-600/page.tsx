@@ -133,12 +133,7 @@ const applications = [
   'Dairy Products'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  
-  'FDA Compliant Materials',
-  'IP54 Rated'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function ICW600Page() {
   return (

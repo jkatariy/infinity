@@ -153,11 +153,7 @@ const applications = [
   'Juice Processing'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  
-  'FDA Compatible Materials'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function ICB120Page() {
   return (

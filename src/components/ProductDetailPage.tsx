@@ -203,6 +203,12 @@ export default function ProductDetailPage({
   const dimensionsData = technicalData?.dimensions || [];
   const powerData = technicalData?.power || [];
 
+  // Ensure only ISO certifications are shown across all product pages
+  const effectiveCertifications = (() => {
+    const isoOnly = (certifications || []).filter((c) => /iso/i.test(c));
+    return isoOnly.length > 0 ? isoOnly : ['ISO 9001:2015'];
+  })();
+
   // Determine if there are any specifications or technical data to show the tab
   const hasSpecifications = (
     (technicalData && (
@@ -389,7 +395,7 @@ export default function ProductDetailPage({
               </div>
 
               {/* Certifications */}
-              {certifications.length > 0 && (
+              {effectiveCertifications.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -404,7 +410,7 @@ export default function ProductDetailPage({
                     Certifications
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {certifications.map((cert, index) => (
+                    {effectiveCertifications.map((cert, index) => (
                       <div
                         key={index}
                         className="text-center p-2 rounded-lg border border-gray-200 bg-gray-50 text-xs font-medium text-gray-700"
@@ -959,7 +965,7 @@ export default function ProductDetailPage({
               )}
 
               {/* Quality & Certifications */}
-              {certifications.length > 0 && (
+              {effectiveCertifications.length > 0 && (
                 <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm" style={{ borderColor: `${colors.accent}15` }}>
                   <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                     <div 
@@ -973,7 +979,7 @@ export default function ProductDetailPage({
                     Quality Certifications & Standards
                   </h3>
                   <div className="flex flex-wrap gap-3">
-                    {certifications.map((cert, index) => (
+                    {effectiveCertifications.map((cert, index) => (
                       <span 
                         key={index} 
                         className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-50 text-green-800 border border-green-200"

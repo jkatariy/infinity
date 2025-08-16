@@ -173,12 +173,7 @@ const applications = [
   'Retail Products'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  
-  'FDA Compatible Materials',
-  'GMP Compliant'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function ACM40Page() {
   return (

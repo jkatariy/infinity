@@ -146,12 +146,7 @@ const applications = [
   'Packaging Integrity Check'
 ];
 
-const certifications = [
-  'ISO 9001:2015',
-  
-  'FDA Compatible',
-  'GMP Compliant'
-];
+const certifications = ['ISO 9001:2015'];
 
 export default function VisionSystemsPage() {
   return (
