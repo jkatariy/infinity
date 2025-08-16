@@ -80,9 +80,9 @@ export async function GET(request: NextRequest) {
     );
 
     // Also persist centrally so normal users don't need to authenticate
-    setAccessToken(tokenData.access_token, tokenData.expires_in);
+    await setAccessToken(tokenData.access_token, tokenData.expires_in);
     if (tokenData.refresh_token) {
-      setRefreshToken(tokenData.refresh_token);
+      await setRefreshToken(tokenData.refresh_token);
     }
 
     // Log successful authentication (remove in production)

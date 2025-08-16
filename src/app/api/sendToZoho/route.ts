@@ -129,11 +129,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Prefer centrally stored tokens so users don't need to authenticate
-    let accessToken: string | undefined = getStoredAccessToken() || request.cookies.get('zoho_access_token')?.value;
-    const refreshToken = getStoredRefreshToken() || request.cookies.get('zoho_refresh_token')?.value;
+    let accessToken: string | undefined = (await getStoredAccessToken()) || request.cookies.get('zoho_access_token')?.value;
+    const refreshToken = (await getStoredRefreshToken()) || request.cookies.get('zoho_refresh_token')?.value;
 
     // If no access token or likely expired, try to refresh
-    if ((!accessToken || !isAccessTokenValid()) && refreshToken) {
+    if ((!accessToken || !(await isAccessTokenValid())) && refreshToken) {
       const newAccessToken = await refreshAccessToken(refreshToken);
       if (!newAccessToken) {
         return NextResponse.json(
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
         );
       }
       accessToken = newAccessToken;
-      setStoredAccessToken(newAccessToken, 3600);
+      await setStoredAccessToken(newAccessToken, 3600);
     }
 
     if (!accessToken) {
@@ -271,8 +271,8 @@ export async function POST(request: NextRequest) {
 // Handle GET request to check authentication status
 export async function GET(request: NextRequest) {
   try {
-    const accessToken = getStoredAccessToken() || request.cookies.get('zoho_access_token')?.value;
-    const refreshToken = getStoredRefreshToken() || request.cookies.get('zoho_refresh_token')?.value;
+    const accessToken = (await getStoredAccessToken()) || request.cookies.get('zoho_access_token')?.value;
+    const refreshToken = (await getStoredRefreshToken()) || request.cookies.get('zoho_refresh_token')?.value;
 
     if (!accessToken && !refreshToken) {
       return NextResponse.json({
@@ -315,7 +315,7 @@ export async function GET(request: NextRequest) {
           maxAge: 3600, // 1 hour
           path: '/',
         });
-        setStoredAccessToken(newAccessToken, 3600);
+        await setStoredAccessToken(newAccessToken, 3600);
 
         return response;
       }
