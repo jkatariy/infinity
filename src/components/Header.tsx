@@ -6,105 +6,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MagnifyingGlassIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import ExploreByIndustryMenu from './ExploreByIndustryMenu';
-
-// Import industries data for mobile menu
-interface IndustryItem {
-  title: string;
-  children?: (IndustrySubItem | string)[];
-  href?: string;
-}
-
-interface IndustrySubItem {
-  title: string;
-  children?: (IndustryModel | string)[];
-  href?: string;
-}
-
-interface IndustryModel {
-  title: string;
-  href: string;
-}
-
-const industries: IndustryItem[] = [
-  {
-    title: "Food & Beverage",
-    children: [
-      { 
-        title: "Tea & Spices", 
-        children: [
-          { title: "IBP-120", href: "/products/bundling-wrapping/ibp-120" },
-          { title: "IBS-200", href: "/products/bundling-wrapping/ibs-200" },
-          { title: "ACM-40", href: "/products/cartoning/acm-40" },
-          { title: "ICP-120", href: "/products/case-packers/icp-120" },
-          { title: "IBG-8", href: "/products/pouch-baler/ibg-h8-v8" },
-          { title: "IMS-600/800", href: "/products/bundling-wrapping/ims-800" }
-        ]
-      },
-      { 
-        title: "Beverage", 
-        children: [
-          { title: "IBP-120", href: "/products/bundling-wrapping/ibp-120" },
-          { title: "ICB-200", href: "/products/case-packers/icb-120" }
-        ]
-      },
-      { 
-        title: "Biscuits", 
-        children: [
-          { title: "IBP-200", href: "/products/bundling-wrapping/ibp-120" },
-          { title: "ICP-120", href: "/products/case-packers/icp-120" }
-        ]
-      },
-      { 
-        title: "Sugar / Flour / Staple Foods", 
-        children: [
-          { title: "IBL-500", href: "/products/pouch-baler/ibl-500" },
-          { title: "IBG-8", href: "/products/pouch-baler/ibg-h8-v8" }
-        ]
-      }
-    ]
-  },
-  {
-    title: "Pharmaceuticals",
-    children: [
-      { title: "ICP-120", href: "/products/case-packers/icp-120" },
-      { title: "ACM-40/100", href: "/products/cartoning/acm-100" },
-      { title: "Check Weighers ICW", href: "/products/checkweighers-inspection" }
-    ]
-  },
-  {
-    title: "Personal Care",
-    children: [
-      { title: "IBP-120", href: "/products/bundling-wrapping/ibp-120" },
-      { title: "ICP-120", href: "/products/case-packers/icp-120" },
-      { title: "ACM-40/100", href: "/products/cartoning/acm-100" }
-    ]
-  },
-  {
-    title: "Chemical",
-    children: [
-      { title: "IBP-120", href: "/products/bundling-wrapping/ibp-120" },
-      { title: "ICP-120", href: "/products/case-packers/icp-120" }
-    ]
-  },
-  {
-    title: "Automotive",
-    children: [
-      { title: "ACM-40/100", href: "/products/cartoning/acm-100" },
-      { title: "ICP-120", href: "/products/case-packers/icp-120" },
-      { title: "Conveying Solutions", href: "/products/conveying" }
-    ]
-  },
-  {
-    title: "E-commerce",
-    children: [
-      { title: "ICP-120", href: "/products/case-packers/icp-120" },
-      { title: "Taping System", href: "/products/case-packers/case-sealer" },
-      { title: "Check Weigher", href: "/products/checkweighers-inspection" },
-      { title: "Conveying Solutions", href: "/products/conveying" }
-    ]
-  }
-];
 
 const GREEN = '#5dc027';
 const BLUE = '#0f4277';
@@ -114,7 +15,9 @@ interface BaseMenuItem {
   href: string;
 }
 
-interface SubMenuItem extends BaseMenuItem {
+interface SubMenuItem {
+  name: string;
+  href?: string;
   submenu?: SubMenuItem[];
 }
 
@@ -370,6 +273,88 @@ const Header = () => {
         }
       ]
     },
+    {
+      name: 'EXPLORE BY INDUSTRY',
+      submenu: [
+        {
+          name: 'Food & Beverage',
+          submenu: [
+            {
+              name: 'Tea & Spices',
+              submenu: [
+                { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
+                { name: 'IBS-200', href: '/products/bundling-wrapping/ibs-200' },
+                { name: 'ACM-40', href: '/products/cartoning/acm-40' },
+                { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+                { name: 'IBG-8', href: '/products/pouch-baler/ibg-h8-v8' },
+                { name: 'IMS-600/800', href: '/products/bundling-wrapping/ims-800' }
+              ]
+            },
+            {
+              name: 'Beverage',
+              submenu: [
+                { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
+                { name: 'ICB-200', href: '/products/case-packers/icb-120' }
+              ]
+            },
+            {
+              name: 'Biscuits',
+              submenu: [
+                { name: 'IBP-200', href: '/products/bundling-wrapping/ibp-120' },
+                { name: 'ICP-120', href: '/products/case-packers/icp-120' }
+              ]
+            },
+            {
+              name: 'Sugar / Flour / Staple Foods',
+              submenu: [
+                { name: 'IBL-500', href: '/products/pouch-baler/ibl-500' },
+                { name: 'IBG-8', href: '/products/pouch-baler/ibg-h8-v8' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Pharmaceuticals',
+          submenu: [
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'ACM-40/100', href: '/products/cartoning/acm-100' },
+            { name: 'Check Weighers ICW', href: '/products/checkweighers-inspection' }
+          ]
+        },
+        {
+          name: 'Personal Care',
+          submenu: [
+            { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'ACM-40/100', href: '/products/cartoning/acm-100' }
+          ]
+        },
+        {
+          name: 'Chemical',
+          submenu: [
+            { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' }
+          ]
+        },
+        {
+          name: 'Automotive',
+          submenu: [
+            { name: 'ACM-40/100', href: '/products/cartoning/acm-100' },
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'Conveying Solutions', href: '/products/conveying' }
+          ]
+        },
+        {
+          name: 'E-commerce',
+          submenu: [
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'Taping System', href: '/products/case-packers/case-sealer' },
+            { name: 'Check Weigher', href: '/products/checkweighers-inspection' },
+            { name: 'Conveying Solutions', href: '/products/conveying' }
+          ]
+        }
+      ]
+    },
     { name: 'CLIENTELE', href: '/clientele' },
     { name: 'EVENTS', href: '/events' },
     { name: 'CAREERS', href: '/careers' },
@@ -411,70 +396,6 @@ const Header = () => {
                 />
               </div>
             </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <div key={item.name} className="relative">
-                  {item.submenu ? (
-                    <div className="group">
-                      <button className="px-4 py-2 text-gray-800 font-medium hover:text-blue-700 transition-colors duration-200">
-                        {item.name}
-                      </button>
-                      <div className="absolute top-full left-0 mt-2 w-64 bg-white/95 backdrop-blur-[8px] border border-white/30 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-                           style={{
-                             background: 'linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.95) 100%)',
-                           }}>
-                        <div className="p-4">
-                          {item.submenu.map((subItem) => (
-                            <div key={subItem.name} className="mb-2">
-                              {'submenu' in subItem ? (
-                                <div className="group/sub">
-                                  <button className="w-full text-left font-medium text-gray-800 hover:text-blue-700 transition-colors duration-200 py-1">
-                                    {subItem.name}
-                                  </button>
-                                  <div className="absolute left-full top-0 ml-2 w-64 bg-white/95 backdrop-blur-[8px] border border-white/30 rounded-xl shadow-lg opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200"
-                                       style={{
-                                         background: 'linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.95) 100%)',
-                                       }}>
-                                    <div className="p-4">
-                                      {subItem.submenu?.map((nestedItem) => (
-                                        <Link
-                                          key={nestedItem.name}
-                                          href={nestedItem.href}
-                                          className="block text-sm text-gray-700 hover:text-blue-600 transition-colors duration-200 py-1"
-                                        >
-                                          {nestedItem.name}
-                                        </Link>
-                                      ))}
-                                    </div>
-                                  </div>
-                                </div>
-                              ) : (
-                                <Link
-                                  href={subItem.href}
-                                  className="block text-sm text-gray-700 hover:text-blue-600 transition-colors duration-200 py-1"
-                                >
-                                  {subItem.name}
-                                </Link>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <Link
-                      href={item.href || '#'}
-                      className="px-4 py-2 text-gray-800 font-medium hover:text-blue-700 transition-colors duration-200"
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </div>
-              ))}
-              <ExploreByIndustryMenu />
-            </nav>
 
             {/* Optimized Search and Menu */}
             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -720,7 +641,9 @@ const Header = () => {
                                                   setIsMenuOpen(false);
                                                   setOpenSubmenu(null);
                                                   setOpenNestedSubmenu(null);
-                                                  router.push(nestedItem.href);
+                                                  if (nestedItem.href) {
+                                                    router.push(nestedItem.href);
+                                                  }
                                                 }}
                                                 className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
                                                          transform-gpu hover:bg-white/40 text-sm"
@@ -737,7 +660,9 @@ const Header = () => {
                                       onClick={() => {
                                         setIsMenuOpen(false);
                                         setOpenSubmenu(null);
-                                        router.push(subItem.href);
+                                        if (subItem.href) {
+                                          router.push(subItem.href);
+                                        }
                                       }}
                                       className="w-full text-left p-2 text-gray-700 rounded-md transition-gpu 
                                                transform-gpu hover:bg-white/40 text-sm"
@@ -765,149 +690,6 @@ const Header = () => {
                     )}
                   </div>
                 ))}
-                
-                {/* Explore by Industry in Mobile Menu */}
-                <div className="p-4 border-t border-white/20">
-                  <div className="mb-2">
-                    <button
-                      onClick={() => setOpenSubmenu(openSubmenu === 'EXPLORE BY INDUSTRY' ? null : 'EXPLORE BY INDUSTRY')}
-                      className="flex items-center justify-between w-full p-3 text-left text-gray-800 
-                               rounded-lg transition-gpu transform-gpu hover:bg-white/60"
-                    >
-                      <span className="font-medium">EXPLORE BY INDUSTRY</span>
-                      <motion.svg
-                        animate={{ rotate: openSubmenu === 'EXPLORE BY INDUSTRY' ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="h-4 w-4 text-gray-600 transform-gpu"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </motion.svg>
-                    </button>
-                    
-                    <AnimatePresence>
-                      {openSubmenu === 'EXPLORE BY INDUSTRY' && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="ml-4 mt-2 overflow-hidden"
-                        >
-                          <div className="space-y-2">
-                            <div className="mb-3">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-2">INDUSTRIES</h4>
-                            </div>
-                            {industries.map((industry) => (
-                              <div key={industry.title} className="mb-2">
-                                <button
-                                  onClick={() => setOpenNestedSubmenu(openNestedSubmenu === industry.title ? null : industry.title)}
-                                  className="flex items-center justify-between w-full p-2 text-left text-gray-700 
-                                           rounded-md transition-gpu transform-gpu hover:bg-white/40 text-sm"
-                                >
-                                  <span className="font-medium">{industry.title}</span>
-                                  <motion.svg
-                                    animate={{ rotate: openNestedSubmenu === industry.title ? 180 : 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="h-3 w-3 text-gray-500 transform-gpu"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                  </motion.svg>
-                                </button>
-                                
-                                <AnimatePresence>
-                                  {openNestedSubmenu === industry.title && (
-                                    <motion.div
-                                      initial={{ opacity: 0, height: 0 }}
-                                      animate={{ opacity: 1, height: 'auto' }}
-                                      exit={{ opacity: 0, height: 0 }}
-                                      transition={{ duration: 0.3 }}
-                                      className="ml-4 mt-1 overflow-hidden"
-                                    >
-                                                                             {industry.children?.map((subIndustry) => (
-                                         <div key={typeof subIndustry === 'string' ? subIndustry : subIndustry.title} className="mb-1">
-                                           {typeof subIndustry === 'string' ? (
-                                             <button
-                                               onClick={() => {
-                                                 setIsMenuOpen(false);
-                                                 setOpenSubmenu(null);
-                                                 setOpenNestedSubmenu(null);
-                                                 // Handle navigation for string items
-                                               }}
-                                               className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
-                                                        transform-gpu hover:bg-white/40 text-sm"
-                                             >
-                                               {subIndustry}
-                                             </button>
-                                           ) : (
-                                             <div>
-                                               <button
-                                                 onClick={() => setOpenNestedSubmenu(openNestedSubmenu === subIndustry.title ? null : subIndustry.title)}
-                                                 className="flex items-center justify-between w-full p-2 text-left text-gray-600 
-                                                          rounded-md transition-gpu transform-gpu hover:bg-white/40 text-sm"
-                                               >
-                                                 <span className="font-medium">{subIndustry.title}</span>
-                                                 <motion.svg
-                                                   animate={{ rotate: openNestedSubmenu === subIndustry.title ? 180 : 0 }}
-                                                   transition={{ duration: 0.3 }}
-                                                   className="h-3 w-3 text-gray-500 transform-gpu"
-                                                   fill="none"
-                                                   stroke="currentColor"
-                                                   viewBox="0 0 24 24"
-                                                 >
-                                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                                 </motion.svg>
-                                               </button>
-                                               
-                                               <AnimatePresence>
-                                                 {openNestedSubmenu === subIndustry.title && (
-                                                   <motion.div
-                                                     initial={{ opacity: 0, height: 0 }}
-                                                     animate={{ opacity: 1, height: 'auto' }}
-                                                     exit={{ opacity: 0, height: 0 }}
-                                                     transition={{ duration: 0.3 }}
-                                                     className="ml-4 mt-1 overflow-hidden"
-                                                   >
-                                                     {subIndustry.children?.map((model) => (
-                                                       <button
-                                                         key={typeof model === 'string' ? model : model.title}
-                                                         onClick={() => {
-                                                           setIsMenuOpen(false);
-                                                           setOpenSubmenu(null);
-                                                           setOpenNestedSubmenu(null);
-                                                           if (typeof model !== 'string' && 'href' in model && model.href) {
-                                                             router.push(model.href);
-                                                           }
-                                                         }}
-                                                         className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
-                                                                  transform-gpu hover:bg-white/40 text-sm"
-                                                       >
-                                                         {typeof model === 'string' ? model : model.title}
-                                                       </button>
-                                                     ))}
-                                                   </motion.div>
-                                                 )}
-                                               </AnimatePresence>
-                                             </div>
-                                           )}
-                                         </div>
-                                       ))}
-                                    </motion.div>
-                                  )}
-                                </AnimatePresence>
-                              </div>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
               </nav>
             </motion.div>
           </>
