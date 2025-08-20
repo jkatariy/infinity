@@ -13,11 +13,11 @@ export default function TestReCaptchaPage() {
   const [status, setStatus] = useState<string>('Initializing...');
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const [scriptStatus, setScriptStatus] = useState<string>('Checking...');
-  const [useSimple, setUseSimple] = useState(false);
+  const [useSimple, setUseSimple] = useState(true);
   const [useFixed, setUseFixed] = useState(false);
   const [useBulletproof, setUseBulletproof] = useState(false);
   const [useDirect, setUseDirect] = useState(false);
-  const [useUltimate, setUseUltimate] = useState(true);
+  const [useUltimate, setUseUltimate] = useState(false);
 
   useEffect(() => {
     // Check script loading status
@@ -117,7 +117,7 @@ export default function TestReCaptchaPage() {
                     }}
                     className="mr-2"
                   />
-                  Use Simple Component
+                  Use Simple Component (Recommended)
                 </label>
                 <label className="flex items-center">
                   <input
@@ -182,7 +182,7 @@ export default function TestReCaptchaPage() {
                     }}
                     className="mr-2"
                   />
-                  Use Ultimate Component (Recommended)
+                  Use Ultimate Component
                 </label>
               </div>
               {useSimple ? (
