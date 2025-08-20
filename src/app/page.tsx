@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import HeroVideo from '@/components/HeroVideo';
 const TickerAnimation = dynamic(() => import('@/components/TickerAnimation'), { ssr: true, loading: () => null });
-const ExploreByIndustry = dynamic(() => import('@/components/ExploreByIndustry'), { ssr: false, loading: () => null });
 const AboutUs = dynamic(() => import('@/components/AboutUs'), { ssr: true, loading: () => null });
 // Heavy media/iframes: safely hydrate on client only
 const FeaturedVideo = dynamic(() => import('@/components/FeaturedVideo'), { ssr: false, loading: () => null });
@@ -33,9 +32,7 @@ export default function Home() {
       <div className="[content-visibility:auto] [contain-intrinsic-size:1px_800px]">
         <TickerAnimation />
       </div>
-      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_1200px]">
-        <ExploreByIndustry />
-      </div>
+
       <div className="[content-visibility:auto] [contain-intrinsic-size:1px_900px]">
         <AboutUs />
       </div>

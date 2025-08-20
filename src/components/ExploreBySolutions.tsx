@@ -26,11 +26,11 @@ const ExploreBySolutions = () => {
           </p>
         </motion.div>
 
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="mx-auto max-w-2xl">
           {/* Explore by Solutions */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="group relative h-full border border-gray-200 bg-white p-8 transition-all duration-300 hover:border-brand-blue-500/50 block cursor-pointer"
@@ -56,42 +56,6 @@ const ExploreBySolutions = () => {
               {/* Call to action */}
               <div className="inline-flex items-center font-medium text-brand-blue-500 group-hover:text-brand-blue-600">
                 <span>View All Products</span>
-                <svg className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Explore by Industry */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="group relative h-full border border-gray-200 bg-white p-8 transition-all duration-300 hover:border-brand-blue-500/50 block cursor-pointer"
-            onClick={() => router.push('/about/industries')}
-          >
-            {/* Engineering corner accents */}
-            <div className="absolute top-0 left-0 h-4 w-4 border-l-2 border-t-2 border-gray-300 transition-colors duration-300 group-hover:border-brand-blue-500"></div>
-            <div className="absolute top-0 right-0 h-4 w-4 border-r-2 border-t-2 border-gray-300 transition-colors duration-300 group-hover:border-brand-blue-500"></div>
-            <div className="absolute bottom-0 left-0 h-4 w-4 border-b-2 border-l-2 border-gray-300 transition-colors duration-300 group-hover:border-brand-blue-500"></div>
-            <div className="absolute bottom-0 right-0 h-4 w-4 border-b-2 border-r-2 border-gray-300 transition-colors duration-300 group-hover:border-brand-blue-500"></div>
-            {/* Top accent line */}
-            <div className="absolute top-0 left-0 h-0.5 w-full bg-gray-200 transition-colors duration-300 group-hover:bg-brand-blue-500"></div>
-            <div className="text-center">
-              <div className="mb-6 text-5xl text-gray-700 transition-colors duration-300 group-hover:text-brand-blue-500">
-                🏭
-              </div>
-              <h3 className="mb-4 text-2xl font-semibold text-gray-900 transition-colors duration-300 group-hover:text-brand-blue-500">
-                Explore by Industry
-              </h3>
-              <p className="mb-6 text-gray-600">
-                Discover industry-specific packaging solutions tailored to meet the unique challenges and requirements of your sector.
-              </p>
-              {/* Call to action */}
-              <div className="inline-flex items-center font-medium text-brand-blue-500 group-hover:text-brand-blue-600">
-                <span>View All Industries</span>
                 <svg className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>

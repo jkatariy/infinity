@@ -298,14 +298,7 @@ const pageData = [
     url: '/about/profile',
     keywords: ['about', 'company', 'profile', 'history', 'mission']
   },
-  {
-    id: 'about-industries',
-    title: 'Industries We Serve',
-    description: 'Discover the various industries we serve with our packaging automation solutions.',
-    type: 'page',
-    url: '/about/industries',
-    keywords: ['industries', 'sectors', 'applications', 'food', 'pharmaceutical', 'fmcg']
-  },
+
   {
     id: 'about-infrastructure',
     title: 'Our Infrastructure',

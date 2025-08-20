@@ -8,7 +8,7 @@ const staticPages = [
   '/about',
   '/about/profile',
   '/about/awards',
-  '/about/industries',
+
   '/about/infrastructure',
   '/products',
   '/products/bundling-wrapping',
@@ -39,13 +39,7 @@ const staticPages = [
   '/solutions/cartoning/acm-40',
   '/solutions/pouch-baler',
   '/solutions/pouch-baler/ibg-h8-v8',
-  '/industries',
-  '/industries/automotive',
-  '/industries/chemical',
-  '/industries/e-commerce',
-  '/industries/food-beverage',
-  '/industries/personal-care',
-  '/industries/pharmaceuticals',
+
   '/clientele',
   '/contact',
   '/events',

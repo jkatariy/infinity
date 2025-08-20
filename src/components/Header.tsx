@@ -216,7 +216,7 @@ const Header = () => {
       name: 'ABOUT US',
       submenu: [
         { name: 'Profile', href: '/about/profile' },
-        { name: 'Industries', href: '/about/industries' },
+
         { name: 'Infrastructure', href: '/about/infrastructure' },
         { name: 'Awards and Certifications', href: '/about/awards' }
       ],
@@ -268,88 +268,6 @@ const Header = () => {
         {
           name: 'Conveying Solutions',
           href: '/products/conveying'
-        }
-      ]
-    },
-    {
-      name: 'EXPLORE BY INDUSTRY',
-      submenu: [
-        {
-          name: 'Food & Beverage',
-          href: '/industries/food-beverage',
-          submenu: [
-            {
-              name: 'Tea & Spices',
-              href: '/products/bundling-wrapping/ibp-120',
-              submenu: [
-                { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
-                { name: 'IBS-200', href: '/products/bundling-wrapping/ibs-200' },
-                { name: 'ACM-40', href: '/products/cartoning/acm-40' },
-                { name: 'ICP-120', href: '/products/case-packers/icp-120' },
-                { name: 'IBG-8', href: '/products/pouch-baler/ibg-8' },
-                { name: 'IMS-600/800', href: '/products/bundling-wrapping/ims-800' }
-              ]
-            },
-            {
-              name: 'Beverage',
-              href: '/products/bundling-wrapping/ibp-120',
-              submenu: [
-                { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
-                { name: 'ICB-200', href: '/products/case-packers/icb-120' }
-              ]
-            },
-            {
-              name: 'Biscuits',
-              href: '/products/bundling-wrapping/ibp-120',
-              submenu: [
-                { name: 'IBP-200', href: '/products/bundling-wrapping/ibp-120' },
-                { name: 'ICP-120', href: '/products/case-packers/icp-120' }
-              ]
-            },
-            {
-              name: 'Sugar/Flour/Staple Foods',
-              href: '/products/pouch-baler/ibl-500',
-              submenu: [
-                { name: 'IBL-500', href: '/products/pouch-baler/ibl-500' },
-                { name: 'IBG-8', href: '/products/pouch-baler/ibg-8' }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'Pharmaceuticals',
-          href: '/industries/pharmaceuticals',
-          submenu: [
-            { name: 'ICP-120, ACM-40/100, Check Weighers ICW', href: '/products/case-packers/icp-120' }
-          ]
-        },
-        {
-          name: 'Personal Care',
-          href: '/industries/personal-care',
-          submenu: [
-            { name: 'IBP-120, ICP-120, ACM-40/100', href: '/products/bundling-wrapping/ibp-120' }
-          ]
-        },
-        {
-          name: 'Chemical',
-          href: '/industries/chemical',
-          submenu: [
-            { name: 'IBP-120, ICP-120', href: '/products/bundling-wrapping/ibp-120' }
-          ]
-        },
-        {
-          name: 'Automotive',
-          href: '/industries/automotive',
-          submenu: [
-            { name: 'ACM-40/100, ICP-120, Conveying Solutions', href: '/products/cartoning/acm-40' }
-          ]
-        },
-        {
-          name: 'E-commerce',
-          href: '/industries/e-commerce',
-          submenu: [
-            { name: 'ICP-120, Taping System, Check Weigher, Conveying Solutions', href: '/products/case-packers/icp-120' }
-          ]
         }
       ]
     },
