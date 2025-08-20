@@ -26,8 +26,8 @@ export default function HeroVideo() {
     return () => clearTimeout(timer);
   }, [mounted]);
 
-  const handleVideoError = () => {
-    // Remove console.error to prevent browser errors
+  const handleVideoError = (error?: any) => {
+    console.log('Video error occurred:', error);
     setIsVideoError(true);
     setIsInitialLoad(false);
   };
@@ -42,17 +42,25 @@ export default function HeroVideo() {
     video.playsInline = true;
     
     const source = document.createElement('source');
-    source.src = '/videos/videoplayback.mp4';
-    source.type = 'video/mp4';
+    source.src = 'https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov';
+    source.type = 'video/quicktime';
     video.appendChild(source);
     
+    // Add fallback source for better browser compatibility
+    const fallbackSource = document.createElement('source');
+    fallbackSource.src = 'https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov';
+    fallbackSource.type = 'video/mp4';
+    video.appendChild(fallbackSource);
+    
     const handleCanPlay = () => {
+      console.log('Video can play');
       setIsVideoLoaded(true);
       setIsInitialLoad(false);
     };
     
-    const handleError = () => {
-      handleVideoError();
+    const handleError = (error: any) => {
+      console.log('Video preload error:', error);
+      handleVideoError(error);
     };
     
     video.addEventListener('canplay', handleCanPlay);
@@ -71,14 +79,7 @@ export default function HeroVideo() {
     return (
       <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/30 z-10" />
-        <Image
-          src="/videos/videoplayback-poster.jpg"
-          alt="Packaging automation hero background"
-          fill
-          className="object-cover"
-          priority
-          fetchPriority="high"
-        />
+        <div className="absolute inset-0 bg-gray-900" />
         <div className="absolute inset-0 flex items-center justify-center z-20">
           <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-6xl">
             <motion.h1
@@ -142,23 +143,26 @@ export default function HeroVideo() {
                 isVideoLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoadedData={() => {
+                console.log('Video loaded data');
                 setIsVideoLoaded(true);
                 setIsInitialLoad(false);
               }}
-              onError={handleVideoError}
+              onError={(e) => {
+                console.log('Video element error:', e);
+                handleVideoError(e);
+              }}
               style={{
                 willChange: 'transform, opacity',
                 transform: 'translateZ(0) scale(1.1)', // Zoom in the video slightly
               }}
-              poster="/videos/videoplayback-poster.jpg"
             >
               <source
-                src="/videos/videoplayback.mp4"
-                type="video/mp4"
+                src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov"
+                type="video/quicktime"
               />
               <source
-                src="/videos/videoplayback.webm"
-                type="video/webm"
+                src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov"
+                type="video/mp4"
               />
               Your browser does not support the video tag.
             </video>
@@ -170,13 +174,7 @@ export default function HeroVideo() {
             )}
           </>
         ) : (
-          <Image
-            src="/videos/videoplayback-poster.jpg"
-            alt="Packaging automation hero background"
-            fill
-            className="object-cover"
-            priority
-          />
+          <div className="absolute inset-0 bg-gray-900" />
         )}
 
         {/* Loading indicator - only show during initial load */}

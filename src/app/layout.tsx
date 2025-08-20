@@ -90,7 +90,6 @@ export default function RootLayout({
         <meta name="color-scheme" content="light" />
         
         {/* Critical image preloads */}
-        <link rel="preload" as="image" href="/videos/videoplayback-poster.jpg" fetchPriority="high" />
         <link rel="preload" as="image" href="/logos/logo.png" fetchPriority="high" />
         
         {/* Optimize script loading */}
