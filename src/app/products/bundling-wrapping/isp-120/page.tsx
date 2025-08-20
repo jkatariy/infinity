@@ -172,7 +172,6 @@ export default function ISP120Page() {
     <ProductDetailPage
       id="isp-120"
       title="ISP-120 Automatic Shrink Wrapping Machine for Pouches"
-      subtitle="Professional Secondary Packaging for Individual Pouches and Pouch Strips"
       description="The Automatic Shrink Wrapping Machine for Pouches (ISP-120) from Infinity Automated Solutions is designed to deliver fast, precise, and professional secondary packaging for both individual pouches and pouch strips. Using heat-sealable laminate and an advanced shrink tunnel process, it produces perfectly wrapped packs that enhance product protection, shelf appeal, and brand presence. With an input capacity of up to 100 packs per minute and an output of 8-12 secondary packs per minute, the ISP-120 integrates seamlessly with VFFS and HFFS machines, ensuring smooth end-of-line operations. Equipped with sensor-based technology, it guarantees accurate pouch counting and ensures that only quality-verified products are packed. Its robust construction, compact footprint, and user-friendly interface make it suitable for both large-scale and space-conscious production setups."
       features={features}
       models={models}

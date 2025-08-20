@@ -132,7 +132,7 @@ interface ModelSelectorProps {
 interface ProductDetailPageProps {
   id: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   description: string;
   features: Feature[];
   models: Model[];

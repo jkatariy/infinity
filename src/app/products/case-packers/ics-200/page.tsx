@@ -154,7 +154,6 @@ export default function ICS200Page() {
     <ProductDetailPage
       id="ics-200"
       title="ICS-200 Case Packer for Strip of Pouches"
-      subtitle="Fully Integrated Servo-Driven Strip Case Packaging System"
       description="The ICS-200 is a fully integrated and 100% servo-driven case packaging system designed specifically for strip of pouches with advanced collation capabilities. Featuring take-up conveying technology for easy product pitch creation, pendulum collator for matrix formation, and engineered Delta Robotic Pick & Place application with specialized grippers and vacuum suction cups. The system delivers unbeatable flexibility in a compact footprint while achieving higher throughputs up to 200 PPM input speed."
       features={features}
       models={models}

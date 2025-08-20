@@ -177,7 +177,6 @@ export default function IBL500Page() {
     <ProductDetailPage
       id="ibl-500"
       title="IBL-500 Automatic Baler Machine for Pouches"
-      subtitle="Large Pouch Handling: 200g, 500g, up to 2kg"
       description="The IBL-500 is designed for handling pouches weighing 200g, 500g, up to 2kg. Ideal for products from VFFS or HFFS machines, it efficiently collects, aligns, and prepares large-sized pouches ranging from 0.25kg to 2kg for secondary packaging. With a maximum input speed of 120 packs per minute and output of 7-8 secondary packs per minute, the IBL-500 ensures high productivity. Built with sensor-based technology, it guarantees accurate product counting and quality control. Perfect for high-volume operations, the IBL-500 reduces manual handling, improves packaging efficiency, and maintains product quality. Perfect for FMCG, food & beverage, and other consumer goods industries, the IBL-500 ensures efficient handling of large pouches with speed, precision, and consistent quality."
       features={features}
       models={models}

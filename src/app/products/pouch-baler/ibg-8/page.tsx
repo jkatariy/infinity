@@ -144,7 +144,6 @@ export default function IBG8Page() {
     <ProductDetailPage
       id="ibg-8"
       title="IBG-8 Bagging Machine"
-      subtitle="High-Speed Automated Bagging System"
       description="The IBG-8 is a high-speed bagging machine designed to collect products from VFFS or HFFS and transfer them to HDPE sacks. This advanced system handles large size pouches from 0.2Kg to 5Kg, featuring sandwich conveyor flattening, optional quality assurance through check weighers or metal detectors, and gate flap assembly for desired matrix formation. With sensor-based technology for exact product count and customizable solutions, the IBG-8 automates the bagging process while reducing labor costs and increasing efficiency."
       features={features}
       models={models}

@@ -216,7 +216,6 @@ export default function IBP120Page() {
     <ProductDetailPage
       id="ibp-120"
       title="IBP-120 Bundling Machine"
-      subtitle="Efficient Secondary Packaging for Single Pouches 50g-200g"
       description="The IBP-120 is an advanced secondary packaging solution designed for efficient bundling of single pouches (50g-200g). This high-speed system streamlines pouch handling with precise bundling capabilities, reducing manual intervention while boosting plant efficiency. Perfect for FMCG, food & beverage industries, it delivers consistent output with dual servo technology and motion controller-based operation."
       features={features}
       models={models}

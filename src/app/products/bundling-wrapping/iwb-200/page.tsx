@@ -168,7 +168,6 @@ export default function IWB200Page() {
     <ProductDetailPage
       id="iwb-200"
       title="IWB-200 Bottle Wrapping Machine"
-      subtitle="Automatic Shrink Wrapping for Bottles"
       description="The IWB-200 represents the latest in bottle wrapping technology, engineered specifically for the automatic shrink wrapping of bottles and cylindrical containers. With its specialized bottle-handling technology, intelligent no-bottle-no-film system, and multi-zone shrink tunnel, it delivers exceptional packaging quality while minimizing waste. The machine's versatile design accommodates various bottle sizes and pack patterns, making it ideal for beverage, personal care, and pharmaceutical industries requiring high-speed, precise bottle packaging solutions."
       features={features}
       models={models}

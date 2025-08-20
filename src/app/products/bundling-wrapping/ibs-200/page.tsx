@@ -185,7 +185,6 @@ export default function IBS200Page() {
     <ProductDetailPage
       id="ibs-200"
       title="IBS-200 High-Speed Secondary Packaging Machine"
-      subtitle="Efficient Bundling for Strips of Pouches 50g-200g"
       description="The IBS-200 specializes in efficient bundling of pouch strips with advanced vacuum-based pick & place gantry technology. This high-performance system handles strips from VFFS/HFFS machines with precision, featuring dual servo strip folding and horizontal flow wrap capabilities. Ideal for food & beverage industries requiring fast, reliable strip packaging solutions."
       features={features}
       models={models}

@@ -139,7 +139,6 @@ export default function ICP120Page() {
     <ProductDetailPage
       id="icp-120"
       title="ICP-120 Case Packer for Pouches"
-      subtitle="Fully Integrated Servo-Driven Case Packaging System"
       description="The ICP-120 is a fully integrated and 100% servo-driven case packaging system designed for pouches with advanced robotic pick & place technology. Expected to be integrated with high-speed primary VFFS or HFFS systems, it features conveying technology for easy product collation, precise gripper mechanisms with mechanical and vacuum suction cups, and optional quality assurance capabilities. The system delivers unbeatable flexibility in a compact footprint while achieving higher throughputs and multi-tasking capabilities."
       features={features}
       models={models}

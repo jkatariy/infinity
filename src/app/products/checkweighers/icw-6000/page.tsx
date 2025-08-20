@@ -139,7 +139,6 @@ export default function ICW6000Page() {
     <ProductDetailPage
       id="icw-6000"
       title="ICW-6000 Dynamic Checkweigher"
-      subtitle="Heavy-Duty Precision Weighing Solution"
       description="The ICW-6000 is a heavy-duty dynamic checkweigher designed for larger products up to 6000 grams. With its robust construction and accuracy of ±5gm, it provides reliable quality control for heavier industrial applications. The system features advanced load cell technology and flexible rejection mechanisms for comprehensive quality assurance."
       features={features}
       models={models}
