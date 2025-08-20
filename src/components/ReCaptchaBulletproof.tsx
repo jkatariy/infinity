@@ -14,7 +14,7 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
   const [loadError, setLoadError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const hasLoadedRef = useRef(false);
+  const widgetIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -24,34 +24,25 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
     console.log('ReCaptcha: Domain allowed:', isDomainAllowed());
     console.log('ReCaptcha: Site key:', RECAPTCHA_CONFIG.SITE_KEY);
     
-    let retryCount = 0;
-    const maxRetries = 50; // 5 seconds max
-    
-    const loadReCAPTCHA = async () => {
+    const loadReCAPTCHA = () => {
       try {
         // Check if script is loaded
         if (typeof window === 'undefined' || !window.grecaptcha) {
-          retryCount++;
-          if (retryCount >= maxRetries) {
-            console.error('ReCaptcha: Script not available after max retries');
-            setLoadError(true);
-            setIsLoading(false);
-            return;
-          }
-          setTimeout(loadReCAPTCHA, 100);
+          console.log('ReCaptcha: Script not available, retrying...');
+          setTimeout(loadReCAPTCHA, 200);
           return;
         }
 
-        // Import the component
-        const { default: ReCAPTCHA } = await import('react-google-recaptcha');
+        console.log('ReCaptcha: Script available, rendering...');
         
-        // Create the component manually
-        if (containerRef.current && !containerRef.current.hasChildNodes()) {
-          const recaptchaElement = document.createElement('div');
-          containerRef.current.appendChild(recaptchaElement);
-          
-          // Use grecaptcha.render directly
-          const widgetId = window.grecaptcha.render(recaptchaElement, {
+        // Clear container
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+
+        // Use grecaptcha.render directly
+        if (containerRef.current) {
+          widgetIdRef.current = window.grecaptcha.render(containerRef.current, {
             sitekey: RECAPTCHA_CONFIG.SITE_KEY,
             theme: 'light',
             size: 'normal',
@@ -70,10 +61,9 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
             }
           });
           
-          console.log('ReCaptcha: Component rendered successfully');
+          console.log('ReCaptcha: Component rendered successfully, widget ID:', widgetIdRef.current);
           setIsLoading(false);
-          if (onLoad && !hasLoadedRef.current) {
-            hasLoadedRef.current = true;
+          if (onLoad) {
             onLoad();
           }
         }
@@ -84,17 +74,24 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
       }
     };
 
-    loadReCAPTCHA();
+    // Start loading after a short delay to ensure DOM is ready
+    setTimeout(loadReCAPTCHA, 100);
   }, []); // No dependencies to prevent re-renders
 
   const handleRefresh = () => {
     setLoadError(false);
     setIsLoading(true);
-    hasLoadedRef.current = false;
     if (containerRef.current) {
       containerRef.current.innerHTML = '';
     }
-    window.location.reload();
+    if (widgetIdRef.current && window.grecaptcha) {
+      try {
+        window.grecaptcha.reset(widgetIdRef.current);
+      } catch (e) {
+        console.log('Could not reset widget, reloading page');
+        window.location.reload();
+      }
+    }
   };
 
   if (!mounted) {

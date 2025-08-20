@@ -14,7 +14,7 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
-import ReCaptcha from '../../components/ReCaptchaBulletproof';
+import ReCaptcha from '../../components/ReCaptchaSimple';
 
 interface JobPosition {
   id: string;

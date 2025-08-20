@@ -11,9 +11,9 @@ export default function TestReCaptchaPage() {
   const [status, setStatus] = useState<string>('Initializing...');
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const [scriptStatus, setScriptStatus] = useState<string>('Checking...');
-  const [useSimple, setUseSimple] = useState(false);
+  const [useSimple, setUseSimple] = useState(true);
   const [useFixed, setUseFixed] = useState(false);
-  const [useBulletproof, setUseBulletproof] = useState(true);
+  const [useBulletproof, setUseBulletproof] = useState(false);
 
   useEffect(() => {
     // Check script loading status
