@@ -1,12 +1,45 @@
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageContainer from '@/components/PageContainer';
-import debounce from 'lodash/debounce';
+
+// Custom debounce hook
+function useDebounce<T extends (...args: any[]) => any>(
+  callback: T,
+  delay: number
+): [T, () => void] {
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  const debouncedCallback = useCallback(
+    (...args: Parameters<T>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => callback(...args), delay);
+    },
+    [callback, delay]
+  ) as T;
+
+  const cancel = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  return [debouncedCallback, cancel];
+}
 
 interface SearchResult {
   id: string;
@@ -36,7 +69,7 @@ export default function SearchPage() {
   const router = useRouter();
 
   // Debounced search function
-  const debouncedSearch = useMemo(() => debounce(async (searchQuery: string, filter: string) => {
+  const [debouncedSearch, cancelDebouncedSearch] = useDebounce(async (searchQuery: string, filter: string) => {
       if (!searchQuery.trim()) {
         setResults([]);
         setMeta(null);
@@ -81,7 +114,7 @@ export default function SearchPage() {
       } finally {
         setLoading(false);
       }
-    }, 300), []);
+    }, 300);
 
   // Effect to trigger search
   useEffect(() => {
@@ -89,9 +122,9 @@ export default function SearchPage() {
     
     // Cleanup
     return () => {
-      debouncedSearch.cancel();
+      cancelDebouncedSearch();
     };
-  }, [query, activeFilter, debouncedSearch]);
+  }, [query, activeFilter, debouncedSearch, cancelDebouncedSearch]);
 
   // Count results by type
   const resultCounts = {

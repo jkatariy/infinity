@@ -98,7 +98,6 @@ export default function RootLayout({
           src="https://www.google.com/recaptcha/api.js" 
           async 
           defer
-          strategy="lazyOnload"
         />
       </head>
       <body className={inter.className + ' antialiased'} suppressHydrationWarning>

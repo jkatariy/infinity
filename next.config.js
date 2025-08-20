@@ -23,7 +23,6 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
     optimizePackageImports: ['@heroicons/react', 'framer-motion'],
-    optimizeCss: true,
     turbo: {
       rules: {
         '*.svg': {
