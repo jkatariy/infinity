@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     creator: '@infinitysols',
   },
   verification: {
-    google: 'your-google-verification-code', // Add your actual Google verification code
+    google: 'G-XXXXXXXXXX', // TODO: Add your actual Google verification code
   },
   alternates: {
     canonical: 'https://infinitysols.com',

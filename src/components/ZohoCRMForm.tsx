@@ -75,6 +75,9 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
   const handleRecaptchaVerify = (token: string | null) => {
     setRecaptchaToken(token);
     setRecaptchaError(false);
+  };
+
+  const handleRecaptchaLoad = () => {
     setRecaptchaLoaded(true);
   };
 
@@ -89,6 +92,19 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Basic form validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setErrorMessage('Please fill in all required fields');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+
     // Check if reCAPTCHA is completed (only if it's loaded)
     if (recaptchaLoaded && !recaptchaToken) {
       setRecaptchaError(true);
@@ -316,7 +332,7 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
 
           {/* reCAPTCHA */}
           <div className="mt-4">
-            <ReCaptcha onVerify={handleRecaptchaVerify} />
+                          <ReCaptcha onVerify={handleRecaptchaVerify} onLoad={handleRecaptchaLoad} />
             {recaptchaError && (
               <p className="text-red-600 text-sm mt-2 text-center">
                 Please complete the reCAPTCHA verification

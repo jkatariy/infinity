@@ -15,10 +15,11 @@ const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), {
 
 interface ReCaptchaProps {
   onVerify: (token: string | null) => void;
+  onLoad?: () => void;
   className?: string;
 }
 
-const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, className = '' }) => {
+const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' }) => {
   const [mounted, setMounted] = useState(false);
   const [loadError, setLoadError] = useState(false);
 
@@ -45,6 +46,10 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, className = '' }) => {
   const handleLoad = () => {
     console.log('ReCaptcha: Component loaded successfully');
     setLoadError(false);
+    // Notify parent component that reCAPTCHA is loaded and ready
+    if (onLoad) {
+      onLoad();
+    }
   };
 
   if (!mounted) {

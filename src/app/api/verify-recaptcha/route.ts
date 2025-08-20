@@ -23,6 +23,14 @@ export async function POST(request: NextRequest) {
       }),
     });
 
+    if (!verificationResponse.ok) {
+      console.error('reCAPTCHA API response not ok:', verificationResponse.status);
+      return NextResponse.json(
+        { success: false, error: 'Failed to verify reCAPTCHA' },
+        { status: 500 }
+      );
+    }
+
     const verificationData = await verificationResponse.json();
 
     if (verificationData.success) {
