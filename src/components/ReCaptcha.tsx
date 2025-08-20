@@ -23,23 +23,65 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
   const [mounted, setMounted] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     
-    // Check if reCAPTCHA script is loaded
+    let retryCount = 0;
+    const maxRetries = 30; // 6 seconds max (30 * 200ms)
+    
+    // Function to check if reCAPTCHA script is loaded
     const checkRecaptchaScript = () => {
-      if (typeof window !== 'undefined' && window.grecaptcha) {
-        console.log('ReCaptcha: Script already loaded');
-        setIsLoading(false);
-        if (onLoad) onLoad();
-      } else {
-        console.log('ReCaptcha: Script not loaded yet, waiting...');
-        setTimeout(checkRecaptchaScript, 100);
+      if (typeof window !== 'undefined') {
+        // Check if grecaptcha object exists
+        if (window.grecaptcha && window.grecaptcha.ready) {
+          console.log('ReCaptcha: Script already loaded and ready');
+          setScriptLoaded(true);
+          setIsLoading(false);
+          if (onLoad) onLoad();
+          return;
+        }
+        
+        // Check if script tag exists
+        const scriptTag = document.querySelector('script[src*="recaptcha/api.js"]');
+        if (scriptTag) {
+          console.log('ReCaptcha: Script tag found, waiting for load...');
+          // Wait a bit more for the script to fully load
+          setTimeout(() => {
+            if (window.grecaptcha && window.grecaptcha.ready) {
+              console.log('ReCaptcha: Script loaded after delay');
+              setScriptLoaded(true);
+              setIsLoading(false);
+              if (onLoad) onLoad();
+            } else {
+              retryCount++;
+              if (retryCount >= maxRetries) {
+                console.error('ReCaptcha: Script failed to load after max retries');
+                setLoadError(true);
+                setIsLoading(false);
+              } else {
+                console.log('ReCaptcha: Script still not ready, retrying...', retryCount);
+                setTimeout(checkRecaptchaScript, 200);
+              }
+            }
+          }, 500);
+        } else {
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            console.error('ReCaptcha: Script tag not found after max retries');
+            setLoadError(true);
+            setIsLoading(false);
+          } else {
+            console.log('ReCaptcha: Script tag not found, retrying...', retryCount);
+            setTimeout(checkRecaptchaScript, 200);
+          }
+        }
       }
     };
 
-    checkRecaptchaScript();
+    // Start checking after a short delay to allow script to load
+    setTimeout(checkRecaptchaScript, 100);
   }, [onLoad]);
 
   const handleChange = (token: string | null) => {
@@ -100,6 +142,17 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
       <div className={`flex justify-center ${className}`}>
         <div className="flex justify-center items-center h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300">
           <div className="text-gray-500 text-sm">Loading reCAPTCHA...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Only render if script is loaded and component is mounted
+  if (!scriptLoaded) {
+    return (
+      <div className={`flex justify-center ${className}`}>
+        <div className="flex justify-center items-center h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300">
+          <div className="text-gray-500 text-sm">Initializing reCAPTCHA...</div>
         </div>
       </div>
     );
