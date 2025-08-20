@@ -461,6 +461,7 @@ export default function ProductDetailPage({
                         key={model.href}
                         onClick={() => router.push(model.href)}
                         className="text-left p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-white hover:shadow-sm transition-all duration-200 text-sm w-full"
+                        aria-label={`View ${model.name} details`}
                       >
                         <div className="font-medium text-gray-900 truncate">{model.name}</div>
                       </button>
@@ -473,6 +474,7 @@ export default function ProductDetailPage({
                       borderColor: colors.accent,
                       color: colors.accent
                     }}
+                    aria-label="Explore more product models"
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = colors.accent;
                       e.currentTarget.style.color = 'white';
@@ -1109,6 +1111,7 @@ export default function ProductDetailPage({
                       onClick={handleGetQuote}
                       className="w-full px-4 py-2 rounded-xl text-white font-semibold transition-all duration-200 hover:scale-105"
                       style={{ backgroundColor: colors.accent }}
+                      aria-label="Get expert consultation for this product"
                     >
                       Get Expert Consultation
                     </button>
@@ -1127,6 +1130,7 @@ export default function ProductDetailPage({
             <button
               onClick={() => setShowVideoModal(false)}
               className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+              aria-label="Close video modal"
             >
               <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

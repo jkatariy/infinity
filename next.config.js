@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
+const withBundleAnalyzer = process.env.ANALYZE === 'true' 
+  ? require('@next/bundle-analyzer')({ enabled: true })
+  : (config) => config;
+
 const nextConfig = {
   images: {
     domains: ['res.cloudinary.com', 'via.placeholder.com'], // Allow Cloudinary and placeholder images
@@ -7,17 +11,66 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   compress: true,
   swcMinify: true,
   reactStrictMode: true,
   poweredByHeader: false,
   generateEtags: false,
+  // Optimize bundle size
   experimental: {
     scrollRestoration: true,
     optimizePackageImports: ['@heroicons/react', 'framer-motion'],
+    optimizeCss: true,
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   transpilePackages: ['framer-motion'],
+  // Optimize webpack configuration
+  webpack: (config, { isServer, dev }) => {
+    // Optimize for framer-motion
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'framer-motion': require.resolve('framer-motion'),
+    };
+
+    // Tree shaking optimization
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      };
+    }
+
+    // Optimize bundle splitting
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+        common: {
+          name: 'common',
+          minChunks: 2,
+          chunks: 'all',
+          enforce: true,
+        },
+      },
+    };
+
+    return config;
+  },
   headers: async () => {
     // Apply strict security headers only in production.
     // In development, relax CSP to avoid blocking Next.js HMR (WebSocket) and tooling.
@@ -80,15 +133,6 @@ const nextConfig = {
       { source: '/products/conveying/box-lifter', destination: '/products/conveying', permanent: true },
     ];
   },
-  webpack: (config, { isServer }) => {
-    // Optimize for framer-motion
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'framer-motion': require.resolve('framer-motion'),
-    };
-    
-    return config;
-  }
 };
 
-module.exports = nextConfig; 
+module.exports = withBundleAnalyzer(nextConfig); 

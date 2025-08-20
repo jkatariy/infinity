@@ -27,10 +27,44 @@ export default function HeroVideo() {
   }, [mounted]);
 
   const handleVideoError = () => {
-    console.error('Video failed to load');
+    // Remove console.error to prevent browser errors
     setIsVideoError(true);
     setIsInitialLoad(false);
   };
+
+  // Preload video metadata for better performance
+  useEffect(() => {
+    if (!mounted || videoError) return;
+    
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.muted = true;
+    video.playsInline = true;
+    
+    const source = document.createElement('source');
+    source.src = '/videos/videoplayback.mp4';
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    
+    const handleCanPlay = () => {
+      setIsVideoLoaded(true);
+      setIsInitialLoad(false);
+    };
+    
+    const handleError = () => {
+      handleVideoError();
+    };
+    
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('error', handleError);
+    
+    video.load();
+    
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('error', handleError);
+    };
+  }, [mounted, videoError]);
 
   // Don't render video until mounted on client to prevent hydration mismatch
   if (!mounted) {
@@ -119,8 +153,12 @@ export default function HeroVideo() {
               poster="/videos/videoplayback-poster.jpg"
             >
               <source
-                src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov"
+                src="/videos/videoplayback.mp4"
                 type="video/mp4"
+              />
+              <source
+                src="/videos/videoplayback.webm"
+                type="video/webm"
               />
               Your browser does not support the video tag.
             </video>
