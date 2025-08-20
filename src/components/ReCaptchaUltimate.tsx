@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { RECAPTCHA_CONFIG, getCurrentDomain, isDomainAllowed } from '../lib/recaptcha-config';
-import { waitForReCaptcha, isReCaptchaReady } from '../lib/recaptcha-loader';
 
 interface ReCaptchaProps {
   onVerify: (token: string | null) => void;
@@ -18,7 +17,7 @@ const ReCaptchaUltimate: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, classNa
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<number | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const maxRetries = 10;
+  const maxRetries = 5;
 
   // Memoize callbacks to prevent re-renders
   const handleCallback = useCallback((token: string) => {
@@ -45,14 +44,13 @@ const ReCaptchaUltimate: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, classNa
     }
   }, [onLoad]);
 
-  const loadReCAPTCHA = useCallback(async () => {
+  const loadReCAPTCHA = useCallback(() => {
     try {
       console.log('ReCaptchaUltimate: Attempting to load reCAPTCHA...');
       console.log('ReCaptchaUltimate: Current domain:', getCurrentDomain());
       console.log('ReCaptchaUltimate: Domain allowed:', isDomainAllowed());
       console.log('ReCaptchaUltimate: Site key:', RECAPTCHA_CONFIG.SITE_KEY);
       console.log('ReCaptchaUltimate: grecaptcha available:', typeof window !== 'undefined' && !!window.grecaptcha);
-      console.log('ReCaptchaUltimate: grecaptcha.render available:', typeof window !== 'undefined' && window.grecaptcha && typeof window.grecaptcha.render === 'function');
 
       // Check if script is loaded
       if (typeof window === 'undefined') {
@@ -60,24 +58,17 @@ const ReCaptchaUltimate: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, classNa
         return;
       }
 
-      // Wait for reCAPTCHA script to be ready
-      if (!isReCaptchaReady()) {
-        console.log('ReCaptchaUltimate: Waiting for reCAPTCHA script...');
-        try {
-          await waitForReCaptcha();
-          console.log('ReCaptchaUltimate: Script loaded successfully');
-        } catch (scriptError) {
-          console.error('ReCaptchaUltimate: Failed to load script:', scriptError);
-          if (retryCount < maxRetries) {
-            setRetryCount(prev => prev + 1);
-            timeoutRef.current = setTimeout(loadReCAPTCHA, 1000);
-          } else {
-            console.error('ReCaptchaUltimate: Max retries reached');
-            setLoadError(true);
-            setIsLoading(false);
-          }
-          return;
+      if (!window.grecaptcha) {
+        console.log('ReCaptchaUltimate: grecaptcha not available, retrying...');
+        if (retryCount < maxRetries) {
+          setRetryCount(prev => prev + 1);
+          timeoutRef.current = setTimeout(loadReCAPTCHA, 500);
+        } else {
+          console.error('ReCaptchaUltimate: Max retries reached');
+          setLoadError(true);
+          setIsLoading(false);
         }
+        return;
       }
 
       if (typeof window.grecaptcha.render !== 'function') {
