@@ -119,7 +119,7 @@ export default function HeroVideo() {
               poster="/videos/videoplayback-poster.jpg"
             >
               <source
-                src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755699809/o4w0fskzmtly06scu4z5.mov"
+                src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov"
                 type="video/mp4"
               />
               Your browser does not support the video tag.
