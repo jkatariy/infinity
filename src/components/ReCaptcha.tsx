@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 // Dynamically import ReCAPTCHA to avoid SSR issues
@@ -24,6 +24,7 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
   const [loadError, setLoadError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -39,7 +40,10 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
           console.log('ReCaptcha: Script already loaded and ready');
           setScriptLoaded(true);
           setIsLoading(false);
-          if (onLoad) onLoad();
+          if (onLoad && !hasLoadedRef.current) {
+            hasLoadedRef.current = true;
+            onLoad();
+          }
           return;
         }
         
@@ -53,7 +57,10 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
               console.log('ReCaptcha: Script loaded after delay');
               setScriptLoaded(true);
               setIsLoading(false);
-              if (onLoad) onLoad();
+              if (onLoad && !hasLoadedRef.current) {
+                hasLoadedRef.current = true;
+                onLoad();
+              }
             } else {
               retryCount++;
               if (retryCount >= maxRetries) {
@@ -82,7 +89,7 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
 
     // Start checking after a short delay to allow script to load
     setTimeout(checkRecaptchaScript, 100);
-  }, [onLoad]);
+  }, []); // Remove onLoad from dependencies to prevent re-renders
 
   const handleChange = (token: string | null) => {
     console.log('ReCaptcha: Token received', token ? 'Yes' : 'No');
@@ -105,7 +112,8 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
     setLoadError(false);
     setIsLoading(false);
     // Notify parent component that reCAPTCHA is loaded and ready
-    if (onLoad) {
+    if (onLoad && !hasLoadedRef.current) {
+      hasLoadedRef.current = true;
       onLoad();
     }
   };
@@ -137,22 +145,12 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
     );
   }
 
-  if (isLoading) {
+  // Show loading state while script is not ready
+  if (!scriptLoaded || isLoading) {
     return (
       <div className={`flex justify-center ${className}`}>
         <div className="flex justify-center items-center h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300">
           <div className="text-gray-500 text-sm">Loading reCAPTCHA...</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Only render if script is loaded and component is mounted
-  if (!scriptLoaded) {
-    return (
-      <div className={`flex justify-center ${className}`}>
-        <div className="flex justify-center items-center h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300">
-          <div className="text-gray-500 text-sm">Initializing reCAPTCHA...</div>
         </div>
       </div>
     );

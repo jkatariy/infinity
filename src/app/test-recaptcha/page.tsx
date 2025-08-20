@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import ReCaptcha from '../../components/ReCaptcha';
+import ReCaptchaSimple from '../../components/ReCaptchaSimple';
 
 export default function TestReCaptchaPage() {
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('Initializing...');
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const [scriptStatus, setScriptStatus] = useState<string>('Checking...');
+  const [useSimple, setUseSimple] = useState(false);
 
   useEffect(() => {
     // Check script loading status
@@ -93,7 +95,22 @@ export default function TestReCaptchaPage() {
           <div className="space-y-4">
             <div className="p-4 bg-purple-50 rounded-lg">
               <h2 className="font-semibold text-purple-900 mb-2">reCAPTCHA Widget:</h2>
-              <ReCaptcha onVerify={handleVerify} onLoad={handleLoad} />
+              <div className="mb-4">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={useSimple}
+                    onChange={(e) => setUseSimple(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Use Simple Component (Recommended)
+                </label>
+              </div>
+              {useSimple ? (
+                <ReCaptchaSimple onVerify={handleVerify} onLoad={handleLoad} />
+              ) : (
+                <ReCaptcha onVerify={handleVerify} onLoad={handleLoad} />
+              )}
             </div>
             
             <div className="p-4 bg-yellow-50 rounded-lg">
