@@ -7,6 +7,7 @@ import ReCaptchaFixed from '../../components/ReCaptchaFixed';
 import ReCaptchaBulletproof from '../../components/ReCaptchaBulletproof';
 import ReCaptchaDirect from '../../components/ReCaptchaDirect';
 import ReCaptchaUltimate from '../../components/ReCaptchaUltimate';
+import ReCaptchaDiagnostic from '../../components/ReCaptchaDiagnostic';
 
 export default function TestReCaptchaPage() {
   const [token, setToken] = useState<string | null>(null);
@@ -17,7 +18,8 @@ export default function TestReCaptchaPage() {
   const [useFixed, setUseFixed] = useState(false);
   const [useBulletproof, setUseBulletproof] = useState(false);
   const [useDirect, setUseDirect] = useState(false);
-  const [useUltimate, setUseUltimate] = useState(true);
+  const [useUltimate, setUseUltimate] = useState(false);
+  const [useDiagnostic, setUseDiagnostic] = useState(true);
 
   useEffect(() => {
     // Check script loading status
@@ -178,11 +180,30 @@ export default function TestReCaptchaPage() {
                         setUseFixed(false);
                         setUseBulletproof(false);
                         setUseDirect(false);
+                        setUseDiagnostic(false);
                       }
                     }}
                     className="mr-2"
                   />
-                  Use Ultimate Component (Recommended)
+                  Use Ultimate Component
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={useDiagnostic}
+                    onChange={(e) => {
+                      setUseDiagnostic(e.target.checked);
+                      if (e.target.checked) {
+                        setUseSimple(false);
+                        setUseFixed(false);
+                        setUseBulletproof(false);
+                        setUseDirect(false);
+                        setUseUltimate(false);
+                      }
+                    }}
+                    className="mr-2"
+                  />
+                  Use Diagnostic Component (Debug Mode)
                 </label>
               </div>
               {useSimple ? (
@@ -195,6 +216,8 @@ export default function TestReCaptchaPage() {
                 <ReCaptchaDirect onVerify={handleVerify} onLoad={handleLoad} />
               ) : useUltimate ? (
                 <ReCaptchaUltimate onVerify={handleVerify} onLoad={handleLoad} />
+              ) : useDiagnostic ? (
+                <ReCaptchaDiagnostic onVerify={handleVerify} onLoad={handleLoad} />
               ) : (
                 <ReCaptcha onVerify={handleVerify} onLoad={handleLoad} />
               )}
