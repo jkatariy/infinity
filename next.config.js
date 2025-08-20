@@ -41,10 +41,10 @@ const nextConfig = {
               "img-src 'self' data: https: https://res.cloudinary.com; " +
               "media-src 'self' https:; " +
               // scripts and styles
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com; " +
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com; " +
               "style-src 'self' 'unsafe-inline'; " +
               // frames and embeds
-              "frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com; " +
+              "frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://www.gstatic.com; " +
               // connections (include GA, Supabase, Zoho, and allow wss for any future needs)
               "connect-src 'self' https://api.perplexity.ai https://accounts.zoho.com https://www.zohoapis.com https://zxvhgpejwgrlxksnqtxk.supabase.co https://www.google-analytics.com https://analytics.google.com wss:; " +
               // fonts and misc

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { RECAPTCHA_CONFIG, getCurrentDomain, isDomainAllowed } from '../lib/recaptcha-config';
 
 interface ReCaptchaProps {
   onVerify: (token: string | null) => void;
@@ -17,6 +18,11 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
 
   useEffect(() => {
     setMounted(true);
+    
+    // Debug information
+    console.log('ReCaptcha: Current domain:', getCurrentDomain());
+    console.log('ReCaptcha: Domain allowed:', isDomainAllowed());
+    console.log('ReCaptcha: Site key:', RECAPTCHA_CONFIG.SITE_KEY);
     
     let retryCount = 0;
     const maxRetries = 50; // 5 seconds max
@@ -46,7 +52,7 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
           
           // Use grecaptcha.render directly
           const widgetId = window.grecaptcha.render(recaptchaElement, {
-            sitekey: '6Lf8qKwrAAAAAGybd9R6bg3zeLdXOCdrGDYiYNVO',
+            sitekey: RECAPTCHA_CONFIG.SITE_KEY,
             theme: 'light',
             size: 'normal',
             callback: (token: string) => {
@@ -106,7 +112,9 @@ const ReCaptchaBulletproof: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, clas
       <div className={`flex justify-center ${className}`}>
         <div className="text-red-600 text-sm p-4 border border-red-200 rounded bg-red-50">
           <p className="font-medium mb-2">reCAPTCHA failed to load</p>
-          <p className="text-xs">Please refresh the page and try again.</p>
+          <p className="text-xs mb-2">Current domain: {getCurrentDomain()}</p>
+          <p className="text-xs mb-2">Domain allowed: {isDomainAllowed() ? 'Yes' : 'No'}</p>
+          <p className="text-xs">Please check reCAPTCHA configuration for this domain.</p>
           <button 
             onClick={handleRefresh}
             className="mt-2 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700"
