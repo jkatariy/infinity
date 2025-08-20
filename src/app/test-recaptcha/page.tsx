@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import ReCaptcha from '../../components/ReCaptcha';
 import ReCaptchaSimple from '../../components/ReCaptchaSimple';
+import ReCaptchaFixed from '../../components/ReCaptchaFixed';
+import ReCaptchaBulletproof from '../../components/ReCaptchaBulletproof';
 
 export default function TestReCaptchaPage() {
   const [token, setToken] = useState<string | null>(null);
@@ -10,6 +12,8 @@ export default function TestReCaptchaPage() {
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const [scriptStatus, setScriptStatus] = useState<string>('Checking...');
   const [useSimple, setUseSimple] = useState(false);
+  const [useFixed, setUseFixed] = useState(false);
+  const [useBulletproof, setUseBulletproof] = useState(true);
 
   useEffect(() => {
     // Check script loading status
@@ -95,19 +99,59 @@ export default function TestReCaptchaPage() {
           <div className="space-y-4">
             <div className="p-4 bg-purple-50 rounded-lg">
               <h2 className="font-semibold text-purple-900 mb-2">reCAPTCHA Widget:</h2>
-              <div className="mb-4">
+              <div className="mb-4 space-y-2">
                 <label className="flex items-center">
                   <input
                     type="checkbox"
                     checked={useSimple}
-                    onChange={(e) => setUseSimple(e.target.checked)}
+                    onChange={(e) => {
+                      setUseSimple(e.target.checked);
+                      if (e.target.checked) {
+                        setUseFixed(false);
+                        setUseBulletproof(false);
+                      }
+                    }}
                     className="mr-2"
                   />
-                  Use Simple Component (Recommended)
+                  Use Simple Component
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={useFixed}
+                    onChange={(e) => {
+                      setUseFixed(e.target.checked);
+                      if (e.target.checked) {
+                        setUseSimple(false);
+                        setUseBulletproof(false);
+                      }
+                    }}
+                    className="mr-2"
+                  />
+                  Use Fixed Component
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={useBulletproof}
+                    onChange={(e) => {
+                      setUseBulletproof(e.target.checked);
+                      if (e.target.checked) {
+                        setUseSimple(false);
+                        setUseFixed(false);
+                      }
+                    }}
+                    className="mr-2"
+                  />
+                  Use Bulletproof Component (Recommended)
                 </label>
               </div>
               {useSimple ? (
                 <ReCaptchaSimple onVerify={handleVerify} onLoad={handleLoad} />
+              ) : useFixed ? (
+                <ReCaptchaFixed onVerify={handleVerify} onLoad={handleLoad} />
+              ) : useBulletproof ? (
+                <ReCaptchaBulletproof onVerify={handleVerify} onLoad={handleLoad} />
               ) : (
                 <ReCaptcha onVerify={handleVerify} onLoad={handleLoad} />
               )}
