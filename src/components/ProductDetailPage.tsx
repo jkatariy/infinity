@@ -61,15 +61,15 @@ const getColorScheme = (category: string) => {
 const allModels = {
   'bundling-wrapping': [
     { name: 'IBP-120', title: 'IBP-120 High Speed Bundler', href: '/products/bundling-wrapping/ibp-120', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/hjmnoiqzl3fosroitm4q.png' },
-    { name: 'IBS-200', title: 'IBS-200 Strip Packaging Machine', href: '/products/bundling-wrapping/ibs-200', image: '/images/products/bundling-wrapping/ibs-200.jpg' },
-    { name: 'ISP-120', title: 'ISP-120 Shrink Wrapping for Pouches', href: '/products/bundling-wrapping/isp-120', image: '/images/products/bundling-wrapping/isp-120.jpg' },
-    { name: 'IMS-800', title: 'IMS-800/600 Multitrack VFFS Integration', href: '/products/bundling-wrapping/ims-800', image: '/images/products/bundling-wrapping/ims-800.jpg' },
+    { name: 'IBS-200', title: 'IBS-200 Strip Packaging Machine', href: '/products/bundling-wrapping/ibs-200', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/no7bf1acf58hgfrvwmnp.png' },
+    { name: 'ISP-120', title: 'ISP-120 Shrink Wrapping for Pouches', href: '/products/bundling-wrapping/isp-120', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/qw4z3foigvwo02hce7jp.png' },
+    { name: 'IMS-800', title: 'IMS-800/600 Multitrack VFFS Integration', href: '/products/bundling-wrapping/ims-800', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/ilnnb2uya0xricuymb8d.png' },
     { name: 'IWB-200', title: 'IWB-200 Shrink Wrapping for Bottles', href: '/products/bundling-wrapping/iwb-200', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098781/vmqgtzrzrbs8jiekt61w.png' },
-    { name: 'ISB-120', title: 'ISB-120 Shrink Wrapping for Bottles', href: '/products/bundling-wrapping/isb-120', image: '/images/products/bundling-wrapping/isb-120.jpg' }
+    { name: 'ISB-120', title: 'ISB-120 Shrink Wrapping for Bottles', href: '/products/bundling-wrapping/isb-120', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178600/vujuj4xsre8embtxwwdb.png' }
   ],
   'pouch-baler': [
     { name: 'IBL-500', title: 'IBL-500 Automatic Baler', href: '/products/pouch-baler/ibl-500', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098786/q9cecrkqu85kbd95t05o.png' },
-    { name: 'IBG-8', title: 'IBG-8 Bagging Machine', href: '/products/pouch-baler/ibg-8', image: '/images/products/pouch-baler/ibg-8.jpg' },
+    { name: 'IBG-8', title: 'IBG-8 Bagging Machine', href: '/products/pouch-baler/ibg-8', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945422/IBG8_oewpey.png' },
     { name: 'IBG-H8-V8', title: 'IBG-H8 & IBG-V8 Bagging Machines', href: '/products/pouch-baler/ibg-h8-v8', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098788/fycdkeggbzabb7ngmdje.jpg' }
   ],
   'cartoning': [
@@ -77,16 +77,16 @@ const allModels = {
     { name: 'ACM-40', title: 'ACM-40 Semi-Automatic Cartoning Machine', href: '/products/cartoning/acm-40', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098784/qhdjxx3v1xynhdhzrj1e.png' }
   ],
   'case-packers': [
-    { name: 'ICP-120', title: 'ICP-120 Robotic Case Packer for Pouches', href: '/products/case-packers/icp-120', image: '/images/products/case-packers/icp-120.jpg' },
+    { name: 'ICP-120', title: 'ICP-120 Robotic Case Packer for Pouches', href: '/products/case-packers/icp-120', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945423/icp-120_c9k0w8.png' },
     { name: 'ICS-200', title: 'ICS-200 Case Packer for Strip of Pouches', href: '/products/case-packers/ics-200', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098778/icqycnzcjm2caqhemj5x.png' },
-    { name: 'ICB-120', title: 'ICB-120 Case Packer for Bottles', href: '/products/case-packers/icb-120', image: '/images/products/case-packers/icb-120.jpg' },
+    { name: 'ICB-120', title: 'ICB-120 Case Packer for Bottles', href: '/products/case-packers/icb-120', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1752945429/ICB120_case_packer_bottles_mqhvdm.png' },
     { name: 'Case Erector', title: 'Automatic Case Erector', href: '/products/case-packers/case-erector', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098774/nu2tjyq4jfbjxoeisycb.png' },
     { name: 'Case Sealer', title: 'Automatic Case Sealer', href: '/products/case-packers/case-sealer', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/lphxuwk9yeykyaojtmxx.png' }
   ],
   'checkweighers-inspection': [
     { name: 'ICW-600', title: 'ICW-600 Light Duty Checkweigher', href: '/products/checkweighers-inspection', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098780/ojxj2meqqjouthgdbncd.png' },
     { name: 'ICW-1200', title: 'ICW-1200 Standard Checkweigher', href: '/products/checkweighers-inspection', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/nsj6z12d9kqpgeklswgq.png' },
-    { name: 'ICW-6000', title: 'ICW-6000 Heavy Duty Checkweigher', href: '/products/checkweighers-inspection', image: '/images/products/checkweighers/icw-6000.jpg' },
+    { name: 'ICW-6000', title: 'ICW-6000 Heavy Duty Checkweigher', href: '/products/checkweighers-inspection', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178600/h99w6hq4fzdkuwv0mitr.png' },
     { name: 'ICW-25K', title: 'ICW-25K Industrial Checkweigher', href: '/products/checkweighers-inspection', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/to7gc0wb5jq8dzm3bojs.png' },
     { name: 'ICW-50K', title: 'ICW-50K Extra Heavy Checkweigher', href: '/products/checkweighers-inspection', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098779/qwdbgrhu0duvwvui6i3t.png' },
     { name: 'Vision Pro', title: 'Vision Pro Standard', href: '/products/checkweighers-inspection', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098783/eyabelg0f9lzx5kl5hms.png' },
@@ -98,8 +98,8 @@ const allModels = {
     { name: 'Roller', title: 'Roller Conveyor', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098782/qxhnotoahwot8qbmshvi.png' },
     { name: 'Compression', title: 'Compression Conveyor', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098775/mujhcs3birsdowgnofjw.png' },
     { name: 'Z-Bucket', title: 'Z Type Bucket Elevator', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098783/ca3y8dxlglvf3wrivxlz.png' },
-    { name: 'Crate Lifter', title: 'Vertical Crate Lifter', href: '/products/conveying', image: '/images/products/conveying/crate-lifter.jpg' },
-    { name: 'Box Lifter', title: 'Box Lifter', href: '/products/conveying', image: '/images/products/conveying/box-lifter.jpg' },
+    { name: 'Crate Lifter', title: 'Vertical Crate Lifter', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178597/hgmojw4whm9xyqvuqjao.png' },
+    { name: 'Box Lifter', title: 'Box Lifter', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755178596/lofywz27dqkb595tfhkd.png' },
     { name: 'Spiral', title: 'Spiral Conveyor', href: '/products/conveying', image: 'https://res.cloudinary.com/dbogkgabu/image/upload/v1755098782/yzhxpcgteq0sl0rc6ugd.png' }
   ]
 } as const;

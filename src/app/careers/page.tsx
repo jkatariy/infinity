@@ -14,6 +14,7 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
+import ReCaptcha from '../../components/ReCaptcha';
 
 interface JobPosition {
   id: string;
@@ -52,6 +53,8 @@ export default function CareersPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [recaptchaError, setRecaptchaError] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,13 +95,41 @@ export default function CareersPage() {
     scrollToForm();
   };
 
+  const handleRecaptchaVerify = (token: string | null) => {
+    setRecaptchaToken(token);
+    setRecaptchaError(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check if reCAPTCHA is completed
+    if (!recaptchaToken) {
+      setRecaptchaError(true);
+      return;
+    }
+
     setSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
+    setRecaptchaError(false);
 
     try {
+      // Verify reCAPTCHA token
+      const recaptchaResponse = await fetch('/api/verify-recaptcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: recaptchaToken }),
+      });
+
+      const recaptchaResult = await recaptchaResponse.json();
+      
+      if (!recaptchaResult.success) {
+        throw new Error('reCAPTCHA verification failed');
+      }
+
       // Insert application into database
       const { error: dbError } = await supabase
         .from('career_applications')
@@ -139,6 +170,7 @@ Infinity Automated Solutions Careers System
         position_interested_in: '',
         additional_info: ''
       });
+      setRecaptchaToken(null);
     } catch (error) {
       console.error('Error submitting application:', error);
       setSubmitStatus('error');
@@ -430,6 +462,16 @@ Infinity Automated Solutions Careers System
                       placeholder="Tell us about your experience, skills, and why you're interested in this position..."
                     />
                   </div>
+                </div>
+
+                {/* reCAPTCHA */}
+                <div className="mt-6">
+                  <ReCaptcha onVerify={handleRecaptchaVerify} />
+                  {recaptchaError && (
+                    <p className="text-red-600 text-sm mt-2 text-center">
+                      Please complete the reCAPTCHA verification
+                    </p>
+                  )}
                 </div>
 
                 <button
