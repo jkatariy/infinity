@@ -55,6 +55,7 @@ export default function CareersPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [recaptchaError, setRecaptchaError] = useState(false);
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -98,13 +99,14 @@ export default function CareersPage() {
   const handleRecaptchaVerify = (token: string | null) => {
     setRecaptchaToken(token);
     setRecaptchaError(false);
+    setRecaptchaLoaded(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check if reCAPTCHA is completed
-    if (!recaptchaToken) {
+    // Check if reCAPTCHA is completed (only if it's loaded)
+    if (recaptchaLoaded && !recaptchaToken) {
       setRecaptchaError(true);
       return;
     }
@@ -115,19 +117,21 @@ export default function CareersPage() {
     setRecaptchaError(false);
 
     try {
-      // Verify reCAPTCHA token
-      const recaptchaResponse = await fetch('/api/verify-recaptcha', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: recaptchaToken }),
-      });
+      // Verify reCAPTCHA token (only if we have a token)
+      if (recaptchaToken) {
+        const recaptchaResponse = await fetch('/api/verify-recaptcha', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token: recaptchaToken }),
+        });
 
-      const recaptchaResult = await recaptchaResponse.json();
-      
-      if (!recaptchaResult.success) {
-        throw new Error('reCAPTCHA verification failed');
+        const recaptchaResult = await recaptchaResponse.json();
+        
+        if (!recaptchaResult.success) {
+          throw new Error('reCAPTCHA verification failed');
+        }
       }
 
       // Insert application into database

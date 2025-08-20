@@ -35,7 +35,7 @@ export default function HeroVideo() {
   // Don't render video until mounted on client to prevent hydration mismatch
   if (!mounted) {
     return (
-      <div className="relative h-[70vh] sm:h-[80vh] lg:h-[85vh] w-full overflow-hidden">
+      <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/30 z-10" />
         <Image
           src="/videos/videoplayback-poster.jpg"
@@ -89,24 +89,15 @@ export default function HeroVideo() {
   }
 
   return (
-    <div className="relative h-[70vh] sm:h-[80vh] lg:h-[85vh] w-full overflow-hidden">
+    <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full">
         {/* Lighter gradient overlay for better video visibility */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/30 z-10" />
         
-        {/* Background content options */}
+        {/* Video Background */}
         {!videoError ? (
           <>
-            <Image
-              src="/videos/videoplayback-poster.jpg"
-              alt="Packaging automation hero background"
-              fill
-              className={`object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}
-              priority
-              fetchPriority="high"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-            />
             <video
               autoPlay
               loop
@@ -123,7 +114,7 @@ export default function HeroVideo() {
               onError={handleVideoError}
               style={{
                 willChange: 'transform, opacity',
-                transform: 'translateZ(0)',
+                transform: 'translateZ(0) scale(1.1)', // Zoom in the video slightly
               }}
               poster="/videos/videoplayback-poster.jpg"
             >
