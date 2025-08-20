@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -98,7 +97,9 @@ const modelRoutes: { [key: string]: string } = {
   'ICB-200': '/products/case-packers/icb-120', // Assuming ICB-200 maps to ICB-120
   'IBP-200': '/products/bundling-wrapping/ibp-120', // Assuming IBP-200 maps to IBP-120
   'IMS-600': '/products/bundling-wrapping/ims-800', // Assuming IMS-600 maps to IMS-800
+  'IMS-600/800': '/products/bundling-wrapping/ims-800', // Combined model reference
   'IMS-800': '/products/bundling-wrapping/ims-800',
+  'ACM-40/100': '/products/cartoning/acm-100', // Assuming ACM-40/100 maps to ACM-100
   'Check Weighers ICW': '/products/checkweighers',
   'Taping System': '/products/case-packers/case-sealer',
   'Check Weigher': '/products/checkweighers',

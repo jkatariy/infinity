@@ -5,7 +5,23 @@ export async function GET(request: NextRequest) {
     // Generate the same OAuth URL that would be used for authorization
     const state = process.env.ZOHO_OAUTH_STATE || 'infinity_automated_solutions_2024';
     
-    const authUrl = new URL(`${process.env.ZOHO_ACCOUNTS_URL}/oauth/v2/auth`);
+    const accountsUrl = process.env.ZOHO_ACCOUNTS_URL;
+    if (!accountsUrl) {
+      return NextResponse.json({
+        success: false,
+        error: 'ZOHO_ACCOUNTS_URL environment variable is not set',
+        environment_check: {
+          ZOHO_CLIENT_ID: process.env.ZOHO_CLIENT_ID ? 'SET' : 'MISSING',
+          ZOHO_CLIENT_SECRET: process.env.ZOHO_CLIENT_SECRET ? 'SET' : 'MISSING',
+          ZOHO_REDIRECT_URI: process.env.ZOHO_REDIRECT_URI || 'MISSING',
+          ZOHO_ACCOUNTS_URL: 'MISSING',
+          ZOHO_SCOPE: process.env.ZOHO_SCOPE || 'MISSING',
+          ZOHO_OAUTH_STATE: process.env.ZOHO_OAUTH_STATE || 'MISSING'
+        }
+      });
+    }
+    
+    const authUrl = new URL(`${accountsUrl}/oauth/v2/auth`);
     
     authUrl.searchParams.append('scope', process.env.ZOHO_SCOPE || 'ZohoCRM.modules.ALL,ZohoCRM.settings.ALL,ZohoCRM.users.READ');
     authUrl.searchParams.append('client_id', process.env.ZOHO_CLIENT_ID!);
