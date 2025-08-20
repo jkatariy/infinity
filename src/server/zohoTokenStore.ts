@@ -276,6 +276,25 @@ export async function markLeadAsSent(leadId: string, zohoLeadId?: string, zohoCo
   }
 }
 
+export async function updateLeadData(leadId: string, updates: Partial<Omit<LeadData, 'id' | 'created_at' | 'sent_to_zoho'>>): Promise<void> {
+  try {
+    const { error } = await supabase
+      .from('zoho_leads')
+      .update(updates)
+      .eq('id', leadId);
+
+    if (error) {
+      console.error('Error updating lead data:', error);
+      throw error;
+    }
+
+    console.log('Lead data updated successfully for ID:', leadId);
+  } catch (error) {
+    console.error('Failed to update lead data:', error);
+    throw error;
+  }
+}
+
 export async function getLeadStats(): Promise<{ total: number; pending: number; sent: number }> {
   try {
     const { data, error } = await supabase

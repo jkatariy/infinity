@@ -70,6 +70,7 @@ export default function FloatingAssistant() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
   const [selectedModel, setSelectedModel] = useState<ModelLink | null>(null);
   const [contactInfo, setContactInfo] = useState({ company: '', phone: '', email: '' });
+  const [leadId, setLeadId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -83,8 +84,50 @@ export default function FloatingAssistant() {
     }
   }, [currentStep, selectedCategory, selectedModel, contactInfo]);
 
+  const handleInitialContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/chatbot-initial-contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: contactInfo.company, // Using company name as the name field
+          email: contactInfo.email,
+          phone: contactInfo.phone,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setLeadId(result.leadId);
+        setCurrentStep('category');
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(result.error || 'Failed to submit contact information');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!leadId) {
+      setSubmitStatus('error');
+      setErrorMessage('No lead ID found. Please start over.');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
@@ -96,9 +139,7 @@ export default function FloatingAssistant() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: contactInfo.company, // Using company name as the name field
-          email: contactInfo.email,
-          phone: contactInfo.phone,
+          leadId: leadId,
           category: selectedCategory,
           model_name: selectedModel?.name,
           model_label: selectedModel?.label,
@@ -154,6 +195,7 @@ export default function FloatingAssistant() {
     setSelectedCategory(null);
     setSelectedModel(null);
     setContactInfo({ company: '', phone: '', email: '' });
+    setLeadId(null);
     setSubmitStatus('idle');
     setErrorMessage('');
   };
@@ -184,37 +226,45 @@ export default function FloatingAssistant() {
 
       {/* Chat Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-end p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md h-96 flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-end p-2 sm:p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md h-[75vh] sm:h-96 flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <h3 className="font-semibold text-gray-900">AI Assistant</h3>
+            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <h3 className="font-semibold text-gray-900 text-sm sm:text-base">AI Assistant</h3>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
                 aria-label="Close AI assistant chat"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
             {/* Chat Content */}
-            <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div ref={chatRef} className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
               {/* Welcome Message */}
               {currentStep === 'welcome' && (
                 <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-blue-900 font-medium">👋 Hello! I'm your AI assistant.</p>
-                    <p className="text-blue-800 text-sm mt-1">I can help you find the perfect automation solution for your needs.</p>
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-blue-900 font-medium text-sm sm:text-base">👋 Hello! I'm your AI assistant.</p>
+                    <p className="text-blue-800 text-xs sm:text-sm mt-1">I can help you find the perfect automation solution for your needs.</p>
                   </div>
+                  
+                  {submitStatus === 'error' && (
+                    <div className="bg-red-50 p-3 sm:p-4 rounded-lg">
+                      <p className="text-red-800 font-medium text-sm sm:text-base">❌ Error</p>
+                      <p className="text-red-700 text-xs sm:text-sm mt-1">{errorMessage}</p>
+                    </div>
+                  )}
+                  
                   <div className="space-y-2">
-                    <p className="text-gray-700">Let's start by getting your contact information:</p>
-                    <form onSubmit={(e) => { e.preventDefault(); setCurrentStep('category'); }} className="space-y-3">
+                    <p className="text-gray-700 text-sm sm:text-base">Let's start by getting your contact information:</p>
+                    <form onSubmit={handleInitialContactSubmit} className="space-y-3">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
                         <input
@@ -222,7 +272,7 @@ export default function FloatingAssistant() {
                           required
                           value={contactInfo.company}
                           onChange={(e) => setContactInfo(prev => ({ ...prev, company: e.target.value }))}
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full p-2.5 sm:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                           placeholder="Enter your company name"
                         />
                       </div>
@@ -233,7 +283,7 @@ export default function FloatingAssistant() {
                           required
                           value={contactInfo.phone}
                           onChange={(e) => setContactInfo(prev => ({ ...prev, phone: e.target.value }))}
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full p-2.5 sm:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                           placeholder="Enter your phone number"
                         />
                       </div>
@@ -244,15 +294,16 @@ export default function FloatingAssistant() {
                           required
                           value={contactInfo.email}
                           onChange={(e) => setContactInfo(prev => ({ ...prev, email: e.target.value }))}
-                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full p-2.5 sm:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                           placeholder="Enter your email"
                         />
                       </div>
                       <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 text-white py-2.5 sm:py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors text-sm font-medium"
                       >
-                        Continue
+                        {isSubmitting ? 'Submitting...' : 'Continue'}
                       </button>
                     </form>
                   </div>
@@ -262,11 +313,11 @@ export default function FloatingAssistant() {
               {/* Category Selection */}
               {currentStep === 'category' && (
                 <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-blue-900 font-medium">Great! Now select a solution category:</p>
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-blue-900 font-medium text-sm sm:text-base">Great! Now select a solution category:</p>
                     <button
                       onClick={handleBack}
-                      className="text-blue-700 text-sm hover:underline mt-2"
+                      className="text-blue-700 text-xs sm:text-sm hover:underline mt-2"
                     >
                       ← Back to contact info
                     </button>
@@ -276,9 +327,9 @@ export default function FloatingAssistant() {
                       <button
                         key={category.id}
                         onClick={() => handleCategorySelect(category.id)}
-                        className="text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors w-full"
+                        className="text-left p-3 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors w-full"
                       >
-                        <span className="font-medium text-gray-900">{category.name}</span>
+                        <span className="font-medium text-gray-900 text-sm sm:text-base">{category.name}</span>
                       </button>
                     ))}
                   </div>
@@ -288,12 +339,12 @@ export default function FloatingAssistant() {
               {/* Model Selection */}
               {currentStep === 'model' && selectedCategory && (
                 <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-blue-900 font-medium">Perfect! Now select a specific model:</p>
-                    <p className="text-blue-800 text-sm mt-1">Category: {categories.find(c => c.id === selectedCategory)?.name}</p>
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-blue-900 font-medium text-sm sm:text-base">Perfect! Now select a specific model:</p>
+                    <p className="text-blue-800 text-xs sm:text-sm mt-1">Category: {categories.find(c => c.id === selectedCategory)?.name}</p>
                     <button
                       onClick={handleBack}
-                      className="text-blue-700 text-sm hover:underline mt-2"
+                      className="text-blue-700 text-xs sm:text-sm hover:underline mt-2"
                     >
                       ← Back to categories
                     </button>
@@ -303,10 +354,10 @@ export default function FloatingAssistant() {
                       <button
                         key={model.name}
                         onClick={() => handleModelSelect(model)}
-                        className="text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors w-full"
+                        className="text-left p-3 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors w-full"
                       >
-                        <div className="font-medium text-gray-900">{model.name}</div>
-                        <div className="text-sm text-gray-600">{model.label}</div>
+                        <div className="font-medium text-gray-900 text-sm sm:text-base">{model.name}</div>
+                        <div className="text-xs sm:text-sm text-gray-600">{model.label}</div>
                       </button>
                     ))}
                   </div>
@@ -316,34 +367,34 @@ export default function FloatingAssistant() {
               {/* Contact Form */}
               {currentStep === 'contact' && (
                 <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-blue-900 font-medium">Almost done! Please confirm your details:</p>
-                    <p className="text-blue-800 text-sm mt-1">Model: {selectedModel?.label}</p>
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-blue-900 font-medium text-sm sm:text-base">Almost done! Please confirm your details:</p>
+                    <p className="text-blue-800 text-xs sm:text-sm mt-1">Model: {selectedModel?.label}</p>
                     <button
                       onClick={handleBack}
-                      className="text-blue-700 text-sm hover:underline mt-2"
+                      className="text-blue-700 text-xs sm:text-sm hover:underline mt-2"
                     >
                       ← Back to models
                     </button>
                   </div>
 
                   {submitStatus === 'error' && (
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <p className="text-red-800 font-medium">❌ Error</p>
-                      <p className="text-red-700 text-sm mt-1">{errorMessage}</p>
+                    <div className="bg-red-50 p-3 sm:p-4 rounded-lg">
+                      <p className="text-red-800 font-medium text-sm sm:text-base">❌ Error</p>
+                      <p className="text-red-700 text-xs sm:text-sm mt-1">{errorMessage}</p>
                     </div>
                   )}
 
                   <div className="space-y-3">
                     <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-sm text-gray-600">Company: <span className="font-medium text-gray-900">{contactInfo.company}</span></p>
-                      <p className="text-sm text-gray-600">Phone: <span className="font-medium text-gray-900">{contactInfo.phone}</span></p>
-                      <p className="text-sm text-gray-600">Email: <span className="font-medium text-gray-900">{contactInfo.email}</span></p>
+                      <p className="text-xs sm:text-sm text-gray-600">Company: <span className="font-medium text-gray-900">{contactInfo.company}</span></p>
+                      <p className="text-xs sm:text-sm text-gray-600">Phone: <span className="font-medium text-gray-900">{contactInfo.phone}</span></p>
+                      <p className="text-xs sm:text-sm text-gray-600">Email: <span className="font-medium text-gray-900">{contactInfo.email}</span></p>
                     </div>
                     <button
                       onClick={handleContactSubmit}
                       disabled={isSubmitting}
-                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors"
+                      className="w-full bg-blue-600 text-white py-2.5 sm:py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors text-sm font-medium"
                     >
                       {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                     </button>
@@ -354,21 +405,21 @@ export default function FloatingAssistant() {
               {/* Submitted Success */}
               {currentStep === 'submitted' && (
                 <div className="space-y-4">
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <p className="text-green-800 font-medium">✅ Thank you!</p>
-                    <p className="text-green-700 text-sm mt-1">Your data has been sent successfully. Our team will contact you within 24 hours with detailed information about {selectedModel?.label}.</p>
+                  <div className="bg-green-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-green-800 font-medium text-sm sm:text-base">✅ Thank you!</p>
+                    <p className="text-green-700 text-xs sm:text-sm mt-1">Your data has been sent successfully. Our team will contact you within 24 hours with detailed information about {selectedModel?.label}.</p>
                   </div>
                   
                   <div className="space-y-3">
                     <button
                       onClick={handleShowPage}
-                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                      className="w-full bg-blue-600 text-white py-2.5 sm:py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
                     >
                       Show Page
                     </button>
                     <button
                       onClick={handleWatchDemo}
-                      className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors"
+                      className="w-full bg-gray-600 text-white py-2.5 sm:py-2 px-4 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium"
                     >
                       Watch Demo
                     </button>
@@ -378,12 +429,13 @@ export default function FloatingAssistant() {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-3 sm:p-4 border-t border-gray-200">
               <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>Powered by Infinity Automated Solutions</span>
+                <span className="hidden sm:inline">Powered by Infinity Automated Solutions</span>
+                <span className="sm:hidden">Infinity Solutions</span>
                 <button
                   onClick={handleReset}
-                  className="text-blue-600 hover:text-blue-700 hover:underline"
+                  className="text-blue-600 hover:text-blue-700 hover:underline text-xs"
                 >
                   Start Over
                 </button>

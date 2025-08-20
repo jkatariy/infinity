@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storeLeadData } from '@/server/zohoTokenStore';
+import { updateLeadData } from '@/server/zohoTokenStore';
 
 interface ChatbotLeadData {
-  name: string;
-  email: string;
-  phone: string;
-  industry?: string;
+  leadId: string;
   category?: string;
   model_name?: string;
   model_label?: string;
@@ -15,42 +12,28 @@ interface ChatbotLeadData {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, industry, category, model_name, model_label, message } = body as ChatbotLeadData;
+    const { leadId, category, model_name, model_label, message } = body as ChatbotLeadData;
 
     // Validate required fields
-    if (!name || !email || !phone) {
+    if (!leadId) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, email, and phone are required' },
+        { error: 'Missing required field: leadId is required' },
         { status: 400 }
       );
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
-
-    // Store lead data in Supabase for batch processing
-    const leadId = await storeLeadData({
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
-      company: undefined, // Chatbot doesn't collect company
-      message: message || `Chatbot inquiry from ${name}. Industry: ${industry || 'Not specified'}. Category: ${category || 'Not specified'}. Model: ${model_name || 'Not specified'}`,
-      source: 'chatbot',
+    // Update lead data in Supabase with final details
+    await updateLeadData(leadId, {
+      message: message || `Chatbot inquiry completed. Category: ${category || 'Not specified'}. Model: ${model_name || 'Not specified'}. ${model_label ? `Model details: ${model_label}` : ''}`,
       product_name: model_name || undefined,
       product_url: undefined
     });
 
-    console.log('Chatbot lead stored successfully:', { leadId, name, email, phone });
+    console.log('Chatbot lead updated successfully:', { leadId, category, model_name, model_label });
 
     return NextResponse.json({
       success: true,
-      message: 'Lead data stored successfully',
+      message: 'Lead data updated successfully',
       leadId
     });
 
