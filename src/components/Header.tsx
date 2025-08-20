@@ -52,6 +52,7 @@ const Header = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [openNestedSubmenu, setOpenNestedSubmenu] = useState<string | null>(null);
+  const [openDeepNestedSubmenu, setOpenDeepNestedSubmenu] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -635,21 +636,76 @@ const Header = () => {
                                             className="ml-4 mt-1 overflow-hidden"
                                           >
                                             {subItem.submenu?.map((nestedItem) => (
-                                              <button
-                                                key={nestedItem.name}
-                                                onClick={() => {
-                                                  setIsMenuOpen(false);
-                                                  setOpenSubmenu(null);
-                                                  setOpenNestedSubmenu(null);
-                                                  if (nestedItem.href) {
-                                                    router.push(nestedItem.href);
-                                                  }
-                                                }}
-                                                className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
-                                                         transform-gpu hover:bg-white/40 text-sm"
-                                              >
-                                                {nestedItem.name}
-                                              </button>
+                                              <div key={nestedItem.name} className="mb-1">
+                                                {'submenu' in nestedItem && nestedItem.submenu ? (
+                                                  <>
+                                                    <button
+                                                      onClick={() => setOpenDeepNestedSubmenu(openDeepNestedSubmenu === nestedItem.name ? null : nestedItem.name)}
+                                                      className="flex items-center justify-between w-full p-2 text-left text-gray-600 
+                                                               rounded-md transition-gpu transform-gpu hover:bg-white/40 text-sm"
+                                                    >
+                                                      <span className="font-medium">{nestedItem.name}</span>
+                                                      <motion.svg
+                                                        animate={{ rotate: openDeepNestedSubmenu === nestedItem.name ? 180 : 0 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        className="h-3 w-3 text-gray-500 transform-gpu"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                      >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                      </motion.svg>
+                                                    </button>
+                                                    
+                                                    <AnimatePresence>
+                                                      {openDeepNestedSubmenu === nestedItem.name && (
+                                                        <motion.div
+                                                          initial={{ opacity: 0, height: 0 }}
+                                                          animate={{ opacity: 1, height: 'auto' }}
+                                                          exit={{ opacity: 0, height: 0 }}
+                                                          transition={{ duration: 0.3 }}
+                                                          className="ml-4 mt-1 overflow-hidden"
+                                                        >
+                                                          {nestedItem.submenu?.map((deepNestedItem) => (
+                                                            <button
+                                                              key={deepNestedItem.name}
+                                                              onClick={() => {
+                                                                setIsMenuOpen(false);
+                                                                setOpenSubmenu(null);
+                                                                setOpenNestedSubmenu(null);
+                                                                setOpenDeepNestedSubmenu(null);
+                                                                if (deepNestedItem.href) {
+                                                                  router.push(deepNestedItem.href);
+                                                                }
+                                                              }}
+                                                              className="w-full text-left p-2 text-gray-500 rounded-md transition-gpu 
+                                                                       transform-gpu hover:bg-white/40 text-xs"
+                                                            >
+                                                              {deepNestedItem.name}
+                                                            </button>
+                                                          ))}
+                                                        </motion.div>
+                                                      )}
+                                                    </AnimatePresence>
+                                                  </>
+                                                ) : (
+                                                  <button
+                                                    onClick={() => {
+                                                      setIsMenuOpen(false);
+                                                      setOpenSubmenu(null);
+                                                      setOpenNestedSubmenu(null);
+                                                      setOpenDeepNestedSubmenu(null);
+                                                      if (nestedItem.href) {
+                                                        router.push(nestedItem.href);
+                                                      }
+                                                    }}
+                                                    className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
+                                                             transform-gpu hover:bg-white/40 text-sm"
+                                                  >
+                                                    {nestedItem.name}
+                                                  </button>
+                                                )}
+                                              </div>
                                             ))}
                                           </motion.div>
                                         )}
@@ -660,6 +716,7 @@ const Header = () => {
                                       onClick={() => {
                                         setIsMenuOpen(false);
                                         setOpenSubmenu(null);
+                                        setOpenDeepNestedSubmenu(null);
                                         if (subItem.href) {
                                           router.push(subItem.href);
                                         }
@@ -680,6 +737,9 @@ const Header = () => {
                       <button
                         onClick={() => {
                           setIsMenuOpen(false);
+                          setOpenSubmenu(null);
+                          setOpenNestedSubmenu(null);
+                          setOpenDeepNestedSubmenu(null);
                           router.push(item.href || '#');
                         }}
                         className="w-full text-left p-3 text-gray-800 rounded-lg transition-gpu 
