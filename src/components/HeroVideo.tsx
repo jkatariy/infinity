@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HeroVideo() {
@@ -23,63 +22,35 @@ export default function HeroVideo() {
       setIsInitialLoad(false);
     }, 1000);
 
-    return () => clearTimeout(timer);
-  }, [mounted]);
+    // Add a timeout for video loading
+    const videoTimeout = setTimeout(() => {
+      if (!isVideoLoaded) {
+        console.log('Video loading timeout - falling back to background');
+        setIsVideoError(true);
+        setIsInitialLoad(false);
+      }
+    }, 5000); // 5 second timeout
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(videoTimeout);
+    };
+  }, [mounted, isVideoLoaded]);
 
   const handleVideoError = (error?: any) => {
-    console.log('Video error occurred:', error);
+    console.error('Video failed to load:', error);
     setIsVideoError(true);
     setIsInitialLoad(false);
   };
-
-  // Preload video metadata for better performance
-  useEffect(() => {
-    if (!mounted || videoError) return;
-    
-    const video = document.createElement('video');
-    video.preload = 'metadata';
-    video.muted = true;
-    video.playsInline = true;
-    
-    const source = document.createElement('source');
-    source.src = 'https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov';
-    source.type = 'video/quicktime';
-    video.appendChild(source);
-    
-    // Add fallback source for better browser compatibility
-    const fallbackSource = document.createElement('source');
-    fallbackSource.src = 'https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov';
-    fallbackSource.type = 'video/mp4';
-    video.appendChild(fallbackSource);
-    
-    const handleCanPlay = () => {
-      console.log('Video can play');
-      setIsVideoLoaded(true);
-      setIsInitialLoad(false);
-    };
-    
-    const handleError = (error: any) => {
-      console.log('Video preload error:', error);
-      handleVideoError(error);
-    };
-    
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('error', handleError);
-    
-    video.load();
-    
-    return () => {
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('error', handleError);
-    };
-  }, [mounted, videoError]);
 
   // Don't render video until mounted on client to prevent hydration mismatch
   if (!mounted) {
     return (
       <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/30 z-10" />
-        <div className="absolute inset-0 bg-gray-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-blue-900 via-brand-blue-800 to-brand-green-900">
+          <div className="absolute inset-0 bg-black/20"></div>
+        </div>
         <div className="absolute inset-0 flex items-center justify-center z-20">
           <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-6xl">
             <motion.h1
@@ -139,16 +110,22 @@ export default function HeroVideo() {
               muted
               playsInline
               preload="metadata"
+              crossOrigin="anonymous"
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
                 isVideoLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoadedData={() => {
-                console.log('Video loaded data');
+                console.log('Video loaded successfully');
+                setIsVideoLoaded(true);
+                setIsInitialLoad(false);
+              }}
+              onCanPlay={() => {
+                console.log('Video can play');
                 setIsVideoLoaded(true);
                 setIsInitialLoad(false);
               }}
               onError={(e) => {
-                console.log('Video element error:', e);
+                console.error('Video element error:', e);
                 handleVideoError(e);
               }}
               style={{
@@ -157,32 +134,53 @@ export default function HeroVideo() {
               }}
             >
               <source
-                src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov"
-                type="video/quicktime"
+                src="https://res.cloudinary.com/dbogkgabu/video/upload/f_auto,q_auto/v1755704149/faxduvzp9blvwattzpjx.mov"
+                type="video/mp4"
+              />
+              <source
+                src="https://res.cloudinary.com/dbogkgabu/video/upload/f_webm,q_auto/v1755704149/faxduvzp9blvwattzpjx.mov"
+                type="video/webm"
               />
               <source
                 src="https://res.cloudinary.com/dbogkgabu/video/upload/v1755704149/faxduvzp9blvwattzpjx.mov"
-                type="video/mp4"
+                type="video/quicktime"
               />
               Your browser does not support the video tag.
             </video>
             {!isVideoLoaded && !videoError && (
-              <div className="absolute inset-0 bg-gray-900" />
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue-900 via-brand-blue-800 to-brand-green-900">
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="w-12 h-12 border-4 border-white/30 border-t-white/80 rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-sm text-white/70">Loading video...</p>
+                  </div>
+                </div>
+              </div>
             )}
             {videoError && (
-              <div className="absolute inset-0 bg-gray-900 opacity-50" />
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue-900 via-brand-blue-800 to-brand-green-900">
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <p className="text-sm text-white/70">Video unavailable</p>
+                  </div>
+                </div>
+              </div>
             )}
           </>
         ) : (
-          <div className="absolute inset-0 bg-gray-900" />
-        )}
-
-        {/* Loading indicator - only show during initial load */}
-        {isInitialLoad && !isVideoLoaded && !videoError && (
-          <div className="absolute inset-0 flex items-center justify-center z-5">
-            <div className="w-8 h-8 border-4 border-white/30 border-t-white/80 rounded-full animate-spin" />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-blue-900 via-brand-blue-800 to-brand-green-900">
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white">
+                <p className="text-sm text-white/70">Video unavailable</p>
+              </div>
+            </div>
           </div>
         )}
+
+
       </div>
 
       {/* Mobile-First Responsive Content */}

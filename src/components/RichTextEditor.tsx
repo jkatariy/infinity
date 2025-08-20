@@ -117,22 +117,22 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start t
     <div className={`w-full ${className}`}>
       {/* Toolbar */}
       <div className="mb-2 flex flex-wrap items-center gap-1 rounded-md border border-gray-200 bg-gray-50 p-1">
-        <button type="button" onClick={() => exec('bold')} className="rounded px-2 py-1 text-sm font-semibold text-gray-700 hover:bg-gray-100" aria-label="Bold text">
+        <button type="button" onClick={() => exec('bold')} className="rounded px-2 py-1 text-sm font-semibold text-gray-700 hover:bg-gray-100">
           B
         </button>
-        <button type="button" onClick={() => exec('italic')} className="rounded px-2 py-1 text-sm italic text-gray-700 hover:bg-gray-100" aria-label="Italic text">
+        <button type="button" onClick={() => exec('italic')} className="rounded px-2 py-1 text-sm italic text-gray-700 hover:bg-gray-100">
           I
         </button>
         <div className="mx-1 h-5 w-px bg-gray-300" />
-        <button type="button" onClick={() => exec('justifyLeft')} className="rounded px-2 py-1 text-sm text-gray-700 hover:bg-gray-100" aria-label="Align text left">
+        <button type="button" onClick={() => exec('justifyLeft')} className="rounded px-2 py-1 text-sm text-gray-700 hover:bg-gray-100">
           Left
         </button>
-        <button type="button" onClick={() => exec('justifyCenter')} className="rounded px-2 py-1 text-sm text-gray-700 hover:bg-gray-100" aria-label="Align text center">
+        <button type="button" onClick={() => exec('justifyCenter')} className="rounded px-2 py-1 text-sm text-gray-700 hover:bg-gray-100">
           Center
         </button>
         <div className="mx-1 h-5 w-px bg-gray-300" />
         {!isLinkMode ? (
-          <button type="button" onClick={() => setIsLinkMode(true)} className="rounded px-2 py-1 text-sm text-blue-700 hover:bg-blue-50" aria-label="Add link">
+          <button type="button" onClick={() => setIsLinkMode(true)} className="rounded px-2 py-1 text-sm text-blue-700 hover:bg-blue-50">
             Link
           </button>
         ) : (
@@ -143,12 +143,11 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start t
               onChange={(e) => setLinkUrl(e.target.value)}
               placeholder="https://example.com"
               className="h-8 w-48 rounded border border-gray-300 bg-white px-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              aria-label="Enter URL for link"
             />
-            <button type="button" onClick={applyLink} className="rounded bg-blue-600 px-2 py-1 text-sm font-medium text-white hover:bg-blue-700" aria-label="Add link">
+            <button type="button" onClick={applyLink} className="rounded bg-blue-600 px-2 py-1 text-sm font-medium text-white hover:bg-blue-700">
               Add
             </button>
-            <button type="button" onClick={() => { setIsLinkMode(false); setLinkUrl(''); }} className="rounded px-2 py-1 text-sm text-gray-700 hover:bg-gray-100" aria-label="Cancel adding link">
+            <button type="button" onClick={() => { setIsLinkMode(false); setLinkUrl(''); }} className="rounded px-2 py-1 text-sm text-gray-700 hover:bg-gray-100">
               Cancel
             </button>
           </div>

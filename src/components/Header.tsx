@@ -394,7 +394,6 @@ const Header = () => {
                   priority
                   fetchPriority="high"
                   sizes="(max-width: 640px) 224px, (max-width: 1024px) 288px, 320px"
-                  quality={85}
                 />
               </div>
             </Link>
