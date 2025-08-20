@@ -8,15 +8,43 @@ export default function HeroVideo() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [videoError, setIsVideoError] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // Start video loading immediately
+    const video = document.createElement('video');
+    video.preload = 'auto'; // Changed from 'metadata' to 'auto' for faster loading
+    video.muted = true;
+    video.playsInline = true;
+    
+    const source = document.createElement('source');
+    source.src = 'https://res.cloudinary.com/dbogkgabu/video/upload/f_auto,q_auto/v1755704149/faxduvzp9blvwattzpjx.mov';
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    
+    const handleCanPlay = () => {
+      console.log('Video can play - preloading successful');
+      setIsVideoLoaded(true);
+      setIsInitialLoad(false);
+    };
+    
+    const handleError = (error: any) => {
+      console.error('Video preload error:', error);
+      setIsVideoError(true);
+      setIsInitialLoad(false);
+    };
+    
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('error', handleError);
+    
+    video.load();
+    
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('error', handleError);
+    };
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-    
     // Hide initial loading state after a short delay if video hasn't loaded
     const timer = setTimeout(() => {
       setIsInitialLoad(false);
@@ -29,70 +57,19 @@ export default function HeroVideo() {
         setIsVideoError(true);
         setIsInitialLoad(false);
       }
-    }, 5000); // 5 second timeout
+    }, 3000); // Reduced timeout to 3 seconds for faster fallback
 
     return () => {
       clearTimeout(timer);
       clearTimeout(videoTimeout);
     };
-  }, [mounted, isVideoLoaded]);
+  }, [isVideoLoaded]);
 
   const handleVideoError = (error?: any) => {
     console.error('Video failed to load:', error);
     setIsVideoError(true);
     setIsInitialLoad(false);
   };
-
-  // Don't render video until mounted on client to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/30 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-blue-900 via-brand-blue-800 to-brand-green-900">
-          <div className="absolute inset-0 bg-black/20"></div>
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center z-20">
-          <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-6xl">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
-            >
-              Secondary Packaging Automation Excellence
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 text-gray-200 leading-relaxed"
-            >
-                              Pioneering end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2015
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
-            >
-              <Link
-                href="/products"
-                className="bg-brand-blue-600 hover:bg-brand-blue-700 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg text-sm sm:text-base w-full sm:w-auto text-center"
-              >
-                Explore Solutions
-              </Link>
-              <Link
-                href="/contact"
-                className="border-2 border-white text-white hover:bg-white hover:text-brand-blue-900 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 text-sm sm:text-base w-full sm:w-auto text-center"
-              >
-                Get Quote
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden">
@@ -109,9 +86,10 @@ export default function HeroVideo() {
               loop
               muted
               playsInline
-              preload="metadata"
+              preload="auto"
               crossOrigin="anonymous"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+              poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZGllbnQpIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzBmNDI3NztzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3R5bGU9InN0b3AtY29sb3I6IzBmNDI3NztzdG9wLW9wYWNpdHk6MC44IiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzVkYzAyNztzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4="
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                 isVideoLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoadedData={() => {
@@ -179,8 +157,6 @@ export default function HeroVideo() {
             </div>
           </div>
         )}
-
-
       </div>
 
       {/* Mobile-First Responsive Content */}
