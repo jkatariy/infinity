@@ -54,7 +54,7 @@ const Footer = () => {
               Infinity Automated Solutions Pvt Ltd.
             </h3>
             <p className="text-gray-300 text-sm sm:text-base mb-4 leading-relaxed">
-              Pioneering secondary packaging machines and end-of-line packaging automation solutions since 2016. Serving Food, FMCG, Personal Care, Textiles, and Pharmaceuticals with 800+ installations across India.
+              Pioneering secondary packaging machines and end-of-line packaging automation solutions since 2015. Serving Food, FMCG, Personal Care, Textiles, and Pharmaceuticals with 800+ installations across India.
             </p>
             <div className="flex justify-center sm:justify-start">
               <SocialLinks variant="minimal" />
@@ -189,7 +189,7 @@ const Footer = () => {
             <div className="flex flex-col space-y-4">
               <span className="text-xl font-medium">Infinity Automated Solutions Pvt Ltd.</span>
               <p className="text-gray-300 text-sm leading-relaxed">
-                Pioneering secondary packaging machines and end-of-line packaging automation solutions since 2016. Serving Food, FMCG, Personal Care, Textiles, and Pharmaceuticals with 800+ installations across India.
+                Pioneering secondary packaging machines and end-of-line packaging automation solutions since 2015. Serving Food, FMCG, Personal Care, Textiles, and Pharmaceuticals with 800+ installations across India.
               </p>
               <SocialLinks variant="minimal" />
             </div>

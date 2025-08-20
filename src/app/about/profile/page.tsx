@@ -41,7 +41,7 @@ export default function Profile() {
 
   const timeline: { year: string; points: string[] }[] = [
     { year: '2015', points: ['Company was founded', 'Infinity certified with ISO 9001:2015'] },
-    { year: '2016', points: ['Engineered and deployed first secondary machine to Everest Spices'] },
+    { year: '2015', points: ['Engineered and deployed first secondary machine to Everest Spices'] },
     { year: '2017', points: ['Received Award for Best SIL Entrepreneur'] },
     { year: '2018', points: ['E2E Pouch-in-Bag developed and launched'] },
     { year: '2019', points: ['Installed 4 Auto Case Packers for MARS'] },

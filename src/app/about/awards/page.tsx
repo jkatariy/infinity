@@ -11,7 +11,7 @@ const certifications = [
   {
     title: 'ISO 9001:2015',
     description: 'Quality Management Systems certification demonstrating our commitment to consistent quality and customer satisfaction.',
-    year: '2016',
+    year: '2015',
     category: 'Quality Management',
     icon: (
       <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +172,7 @@ export default function Awards() {
             { 
               src: "https://res.cloudinary.com/dbogkgabu/image/upload/v1752950542/awards9_vezyun.png",
               title: "Industry Recognition",
-              year: "2016"
+              year: "2015"
             }
           ].map((award, index) => (
             <motion.div

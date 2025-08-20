@@ -29,8 +29,8 @@ export const organizationSchema = {
   name: 'Infinity Automated Solutions',
   url: 'https://infinitysols.com',
   logo: 'https://infinitysols.com/logos/logo.png',
-  description: 'Leading provider of secondary packaging machines and end-of-line packaging automation solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2016. 800+ installations across India.',
-  foundingDate: '2016',
+  description: 'Leading provider of secondary packaging machines and end-of-line packaging automation solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2015. 800+ installations across India.',
+  foundingDate: '2015',
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Plot No. 7 & 16, S. No-1556/1559, Shelarwasti, Dehu-Alandi Road',

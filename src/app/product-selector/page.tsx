@@ -265,7 +265,7 @@ const solutionToPreferredModelIds: Record<string, string[]> = {
   'pouch-to-pouch': ['ibp-120'],
   'strip-to-pouch': ['ibs-200', 'ims-800'],
   'pouch-to-shrink': ['isp-120'],
-  'bottle-to-shrink': ['iwb-120'],
+  'bottle-to-shrink': ['iwb-200'],
   'product-to-carton': ['acm-100', 'acm-40'],
   'pouch-to-bale': ['ibl-500'],
   'pouch-to-hdpe': ['ibg-h8', 'ibg-v8'],
@@ -394,9 +394,9 @@ const productModels: ProductModel[] = [
     technicalHighlights: ['Ultra-high speed', 'Multi-track capability', 'Large scale operation']
   },
   {
-    id: 'iwb-120',
-    name: 'IWB-120 Bottle Wrapping Machine',
-    model: 'IWB-120',
+    id: 'iwb-200',
+    name: 'IWB-200 Bottle Wrapping Machine',
+    model: 'IWB-200',
     category: 'bundling-wrapping',
     description: 'Specialized shrink wrapping system for bottles and jars',
     application: 'For stacking/bundling of bottles into a Shrinked pouch',

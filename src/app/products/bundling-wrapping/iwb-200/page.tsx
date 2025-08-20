@@ -35,7 +35,7 @@ const features = [
 
 const models = [
   {
-    name: 'IWB-120 Bottle Wrapping Machine',
+    name: 'IWB-200 Bottle Wrapping Machine',
     description: 'Advanced automatic shrink wrapping machine specifically engineered for bottles and cylindrical containers, featuring innovative handling technology and flexible pack pattern capabilities.',
     features: [
       'Bottle-specific gripper system',
@@ -49,7 +49,7 @@ const models = [
       'Energy recovery system'
     ],
     specifications: [
-      { label: 'Model', value: 'IWB-120' },
+      { label: 'Model', value: 'IWB-200' },
       { label: 'Application', value: 'For stacking/bundling of bottles into a Shrinked pouch' },
       { label: 'Product', value: 'Bottles/jars' },
       { label: 'Input speed', value: 'upto 60 bottles/min' },
@@ -167,9 +167,9 @@ export default function IWB200Page() {
   return (
     <ProductDetailPage
       id="iwb-200"
-      title="IWB-120 Bottle Wrapping Machine"
+      title="IWB-200 Bottle Wrapping Machine"
       subtitle="Automatic Shrink Wrapping for Bottles"
-      description="The IWB-120 represents the latest in bottle wrapping technology, engineered specifically for the automatic shrink wrapping of bottles and cylindrical containers. With its specialized bottle-handling technology, intelligent no-bottle-no-film system, and multi-zone shrink tunnel, it delivers exceptional packaging quality while minimizing waste. The machine's versatile design accommodates various bottle sizes and pack patterns, making it ideal for beverage, personal care, and pharmaceutical industries requiring high-speed, precise bottle packaging solutions."
+      description="The IWB-200 represents the latest in bottle wrapping technology, engineered specifically for the automatic shrink wrapping of bottles and cylindrical containers. With its specialized bottle-handling technology, intelligent no-bottle-no-film system, and multi-zone shrink tunnel, it delivers exceptional packaging quality while minimizing waste. The machine's versatile design accommodates various bottle sizes and pack patterns, making it ideal for beverage, personal care, and pharmaceutical industries requiring high-speed, precise bottle packaging solutions."
       features={features}
       models={models}
       applications={applications}

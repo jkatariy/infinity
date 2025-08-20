@@ -14,11 +14,11 @@ const MapSection = dynamic(() => import('@/components/MapSection'), { ssr: false
 
 export const metadata: Metadata = {
   title: 'Packaging Automation Solutions | Infinity Automated Solutions',
-  description: 'Leading provider of secondary packaging machines and end-of-line automation for Food, FMCG, Personal Care, and Pharmaceuticals. 800+ installations since 2016.',
+  description: 'Leading provider of secondary packaging machines and end-of-line automation for Food, FMCG, Personal Care, and Pharmaceuticals. 800+ installations since 2015.',
   keywords: 'secondary packaging automation, case packers, cartoning machines, bundling solutions, check weighers, conveying systems, FMCG automation, Pune packaging machinery',
   openGraph: {
     title: 'Packaging Automation Solutions | Infinity Automated Solutions',
-    description: 'Leading provider of secondary packaging machines and end-of-line automation for Food, FMCG, Personal Care, and Pharmaceuticals. 800+ installations since 2016.',
+    description: 'Leading provider of secondary packaging machines and end-of-line automation for Food, FMCG, Personal Care, and Pharmaceuticals. 800+ installations since 2015.',
     url: 'https://infinitysols.com',
   },
   alternates: {

@@ -61,7 +61,7 @@ export default function HeroVideo() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 text-gray-200 leading-relaxed"
             >
-                              Pioneering end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2016
+                              Pioneering end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2015
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

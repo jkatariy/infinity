@@ -15,7 +15,7 @@ const inter = Inter({ subsets: ['latin'], display: 'swap' });
 export const metadata: Metadata = {
   metadataBase: new URL('https://infinitysols.com'),
   title: "Infinity Automated Solutions - Secondary Packaging & End-of-Line Automation",
-  description: "Leading provider of secondary packaging machines and end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2016. Based in Pune, India.",
+  description: "Leading provider of secondary packaging machines and end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2015. Based in Pune, India.",
   keywords: "secondary packaging automation, end-of-line packaging, case packers, cartoning machines, bundling machines, check weighers, conveying solutions, FMCG packaging, Pune automation",
   authors: [{ name: "Infinity Automated Solutions" }],
   creator: "Infinity Automated Solutions",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://infinitysols.com',
     title: 'Infinity Automated Solutions - Secondary Packaging & End-of-Line Automation',
-    description: 'Leading provider of secondary packaging machines and end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2016. Based in Pune, India.',
+    description: 'Leading provider of secondary packaging machines and end-of-line packaging solutions for Food, FMCG, Personal Care, Textiles, and Pharmaceuticals since 2015. Based in Pune, India.',
     siteName: 'Infinity Automated Solutions',
     images: [
       {
