@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { RECAPTCHA_CONFIG, getCurrentDomain, isDomainAllowed } from '../lib/recaptcha-config';
 
-// Dynamically import ReCAPTCHA to avoid SSR issues
+// Dynamic import with no SSR
 const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), {
   ssr: false,
   loading: () => (
@@ -19,101 +20,56 @@ interface ReCaptchaProps {
   className?: string;
 }
 
-const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' }) => {
+const ReCaptchaSimple: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' }) => {
   const [mounted, setMounted] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
     
-    let retryCount = 0;
-    const maxRetries = 30; // 6 seconds max (30 * 200ms)
+    // Debug information
+    console.log('ReCaptchaSimple: Current domain:', getCurrentDomain());
+    console.log('ReCaptchaSimple: Domain allowed:', isDomainAllowed());
+    console.log('ReCaptchaSimple: Site key:', RECAPTCHA_CONFIG.SITE_KEY);
     
-    // Function to check if reCAPTCHA script is loaded
-    const checkRecaptchaScript = () => {
-      if (typeof window !== 'undefined') {
-        // Check if grecaptcha object exists
-        if (window.grecaptcha && window.grecaptcha.ready) {
-          console.log('ReCaptcha: Script already loaded and ready');
-          setScriptLoaded(true);
-          setIsLoading(false);
-          if (onLoad && !hasLoadedRef.current) {
-            hasLoadedRef.current = true;
-            onLoad();
-          }
-          return;
+    // Check if grecaptcha is available
+    const checkGrecaptcha = () => {
+      if (typeof window !== 'undefined' && window.grecaptcha) {
+        console.log('ReCaptchaSimple: grecaptcha available');
+        setScriptLoaded(true);
+        if (onLoad) {
+          onLoad();
         }
-        
-        // Check if script tag exists
-        const scriptTag = document.querySelector('script[src*="recaptcha/api.js"]');
-        if (scriptTag) {
-          console.log('ReCaptcha: Script tag found, waiting for load...');
-          // Wait a bit more for the script to fully load
-          setTimeout(() => {
-            if (window.grecaptcha && window.grecaptcha.ready) {
-              console.log('ReCaptcha: Script loaded after delay');
-              setScriptLoaded(true);
-              setIsLoading(false);
-              if (onLoad && !hasLoadedRef.current) {
-                hasLoadedRef.current = true;
-                onLoad();
-              }
-            } else {
-              retryCount++;
-              if (retryCount >= maxRetries) {
-                console.error('ReCaptcha: Script failed to load after max retries');
-                setLoadError(true);
-                setIsLoading(false);
-              } else {
-                console.log('ReCaptcha: Script still not ready, retrying...', retryCount);
-                setTimeout(checkRecaptchaScript, 200);
-              }
-            }
-          }, 500);
-        } else {
-          retryCount++;
-          if (retryCount >= maxRetries) {
-            console.error('ReCaptcha: Script tag not found after max retries');
-            setLoadError(true);
-            setIsLoading(false);
-          } else {
-            console.log('ReCaptcha: Script tag not found, retrying...', retryCount);
-            setTimeout(checkRecaptchaScript, 200);
-          }
-        }
+      } else {
+        console.log('ReCaptchaSimple: grecaptcha not available, retrying...');
+        setTimeout(checkGrecaptcha, 200);
       }
     };
-
-    // Start checking after a short delay to allow script to load
-    setTimeout(checkRecaptchaScript, 100);
-  }, []); // Remove onLoad from dependencies to prevent re-renders
+    
+    checkGrecaptcha();
+  }, [onLoad]);
 
   const handleChange = (token: string | null) => {
-    console.log('ReCaptcha: Token received', token ? 'Yes' : 'No');
+    console.log('ReCaptchaSimple: Token changed:', token ? 'received' : 'null');
     onVerify(token);
   };
 
   const handleExpired = () => {
-    console.log('ReCaptcha: Token expired');
+    console.log('ReCaptchaSimple: Token expired');
     onVerify(null);
   };
 
   const handleError = () => {
-    console.error('ReCaptcha: Error occurred');
+    console.error('ReCaptchaSimple: Error occurred');
     setLoadError(true);
     onVerify(null);
   };
 
   const handleLoad = () => {
-    console.log('ReCaptcha: Component loaded successfully');
-    setLoadError(false);
-    setIsLoading(false);
-    // Notify parent component that reCAPTCHA is loaded and ready
-    if (onLoad && !hasLoadedRef.current) {
-      hasLoadedRef.current = true;
+    console.log('ReCaptchaSimple: Component loaded');
+    setScriptLoaded(true);
+    if (onLoad) {
       onLoad();
     }
   };
@@ -133,9 +89,11 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
       <div className={`flex justify-center ${className}`}>
         <div className="text-red-600 text-sm p-4 border border-red-200 rounded bg-red-50">
           <p className="font-medium mb-2">reCAPTCHA failed to load</p>
-          <p className="text-xs">Please refresh the page and try again. If the problem persists, please contact support.</p>
+          <p className="text-xs mb-2">Current domain: {getCurrentDomain()}</p>
+          <p className="text-xs mb-2">Domain allowed: {isDomainAllowed() ? 'Yes' : 'No'}</p>
+          <p className="text-xs">Please check reCAPTCHA configuration for this domain.</p>
           <button 
-            onClick={() => window.location.reload()} 
+            onClick={() => window.location.reload()}
             className="mt-2 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700"
           >
             Refresh Page
@@ -145,31 +103,19 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify, onLoad, className = '' 
     );
   }
 
-  // Show loading state while script is not ready
-  if (!scriptLoaded || isLoading) {
-    return (
-      <div className={`flex justify-center ${className}`}>
-        <div className="flex justify-center items-center h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300">
-          <div className="text-gray-500 text-sm">Loading reCAPTCHA...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`flex justify-center ${className}`}>
       <ReCAPTCHA
-        sitekey="6Lf8qKwrAAAAAGybd9R6bg3zeLdXOCdrGDYiYNVO"
+        sitekey={RECAPTCHA_CONFIG.SITE_KEY}
         onChange={handleChange}
         onExpired={handleExpired}
         onError={handleError}
         onLoad={handleLoad}
         theme="light"
         size="normal"
-        tabindex={0}
       />
     </div>
   );
 };
 
-export default ReCaptcha;
+export default ReCaptchaSimple;
