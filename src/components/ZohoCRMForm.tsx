@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import ReCaptcha from './ReCaptchaDirect';
+import ReCaptcha from './ReCaptchaUltimate';
 
 interface ZohoCRMFormProps {
   productName?: string;

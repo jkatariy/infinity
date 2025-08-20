@@ -6,6 +6,7 @@ import ReCaptchaSimple from '../../components/ReCaptchaSimple';
 import ReCaptchaFixed from '../../components/ReCaptchaFixed';
 import ReCaptchaBulletproof from '../../components/ReCaptchaBulletproof';
 import ReCaptchaDirect from '../../components/ReCaptchaDirect';
+import ReCaptchaUltimate from '../../components/ReCaptchaUltimate';
 
 export default function TestReCaptchaPage() {
   const [token, setToken] = useState<string | null>(null);
@@ -15,7 +16,8 @@ export default function TestReCaptchaPage() {
   const [useSimple, setUseSimple] = useState(false);
   const [useFixed, setUseFixed] = useState(false);
   const [useBulletproof, setUseBulletproof] = useState(false);
-  const [useDirect, setUseDirect] = useState(true);
+  const [useDirect, setUseDirect] = useState(false);
+  const [useUltimate, setUseUltimate] = useState(true);
 
   useEffect(() => {
     // Check script loading status
@@ -158,11 +160,29 @@ export default function TestReCaptchaPage() {
                         setUseSimple(false);
                         setUseFixed(false);
                         setUseBulletproof(false);
+                        setUseUltimate(false);
                       }
                     }}
                     className="mr-2"
                   />
-                  Use Direct Component (Recommended)
+                  Use Direct Component
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={useUltimate}
+                    onChange={(e) => {
+                      setUseUltimate(e.target.checked);
+                      if (e.target.checked) {
+                        setUseSimple(false);
+                        setUseFixed(false);
+                        setUseBulletproof(false);
+                        setUseDirect(false);
+                      }
+                    }}
+                    className="mr-2"
+                  />
+                  Use Ultimate Component (Recommended)
                 </label>
               </div>
               {useSimple ? (
@@ -173,6 +193,8 @@ export default function TestReCaptchaPage() {
                 <ReCaptchaBulletproof onVerify={handleVerify} onLoad={handleLoad} />
               ) : useDirect ? (
                 <ReCaptchaDirect onVerify={handleVerify} onLoad={handleLoad} />
+              ) : useUltimate ? (
+                <ReCaptchaUltimate onVerify={handleVerify} onLoad={handleLoad} />
               ) : (
                 <ReCaptcha onVerify={handleVerify} onLoad={handleLoad} />
               )}
