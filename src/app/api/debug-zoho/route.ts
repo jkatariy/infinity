@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { 
   getStoredTokens, 
   getTokenStatus, 
-  isAccessTokenValid,
-  setAccessToken,
-  setRefreshToken 
+  isAccessTokenValid
 } from '@/server/zohoTokenStore';
 
 export async function GET(request: NextRequest) {
@@ -32,23 +30,9 @@ export async function GET(request: NextRequest) {
     console.log('🔑 Stored Tokens:', storedTokens ? 'Present' : 'Missing');
     console.log('✅ Access Token Valid:', accessTokenValid);
 
-    // Test token storage
-    let storageTest = 'Not tested';
-    try {
-      const testAccessToken = 'test_access_token_' + Date.now();
-      const testRefreshToken = 'test_refresh_token_' + Date.now();
-      
-      await setAccessToken(testAccessToken, 3600);
-      await setRefreshToken(testRefreshToken);
-      
-      const testTokens = await getStoredTokens();
-      storageTest = testTokens?.accessToken === testAccessToken ? '✅ Working' : '❌ Failed';
-      
-      console.log('🧪 Storage Test:', storageTest);
-    } catch (error) {
-      storageTest = `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
-      console.error('🧪 Storage Test Error:', error);
-    }
+    // Check if tokens are test tokens
+    const isTestToken = storedTokens?.accessToken?.startsWith('test_') || false;
+    const tokenLength = storedTokens?.accessToken?.length || 0;
 
     return NextResponse.json({
       success: true,
@@ -59,9 +43,12 @@ export async function GET(request: NextRequest) {
           hasAccessToken: !!storedTokens.accessToken,
           hasRefreshToken: !!storedTokens.refreshToken,
           accessTokenExpiresAt: storedTokens.accessTokenExpiresAt,
+          isTestToken: isTestToken,
+          tokenLength: tokenLength,
         } : null,
         accessTokenValid,
-        storageTest,
+        isTestToken: isTestToken,
+        tokenLength: tokenLength,
         timestamp: new Date().toISOString(),
       }
     });
