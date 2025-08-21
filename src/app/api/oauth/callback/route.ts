@@ -16,6 +16,11 @@ export async function GET(request: NextRequest) {
     const state = searchParams.get('state');
     const error = searchParams.get('error');
 
+    console.log('🔐 OAuth callback received:');
+    console.log('  - Code:', code ? 'Present' : 'Missing');
+    console.log('  - State:', state);
+    console.log('  - Error:', error);
+
     // Handle OAuth error
     if (error) {
       console.error('OAuth error:', error);
@@ -32,14 +37,21 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Validate state parameter (optional but recommended for security)
-    const expectedState = process.env.ZOHO_OAUTH_STATE;
-    if (expectedState && state !== expectedState) {
-      console.error('Invalid state parameter');
+    // Validate state parameter
+    const expectedState = process.env.ZOHO_OAUTH_STATE || 'infinity_automated_solutions_2024';
+    console.log('🔍 State validation:');
+    console.log('  - Expected:', expectedState);
+    console.log('  - Received:', state);
+    console.log('  - Match:', state === expectedState);
+
+    if (state !== expectedState) {
+      console.error('Invalid state parameter - mismatch detected');
       return NextResponse.redirect(
         new URL(`/dashboard?error=${encodeURIComponent('Invalid state parameter')}`, request.url)
       );
     }
+
+    console.log('✅ State parameter validated successfully');
 
     // Exchange authorization code for access token
     const tokenUrl = `${process.env.ZOHO_ACCOUNTS_URL}/oauth/v2/token`;
@@ -51,7 +63,10 @@ export async function GET(request: NextRequest) {
       code: code,
     });
 
-    console.log('Exchanging authorization code for tokens...');
+    console.log('🔄 Exchanging authorization code for tokens...');
+    console.log('  - Token URL:', tokenUrl);
+    console.log('  - Client ID:', process.env.ZOHO_CLIENT_ID?.substring(0, 8) + '...');
+
     const tokenResponse = await fetch(tokenUrl, {
       method: 'POST',
       headers: {
@@ -62,14 +77,19 @@ export async function GET(request: NextRequest) {
 
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
-      console.error('Token exchange failed:', errorText);
+      console.error('❌ Token exchange failed:', errorText);
+      console.error('  - Status:', tokenResponse.status);
+      console.error('  - Status Text:', tokenResponse.statusText);
       return NextResponse.redirect(
         new URL(`/dashboard?error=${encodeURIComponent('Token exchange failed')}`, request.url)
       );
     }
 
     const tokenData: ZohoTokenResponse = await tokenResponse.json();
-    console.log('Token exchange successful, storing tokens...');
+    console.log('✅ Token exchange successful');
+    console.log('  - Access Token Length:', tokenData.access_token?.length || 0);
+    console.log('  - Refresh Token Present:', !!tokenData.refresh_token);
+    console.log('  - Expires In:', tokenData.expires_in);
 
     // Store tokens securely in Supabase
     try {
@@ -77,9 +97,9 @@ export async function GET(request: NextRequest) {
       if (tokenData.refresh_token) {
         await setRefreshToken(tokenData.refresh_token);
       }
-      console.log('Tokens stored successfully');
+      console.log('✅ Tokens stored successfully in Supabase');
     } catch (storageError) {
-      console.error('Error storing tokens:', storageError);
+      console.error('❌ Error storing tokens:', storageError);
       return NextResponse.redirect(
         new URL(`/dashboard?error=${encodeURIComponent('Failed to store authentication tokens')}`, request.url)
       );
@@ -87,7 +107,7 @@ export async function GET(request: NextRequest) {
 
     // Verify tokens were stored correctly
     const tokenStatus = await getTokenStatus();
-    console.log('Token storage verification:', tokenStatus);
+    console.log('🔍 Token storage verification:', tokenStatus);
 
     // Redirect to dashboard with success message
     const response = NextResponse.redirect(
@@ -95,12 +115,12 @@ export async function GET(request: NextRequest) {
     );
 
     // Log successful authentication
-    console.log('OAuth callback successful for client:', process.env.ZOHO_CLIENT_ID?.substring(0, 8) + '...');
+    console.log('🎉 OAuth callback successful for client:', process.env.ZOHO_CLIENT_ID?.substring(0, 8) + '...');
 
     return response;
 
   } catch (error) {
-    console.error('OAuth callback error:', error);
+    console.error('❌ OAuth callback error:', error);
     return NextResponse.redirect(
       new URL(`/dashboard?error=${encodeURIComponent('Internal server error')}`, request.url)
     );

@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
       const clientId = process.env.ZOHO_CLIENT_ID;
       const redirectUri = process.env.ZOHO_REDIRECT_URI;
       const accountsUrl = process.env.ZOHO_ACCOUNTS_URL;
+      const state = process.env.ZOHO_OAUTH_STATE || 'infinity_automated_solutions_2024';
       
       if (!clientId || !redirectUri || !accountsUrl) {
         return NextResponse.json({ 
@@ -55,12 +56,13 @@ export async function POST(request: NextRequest) {
         });
       }
       
-      const oauthUrl = `${accountsUrl}/oauth/v2/auth?response_type=code&client_id=${clientId}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(redirectUri)}&access_type=offline`;
+      const oauthUrl = `${accountsUrl}/oauth/v2/auth?response_type=code&client_id=${clientId}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(redirectUri)}&access_type=offline&state=${state}&prompt=consent`;
       
       return NextResponse.json({ 
         success: true, 
         message: 'OAuth URL generated for real Zoho authentication',
         oauthUrl,
+        state: state,
         instructions: [
           'Click the OAuth URL to authenticate with your Indian Zoho account',
           'Complete the authentication flow',

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Generate state parameter for security (CSRF protection)
-    const state = process.env.ZOHO_OAUTH_STATE || Math.random().toString(36).substring(2, 15);
+    // Use fixed state parameter from environment for consistency
+    const state = process.env.ZOHO_OAUTH_STATE || 'infinity_automated_solutions_2024';
     
     // Zoho OAuth authorization URL
     const authUrl = new URL(`${process.env.ZOHO_ACCOUNTS_URL}/oauth/v2/auth`);
@@ -15,6 +15,9 @@ export async function GET(request: NextRequest) {
     authUrl.searchParams.append('redirect_uri', process.env.ZOHO_REDIRECT_URI!);
     authUrl.searchParams.append('state', state);
     authUrl.searchParams.append('prompt', 'consent');
+
+    console.log('🔐 OAuth authorization initiated with state:', state);
+    console.log('🔗 Authorization URL:', authUrl.toString());
 
     // Redirect to Zoho authorization page
     return NextResponse.redirect(authUrl.toString());
@@ -31,7 +34,8 @@ export async function GET(request: NextRequest) {
 // Handle POST request to get authorization URL without redirect
 export async function POST(request: NextRequest) {
   try {
-    const state = process.env.ZOHO_OAUTH_STATE || Math.random().toString(36).substring(2, 15);
+    // Use fixed state parameter from environment for consistency
+    const state = process.env.ZOHO_OAUTH_STATE || 'infinity_automated_solutions_2024';
     
     const authUrl = new URL(`${process.env.ZOHO_ACCOUNTS_URL}/oauth/v2/auth`);
     
@@ -42,6 +46,8 @@ export async function POST(request: NextRequest) {
     authUrl.searchParams.append('redirect_uri', process.env.ZOHO_REDIRECT_URI!);
     authUrl.searchParams.append('state', state);
     authUrl.searchParams.append('prompt', 'consent');
+
+    console.log('🔐 OAuth URL generated with state:', state);
 
     return NextResponse.json({
       authUrl: authUrl.toString(),
