@@ -94,10 +94,19 @@ export default function DebugIndianZohoPage() {
 
       // Step 4: Check OAuth configuration
       addResult('🔗 Step 4: Checking OAuth configuration...');
-      const oauthUrl = `${envStatus.ZOHO_ACCOUNTS_URL || 'https://accounts.zoho.in'}/oauth/v2/auth?response_type=code&client_id=${envStatus.ZOHO_CLIENT_ID || 'MISSING'}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(envStatus.ZOHO_REDIRECT_URI || 'https://infinitysols.com/api/oauth/callback')}&access_type=offline`;
+      
+      // Get actual environment variable values for OAuth URL construction
+      const envResponse = await fetch('/api/test-env');
+      const envValues = await envResponse.json();
+      
+      const accountsUrl = envValues.ZOHO_ACCOUNTS_URL || 'https://accounts.zoho.in';
+      const clientId = envValues.ZOHO_CLIENT_ID || 'MISSING';
+      const redirectUri = envValues.ZOHO_REDIRECT_URI || 'https://infinitysols.com/api/oauth/callback';
+      
+      const oauthUrl = `${accountsUrl}/oauth/v2/auth?response_type=code&client_id=${clientId}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(redirectUri)}&access_type=offline`;
       
       addResult(`   OAuth URL: ${oauthUrl.substring(0, 100)}...`);
-      addResult(`   Redirect URI: ${envStatus.ZOHO_REDIRECT_URI || 'Not set'}`);
+      addResult(`   Redirect URI: ${redirectUri}`);
 
       // Compile debug data
       const debugInfo = {
@@ -127,13 +136,25 @@ export default function DebugIndianZohoPage() {
     setDebugData(null);
   };
 
-  const regenerateOAuthUrl = () => {
+  const regenerateOAuthUrl = async () => {
     if (!debugData) return;
     
-    const env = debugData.environment;
-    const oauthUrl = `${env.ZOHO_ACCOUNTS_URL || 'https://accounts.zoho.in'}/oauth/v2/auth?response_type=code&client_id=${env.ZOHO_CLIENT_ID || 'MISSING'}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(env.ZOHO_REDIRECT_URI || 'https://infinitysols.com/api/oauth/callback')}&access_type=offline`;
-    
-    window.open(oauthUrl, '_blank');
+    try {
+      // Get actual environment variable values
+      const envResponse = await fetch('/api/test-env');
+      const envValues = await envResponse.json();
+      
+      const accountsUrl = envValues.ZOHO_ACCOUNTS_URL || 'https://accounts.zoho.in';
+      const clientId = envValues.ZOHO_CLIENT_ID || 'MISSING';
+      const redirectUri = envValues.ZOHO_REDIRECT_URI || 'https://infinitysols.com/api/oauth/callback';
+      
+      const oauthUrl = `${accountsUrl}/oauth/v2/auth?response_type=code&client_id=${clientId}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(redirectUri)}&access_type=offline`;
+      
+      window.open(oauthUrl, '_blank');
+    } catch (error) {
+      console.error('Failed to generate OAuth URL:', error);
+      alert('Failed to generate OAuth URL. Please check your environment variables.');
+    }
   };
 
   return (
