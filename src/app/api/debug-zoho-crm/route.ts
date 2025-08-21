@@ -99,7 +99,8 @@ export async function POST(request: NextRequest) {
 
     // Step 4: Make API call to Zoho CRM
     console.log('🌐 Step 4: Making API call to Zoho CRM...');
-    const apiUrl = `${process.env.ZOHO_API_DOMAIN}/crm/v6/Leads`;
+    // Use Indian Zoho server domain
+    const apiUrl = `${process.env.ZOHO_API_DOMAIN || 'https://www.zohoapis.in'}/crm/v6/Leads`;
     
     console.log('🔗 API URL:', apiUrl);
     console.log('🔑 Using access token:', tokens.accessToken.substring(0, 20) + '...');

@@ -112,7 +112,8 @@ async function sendToZohoCRM(
   data: ZohoLead | ZohoContact,
   accessToken: string
 ): Promise<any> {
-  const apiUrl = `${process.env.ZOHO_API_DOMAIN}/crm/v6/${module}`;
+  // Use Indian Zoho server domain
+  const apiUrl = `${process.env.ZOHO_API_DOMAIN || 'https://www.zohoapis.in'}/crm/v6/${module}`;
   
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -235,7 +236,8 @@ export async function GET(request: NextRequest) {
 
     // Test the access token by making a simple API call
     if (accessToken && tokenStatus.accessTokenValid) {
-      const testUrl = `${process.env.ZOHO_API_DOMAIN}/crm/v6/org`;
+      // Use Indian Zoho server domain
+    const testUrl = `${process.env.ZOHO_API_DOMAIN || 'https://www.zohoapis.in'}/crm/v6/org`;
       const response = await fetch(testUrl, {
         method: 'GET',
         headers: {

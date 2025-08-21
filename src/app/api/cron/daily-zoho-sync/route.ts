@@ -87,7 +87,8 @@ async function sendLeadToZoho(leadData: any, accessToken: string): Promise<{ suc
       Product_Interest: leadData.product_name || undefined
     };
 
-    const apiUrl = `${process.env.ZOHO_API_DOMAIN}/crm/v6/Leads`;
+    // Use Indian Zoho server domain
+    const apiUrl = `${process.env.ZOHO_API_DOMAIN || 'https://www.zohoapis.in'}/crm/v6/Leads`;
     
     const response = await fetch(apiUrl, {
       method: 'POST',

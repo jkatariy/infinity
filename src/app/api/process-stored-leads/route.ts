@@ -59,7 +59,8 @@ async function refreshAccessToken(refreshToken: string): Promise<string | null> 
 }
 
 async function sendToZohoCRM(recordType: string, recordData: any, accessToken: string) {
-  const apiUrl = `${process.env.ZOHO_API_DOMAIN}/crm/v3/${recordType}`;
+      // Use Indian Zoho server domain
+    const apiUrl = `${process.env.ZOHO_API_DOMAIN || 'https://www.zohoapis.in'}/crm/v3/${recordType}`;
   
   const response = await fetch(apiUrl, {
     method: 'POST',
