@@ -96,8 +96,8 @@ export default function DebugIndianZohoPage() {
       addResult('🔗 Step 4: Checking OAuth configuration...');
       
       // Get actual environment variable values for OAuth URL construction
-      const envResponse = await fetch('/api/test-env');
-      const envValues = await envResponse.json();
+      const envResponse2 = await fetch('/api/test-env');
+      const envValues = await envResponse2.json();
       
       const accountsUrl = envValues.ZOHO_ACCOUNTS_URL || 'https://accounts.zoho.in';
       const clientId = envValues.ZOHO_CLIENT_ID || 'MISSING';
