@@ -12,9 +12,12 @@ const TOKEN_FILE_PATH = path.resolve(process.cwd(), 'zoho_tokens.json');
 
 // Use environment variables if available, otherwise fall back to hardcoded values
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://zxvhgpejwgrlxksnqtxk.supabase.co';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4dmhncGVqd2dybHhrc25xdHhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2OTk4NjEsImV4cCI6MjA2NDI3NTg2MX0.UfPkqIRY56eN8HvTNFXhG0MVzVtkZmXEHhSyD7M7eKU';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4dmhncGVqd2dybHhrc25xdHhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2OTk4NjEsImV4cCI6MjA2NDI3NTg2MX0.UfPkqIRY56eN8HvTNFXhG0MVzVtkZmXEHhSyD7M7eKU';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create two clients: one for public operations and one for service role operations
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseService = supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey) : null;
 
 function readFileSafe(filePath: string): string | null {
   try {
@@ -36,7 +39,10 @@ function writeFileSafe(filePath: string, data: string): void {
 export async function getStoredTokens(): Promise<StoredZohoTokens | null> {
   // Prefer Supabase; fall back to file locally
   try {
-    const { data, error } = await supabase
+    // Try service role client first, then fall back to anon client
+    const client = supabaseService || supabase;
+    
+    const { data, error } = await client
       .from('zoho_tokens')
       .select('*')
       .order('updated_at', { ascending: false })
@@ -88,8 +94,11 @@ export async function saveStoredTokens(tokens: StoredZohoTokens): Promise<void> 
       updated_at: new Date().toISOString(),
     };
     
+    // Try service role client first, then fall back to anon client
+    const client = supabaseService || supabase;
+    
     // Upsert single row with fixed ID
-    const { error } = await supabase
+    const { error } = await client
       .from('zoho_tokens')
       .upsert(payload, { 
         onConflict: 'id',
@@ -138,7 +147,10 @@ export async function isAccessTokenValid(): Promise<boolean> {
 // New function to clear all tokens (useful for testing or re-authentication)
 export async function clearStoredTokens(): Promise<void> {
   try {
-    const { error } = await supabase
+    // Try service role client first, then fall back to anon client
+    const client = supabaseService || supabase;
+    
+    const { error } = await client
       .from('zoho_tokens')
       .update({
         access_token: null,
