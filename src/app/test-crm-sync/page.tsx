@@ -251,7 +251,7 @@ export default function TestCRMSyncPage() {
 
       addResult('✅ Zoho authentication is working');
 
-      // Test direct lead creation
+      // Test direct lead creation with detailed debug
       addResult('📝 Creating test lead directly in Zoho CRM...');
       const leadData = {
         name: 'Direct Test Lead ' + new Date().toISOString().slice(0, 19),
@@ -262,7 +262,7 @@ export default function TestCRMSyncPage() {
         leadSource: 'Direct Test'
       };
 
-      const createResponse = await fetch('/api/sendToZoho', {
+      const createResponse = await fetch('/api/debug-zoho-crm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -274,9 +274,27 @@ export default function TestCRMSyncPage() {
       
       if (createResult.success) {
         addResult(`✅ Direct lead creation successful`);
-        addResult(`🆔 Zoho Lead ID: ${createResult.data?.data?.[0]?.details?.id || 'N/A'}`);
+        addResult(`🆔 Zoho Lead ID: ${createResult.zohoId || 'N/A'}`);
       } else {
         addResult(`❌ Direct lead creation failed: ${createResult.error}`);
+        addResult(`📍 Failed at step: ${createResult.step}`);
+        
+        // Show detailed debug information
+        if (createResult.debug) {
+          addResult('🔍 Debug Information:');
+          if (createResult.debug.apiUrl) {
+            addResult(`   API URL: ${createResult.debug.apiUrl}`);
+          }
+          if (createResult.debug.responseStatus) {
+            addResult(`   Response Status: ${createResult.debug.responseStatus}`);
+          }
+          if (createResult.debug.responseBody) {
+            addResult(`   Response Body: ${createResult.debug.responseBody.substring(0, 200)}...`);
+          }
+          if (createResult.debug.requestData) {
+            addResult(`   Request Data: ${JSON.stringify(createResult.debug.requestData).substring(0, 200)}...`);
+          }
+        }
       }
 
       addResult('🎉 Direct Zoho CRM test finished!');
