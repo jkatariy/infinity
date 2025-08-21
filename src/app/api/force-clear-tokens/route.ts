@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         accessTokenLength: tokens.accessToken?.length || 0,
         refreshTokenLength: tokens.refreshToken?.length || 0,
         isTestToken: tokens.accessToken?.startsWith('test_') || false,
-        needsClearing: tokens.accessToken?.startsWith('test_') || tokens.accessToken?.length < 50
+        needsClearing: tokens.accessToken?.startsWith('test_') || (tokens.accessToken?.length || 0) < 50
       } : null,
       message: 'Ready to force clear all tokens'
     });
