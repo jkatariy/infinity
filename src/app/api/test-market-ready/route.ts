@@ -112,11 +112,19 @@ async function testEnvironmentVariables() {
 
 async function testDatabaseConnection() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        status: 'failed',
+        details: { error: 'Missing Supabase environment variables' },
+        message: 'Database connection test failed: Missing environment variables'
+      };
+    }
+    
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = createClient(supabaseUrl, supabaseKey);
     
     const startTime = Date.now();
     const { data, error } = await supabase.rpc('get_zoho_token_status');
@@ -175,11 +183,19 @@ async function testTokenManagement() {
 
 async function testLeadProcessing() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        status: 'failed',
+        details: { error: 'Missing Supabase environment variables' },
+        message: 'Lead processing test failed: Missing environment variables'
+      };
+    }
+    
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = createClient(supabaseUrl, supabaseKey);
     
     // Test lead statistics function
     const { data: leadStats, error: statsError } = await supabase.rpc('get_comprehensive_lead_stats');
@@ -245,11 +261,19 @@ async function testHealthCheck() {
 async function testErrorHandling() {
   try {
     // Test with invalid data to ensure error handling works
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        status: 'failed',
+        details: { error: 'Missing Supabase environment variables' },
+        message: 'Error handling test failed: Missing environment variables'
+      };
+    }
+    
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = createClient(supabaseUrl, supabaseKey);
     
     // Test with invalid function call (should handle error gracefully)
     const { data, error } = await supabase.rpc('nonexistent_function');

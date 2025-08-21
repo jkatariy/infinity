@@ -1,12 +1,22 @@
 import { useState, useCallback } from 'react';
-import { 
-  sendToZohoCRM, 
-  checkZohoAuth, 
-  transformFormData, 
-  validateZohoFormData,
-  type ZohoFormData, 
-  type ZohoApiResponse 
-} from '@/utils/zohoIntegration';
+import { perfectZohoIntegration } from '@/utils/perfectZohoIntegration';
+
+interface ZohoFormData {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message?: string;
+  lead_source?: string;
+  [key: string]: any;
+}
+
+interface ZohoApiResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+  data?: any;
+}
 
 interface UseZohoIntegrationOptions {
   formType?: string;
@@ -23,14 +33,75 @@ export function useZohoIntegration(options: UseZohoIntegrationOptions = {}) {
   // Check authentication status
   const checkAuth = useCallback(async () => {
     try {
-      const result = await checkZohoAuth();
-      setIsAuthenticated(result.authenticated);
-      return result;
+      const healthStatus = await perfectZohoIntegration.getPerfectHealthStatus();
+      const hasToken = healthStatus.token_status.has_token;
+      setIsAuthenticated(hasToken);
+      return { authenticated: hasToken, message: hasToken ? 'Authenticated' : 'Not authenticated' };
     } catch (error) {
       setIsAuthenticated(false);
       console.error('Auth check failed:', error);
       return { authenticated: false, message: 'Auth check failed' };
     }
+  }, []);
+
+  // Transform form data to Zoho format
+  const transformFormData = useCallback((formData: any, formType: string = 'contact'): ZohoFormData => {
+    const baseData: ZohoFormData = {
+      name: formData.name || formData.firstName || formData.fullName || '',
+      email: formData.email || '',
+      phone: formData.phone || formData.telephone || '',
+      company: formData.company || formData.organization || '',
+      message: formData.message || formData.comments || formData.description || '',
+      lead_source: formData.lead_source || 'Website Form',
+    };
+
+    // Add form-specific fields
+    switch (formType) {
+      case 'quote':
+        baseData.inquiry_type = 'Quote Request';
+        baseData.product_interest = formData.product || formData.service || '';
+        break;
+      case 'demo':
+        baseData.inquiry_type = 'Demo Request';
+        baseData.product_interest = formData.product || formData.service || '';
+        break;
+      case 'service':
+        baseData.inquiry_type = 'Service Request';
+        baseData.service_type = formData.serviceType || '';
+        break;
+      case 'chatbot':
+        baseData.inquiry_type = 'Chatbot Lead';
+        baseData.conversation_summary = formData.conversation || '';
+        break;
+      default:
+        baseData.inquiry_type = 'General Inquiry';
+    }
+
+    return baseData;
+  }, []);
+
+  // Validate Zoho form data
+  const validateZohoFormData = useCallback((data: ZohoFormData): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+
+    if (!data.name || data.name.trim().length === 0) {
+      errors.push('Name is required');
+    }
+
+    if (!data.email || data.email.trim().length === 0) {
+      errors.push('Email is required');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      errors.push('Email format is invalid');
+    }
+
+    if (!data.lead_source) {
+      errors.push('Lead source is required');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
   }, []);
 
   // Submit form data to Zoho CRM
@@ -65,17 +136,30 @@ export function useZohoIntegration(options: UseZohoIntegrationOptions = {}) {
         return errorResponse;
       }
 
-      // Submit to Zoho CRM
-      const response = await sendToZohoCRM(zohoData);
-      setLastResponse(response);
+      // Store lead in database (this will be processed by the cron job)
+      const response = await fetch('/api/store-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(zohoData),
+      });
 
-      if (response.success) {
-        options.onSuccess?.(response);
-      } else {
-        options.onError?.(response.error || 'Submission failed');
+      if (!response.ok) {
+        throw new Error(`Failed to store lead: ${response.statusText}`);
       }
 
-      return response;
+      const result = await response.json();
+      
+      const successResponse: ZohoApiResponse = {
+        success: true,
+        message: 'Lead stored successfully and will be sent to Zoho CRM',
+        data: result
+      };
+
+      setLastResponse(successResponse);
+      options.onSuccess?.(successResponse);
+      return successResponse;
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -91,7 +175,7 @@ export function useZohoIntegration(options: UseZohoIntegrationOptions = {}) {
     } finally {
       setIsLoading(false);
     }
-  }, [options]);
+  }, [options, transformFormData, validateZohoFormData]);
 
   // Start OAuth flow
   const initiateAuth = useCallback(() => {

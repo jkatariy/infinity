@@ -85,11 +85,20 @@ export async function POST(request: NextRequest) {
 
 async function checkDatabaseConnection() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        connected: false,
+        response_time_ms: null,
+        error: 'Missing Supabase environment variables',
+        status: 'error'
+      };
+    }
+    
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = createClient(supabaseUrl, supabaseKey);
     
     const startTime = Date.now();
     const { data, error } = await supabase.rpc('get_zoho_token_status');
@@ -144,11 +153,29 @@ async function checkEnvironmentVariables() {
 
 async function checkSystemPerformance() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        database_performance: {
+          response_time_ms: null,
+          status: 'error',
+          error: 'Missing Supabase environment variables'
+        },
+        memory_usage: {
+          rss: 0,
+          heapTotal: 0,
+          heapUsed: 0,
+          external: 0,
+          status: 'error'
+        },
+        overall_status: 'error'
+      };
+    }
+    
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = createClient(supabaseUrl, supabaseKey);
     
     // Test database performance
     const startTime = Date.now();

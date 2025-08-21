@@ -1,8 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Validate environment variables before creating client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Missing required Supabase environment variables');
+  console.error('NEXT_PUBLIC_SUPABASE_URL:', !!supabaseUrl);
+  console.error('SUPABASE_SERVICE_ROLE_KEY:', !!supabaseKey);
+}
+
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  supabaseUrl || 'https://zxvhgpejwgrlxksnqtxk.supabase.co',
+  supabaseKey || 'fallback-key'
 );
 
 interface ZohoTokenResponse {

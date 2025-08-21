@@ -4,14 +4,29 @@ export async function GET(request: NextRequest) {
   try {
     // Generate the same OAuth URL that would be used for authorization
     const state = process.env.ZOHO_OAUTH_STATE || 'infinity_automated_solutions_2024';
+    const accountsUrl = process.env.ZOHO_ACCOUNTS_URL || 'https://accounts.zoho.com';
     
-    const authUrl = new URL(`${process.env.ZOHO_ACCOUNTS_URL}/oauth/v2/auth`);
+    const authUrl = new URL(`${accountsUrl}/oauth/v2/auth`);
     
     authUrl.searchParams.append('scope', process.env.ZOHO_SCOPE || 'ZohoCRM.modules.ALL,ZohoCRM.settings.ALL,ZohoCRM.users.READ');
-    authUrl.searchParams.append('client_id', process.env.ZOHO_CLIENT_ID!);
+    const clientId = process.env.ZOHO_CLIENT_ID;
+    const redirectUri = process.env.ZOHO_REDIRECT_URI;
+    
+    if (!clientId || !redirectUri) {
+      return NextResponse.json({
+        success: false,
+        error: 'Missing required environment variables',
+        environment_check: {
+          ZOHO_CLIENT_ID: clientId ? 'SET' : 'MISSING',
+          ZOHO_REDIRECT_URI: redirectUri ? 'SET' : 'MISSING',
+        }
+      }, { status: 400 });
+    }
+    
+    authUrl.searchParams.append('client_id', clientId);
     authUrl.searchParams.append('response_type', 'code');
     authUrl.searchParams.append('access_type', 'offline');
-    authUrl.searchParams.append('redirect_uri', process.env.ZOHO_REDIRECT_URI!);
+    authUrl.searchParams.append('redirect_uri', redirectUri);
     authUrl.searchParams.append('state', state);
     authUrl.searchParams.append('prompt', 'consent');
 

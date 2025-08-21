@@ -24,7 +24,7 @@ export default function ZohoFormExample() {
     lastResponse 
   } = useContactForm({
     onSuccess: (response) => {
-      console.log('Success! Zoho ID:', response.zohoId);
+      console.log('Success! Response:', response);
       alert('Thank you! Your inquiry has been submitted successfully.');
       // Reset form
       setFormData({
@@ -212,8 +212,8 @@ export default function ZohoFormExample() {
             {lastResponse.success ? '✅ Success!' : '❌ Error'}
           </p>
           <p className="text-sm">{lastResponse.message}</p>
-          {lastResponse.zohoId && (
-            <p className="text-xs mt-1">Zoho ID: {lastResponse.zohoId}</p>
+          {lastResponse.data?.zoho_id && (
+            <p className="text-xs mt-1">Zoho ID: {lastResponse.data.zoho_id}</p>
           )}
         </div>
       )}
