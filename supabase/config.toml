@@ -2,19 +2,18 @@
 # https://supabase.com/docs/guides/local-development/cli/config
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
-project_id = "company"
+project_id = "zxvhgpejwgrlxksnqtxk"
 
 [api]
 enabled = true
 # Port to use for the API URL.
 port = 54321
-# Schemas to expose in your API. Tables, views and stored procedures in this schema will get API
-# endpoints. `public` and `graphql_public` schemas are included by default.
-schemas = ["public", "graphql_public"]
-# Extra schemas to add to the search_path of every request.
+# Schemas to expose in your API. Tables, views and stored procedures in this schema will get API endpoints.
+# public and storage are always included.
+schemas = ["public", "storage", "graphql_public"]
+# Extra schemas to add to the search_path of every request. public is always included.
 extra_search_path = ["public", "extensions"]
-# The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
-# for accidental or malicious requests.
+# The maximum number of rows returned from a table or view. Limits payload size for accidental or malicious requests.
 max_rows = 1000
 
 [api.tls]
@@ -22,13 +21,13 @@ max_rows = 1000
 enabled = false
 
 [db]
+enabled = true
 # Port to use for the local database URL.
 port = 54322
 # Port used by db diff command to initialize the shadow database.
 shadow_port = 54320
-# The database major version to use. This has to be the same as your remote database's. Run `SHOW
-# server_version;` on the remote database to check.
-major_version = 17
+# The database major version to use. This has to be the same as your remote database's. Run `SHOW server_version;` on the remote database to check.
+major_version = 15
 
 [db.pooler]
 enabled = false
@@ -38,7 +37,7 @@ port = 54329
 # Configure one of the supported pooler modes: `transaction`, `session`.
 pool_mode = "transaction"
 # How many server connections to allow per user/database pair.
-default_pool_size = 20
+default_pool_size = 15
 # Maximum number of client connections allowed.
 max_client_conn = 100
 
@@ -72,7 +71,7 @@ allowed_cidrs_v6 = ["::/0"]
 [realtime]
 enabled = true
 # Bind realtime via either IPv4 or IPv6. (default: IPv4)
-# ip_version = "IPv6"
+# ip_version = "IPv4"
 # The maximum length in bytes of HTTP request headers. (default: 4096)
 # max_header_length = 4096
 
@@ -81,7 +80,7 @@ enabled = true
 # Port to use for Supabase Studio.
 port = 54323
 # External URL of the API server that frontend connects to.
-api_url = "http://127.0.0.1"
+api_url = "http://127.0.0.1:54321"
 # OpenAI API Key to use for Supabase AI in the Supabase Studio.
 openai_api_key = "env(OPENAI_API_KEY)"
 
@@ -92,8 +91,8 @@ enabled = true
 # Port to use for the email testing server web interface.
 port = 54324
 # Uncomment to expose additional ports for testing user applications that send emails.
-# smtp_port = 54325
-# pop3_port = 54326
+# smtp_port = 2500
+# pop3_port = 1100
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
@@ -117,10 +116,10 @@ file_size_limit = "50MiB"
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "http://127.0.0.1:3000"
+site_url = "http://localhost:3000"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000"]
-# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
+additional_redirect_urls = ["https://localhost:3000"]
+# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604800 (1 week).
 jwt_expiry = 3600
 # Path to JWT signing key. DO NOT commit your signing keys file to git.
 # signing_keys_path = "./signing_keys.json"
@@ -197,11 +196,11 @@ otp_expiry = 3600
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
-enable_signup = false
+enable_signup = true
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = false
-# Template for sending OTP to users
-template = "Your code is {{ .Code }}"
+# Template for sending a confirmation message. Use {{ .Code }} to insert the confirmation code.
+template = "Your confirmation code is {{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
 max_frequency = "5s"
 
@@ -264,7 +263,7 @@ max_frequency = "5s"
 enabled = false
 client_id = ""
 # DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
-secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
+secret = ""
 # Overrides the default auth redirectUrl.
 redirect_uri = ""
 # Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
@@ -303,10 +302,9 @@ enabled = false
 
 [edge_runtime]
 enabled = true
-# Configure one of the supported request policies: `oneshot`, `per_worker`.
-# Use `oneshot` for hot reload, or `per_worker` for load testing.
-policy = "oneshot"
-# Port to attach the Chrome inspector for debugging edge functions.
+# Configure the port for the Edge Runtime API server.
+port = 54325
+# Configure the port for the Edge Runtime inspector.
 inspector_port = 8083
 # The Deno major version to use.
 deno_version = 1
@@ -315,10 +313,13 @@ deno_version = 1
 # secret_key = "env(SECRET_VALUE)"
 
 [analytics]
-enabled = true
+enabled = false
 port = 54327
-# Configure one of the supported backends: `postgres`, `bigquery`.
-backend = "postgres"
+vector_port = 54328
+# Configure the port for the Analytics API server.
+# port = 54327
+# Configure the port for the Analytics Web UI.
+# web_port = 54326
 
 # Experimental features may be deprecated any time
 [experimental]
