@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -83,12 +83,12 @@ export default function ZohoIntegrationDashboard() {
     }
   };
 
-  const refreshData = async () => {
+  const refreshData = useCallback(async () => {
     setIsLoading(true);
     await Promise.all([fetchHealthStatus(), fetchLeadStats()]);
     setLastRefresh(new Date());
     setIsLoading(false);
-  };
+  }, []);
 
   const processLeads = async (limit: number = 10) => {
     setIsProcessing(true);

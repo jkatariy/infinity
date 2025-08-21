@@ -5,9 +5,19 @@ export async function GET(request: NextRequest) {
   try {
     console.log('🧪 Running comprehensive market-ready system test...');
     
-    const testResults = {
+    const testResults: {
+      timestamp: string;
+      tests: any;
+      overall_status: string;
+      summary?: {
+        total_tests: number;
+        passed_tests: number;
+        failed_tests: number;
+        success_rate: number;
+      };
+    } = {
       timestamp: new Date().toISOString(),
-      tests: {} as any,
+      tests: {},
       overall_status: 'unknown'
     };
     
