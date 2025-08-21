@@ -64,10 +64,21 @@ export async function POST(request: NextRequest) {
     
     if (action === 'test_simple_auth') {
       // Test with simple Indian server configuration
+      const clientId = process.env.ZOHO_CLIENT_ID;
+      const redirectUri = process.env.ZOHO_REDIRECT_URI || 'https://infinitysols.com/api/oauth/callback';
+      
+      if (!clientId) {
+        return NextResponse.json({ 
+          success: false, 
+          error: 'ZOHO_CLIENT_ID environment variable is not set'
+        });
+      }
+      
       const testConfig = {
         accountsUrl: 'https://accounts.zoho.in',
         apiDomain: 'https://www.zohoapis.in',
-        redirectUri: process.env.ZOHO_REDIRECT_URI || 'https://infinitysols.com/api/oauth/callback'
+        redirectUri: redirectUri,
+        oauthUrl: `https://accounts.zoho.in/oauth/v2/auth?response_type=code&client_id=${clientId}&scope=ZohoCRM.modules.ALL,ZohoCRM.settings.ALL&redirect_uri=${encodeURIComponent(redirectUri)}&access_type=offline`
       };
       
       return NextResponse.json({ 
@@ -96,6 +107,18 @@ export async function POST(request: NextRequest) {
           details: error instanceof Error ? error.message : 'Unknown error'
         });
       }
+    }
+    
+    if (action === 'check_client_id') {
+      // Check if client ID is set
+      const clientId = process.env.ZOHO_CLIENT_ID;
+      
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Client ID check completed',
+        hasClientId: !!clientId,
+        clientIdPreview: clientId ? `${clientId.substring(0, 8)}...` : null
+      });
     }
     
     return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
