@@ -160,7 +160,7 @@ export default function DebugOAuthPage() {
                 <div key={key} className="flex justify-between items-center bg-white p-2 rounded border">
                   <span className="font-mono text-sm">{key}:</span>
                   <span className={`text-sm ${value ? 'text-green-600' : 'text-red-600'}`}>
-                    {typeof value === 'boolean' ? (value ? '✅ Set' : '❌ Missing') : value || 'Not set'}
+                    {typeof value === 'boolean' ? (value ? '✅ Set' : '❌ Missing') : String(value || 'Not set')}
                   </span>
                 </div>
               ))}
