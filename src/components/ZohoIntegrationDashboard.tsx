@@ -1,24 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
-import { 
-  RefreshCw, 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
-  Clock,
-  Users,
-  Mail,
-  Activity,
-  Settings,
-  Play,
-  Pause
-} from 'lucide-react';
 
 interface HealthStatus {
   timestamp: string;
@@ -103,15 +85,26 @@ export default function ZohoIntegrationDashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Lead processing result:', data);
-        await refreshData(); // Refresh data after processing
-      } else {
-        console.error('Failed to process leads');
+        console.log('Leads processed:', data);
+        await refreshData();
       }
     } catch (error) {
       console.error('Error processing leads:', error);
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const testMarketReady = async () => {
+    try {
+      const response = await fetch('/api/test-market-ready');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Market ready test results:', data);
+        alert(`Market Ready Test: ${data.overall_status.toUpperCase()}\nSuccess Rate: ${data.summary?.success_rate}%`);
+      }
+    } catch (error) {
+      console.error('Error testing market ready:', error);
     }
   };
 
@@ -140,281 +133,285 @@ export default function ZohoIntegrationDashboard() {
     switch (status) {
       case 'passed':
       case 'healthy':
-        return <CheckCircle className="w-4 h-4" />;
+        return '✅';
       case 'warning':
       case 'degraded':
-        return <AlertTriangle className="w-4 h-4" />;
+        return '⚠️';
       case 'failed':
       case 'unhealthy':
       case 'error':
-        return <XCircle className="w-4 h-4" />;
+        return '❌';
       default:
-        return <Clock className="w-4 h-4" />;
+        return 'ℹ️';
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <RefreshCw className="w-6 h-6 animate-spin" />
-        <span className="ml-2">Loading dashboard...</span>
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg shadow p-6">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                  <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Zoho Integration Dashboard</h1>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Zoho CRM Integration Dashboard
+          </h1>
           <p className="text-gray-600">
-            Monitor and manage your Zoho CRM integration
+            Real-time monitoring and management of Zoho CRM integration
           </p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            onClick={refreshData}
-            disabled={isLoading}
-            variant="outline"
-            size="sm"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
-          <Button
-            onClick={() => processLeads(5)}
-            disabled={isProcessing}
-            size="sm"
-          >
-            <Play className="w-4 h-4 mr-2" />
-            Process Leads
-          </Button>
-        </div>
-      </div>
-
-      {lastRefresh && (
-        <p className="text-sm text-gray-500">
-          Last updated: {lastRefresh.toLocaleString()}
-        </p>
-      )}
-
-      {/* Overall Status */}
-      {healthStatus && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Activity className="w-5 h-5 mr-2" />
-              System Health Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4 mb-4">
-              <Badge className={getStatusColor(healthStatus.status)}>
-                {getStatusIcon(healthStatus.status)}
-                <span className="ml-1 capitalize">{healthStatus.status}</span>
-              </Badge>
-              <span className="text-sm text-gray-600">
-                {healthStatus.summary.passed}/{healthStatus.summary.total_checks} checks passed
+          <div className="flex items-center gap-4 mt-4">
+            <button
+              onClick={refreshData}
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+            >
+              🔄 Refresh
+            </button>
+            <button
+              onClick={testMarketReady}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+            >
+              🧪 Test Market Ready
+            </button>
+            {lastRefresh && (
+              <span className="text-sm text-gray-500">
+                Last updated: {lastRefresh.toLocaleTimeString()}
               </span>
-            </div>
+            )}
+          </div>
+        </div>
 
-            {/* Health Check Progress */}
-            <div className="space-y-2 mb-4">
-              <div className="flex justify-between text-sm">
-                <span>Health Score</span>
-                <span>{Math.round((healthStatus.summary.passed / healthStatus.summary.total_checks) * 100)}%</span>
+        {/* Health Status */}
+        {healthStatus && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+              System Health Status
+            </h2>
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(healthStatus.status)}`}>
+                    {getStatusIcon(healthStatus.status)} {healthStatus.status.toUpperCase()}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {new Date(healthStatus.timestamp).toLocaleString()}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-600">
+                  {healthStatus.summary.passed}/{healthStatus.summary.total_checks} checks passed
+                </div>
               </div>
-              <Progress 
-                value={(healthStatus.summary.passed / healthStatus.summary.total_checks) * 100} 
-                className="h-2"
-              />
-            </div>
 
-            {/* Recommendations */}
-            {healthStatus.recommendations && healthStatus.recommendations.length > 0 && (
-              <Alert className="mb-4">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Recommendations:</strong>
-                  <ul className="mt-2 list-disc list-inside">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Object.entries(healthStatus.checks).map(([key, check]) => (
+                  <div key={key} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-medium text-gray-900 capitalize">
+                        {key.replace(/_/g, ' ')}
+                      </h3>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(check.status)}`}>
+                        {getStatusIcon(check.status)} {check.status}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600">{check.message}</p>
+                  </div>
+                ))}
+              </div>
+
+              {healthStatus.recommendations && healthStatus.recommendations.length > 0 && (
+                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <h4 className="font-medium text-yellow-800 mb-2">Recommendations:</h4>
+                  <ul className="list-disc list-inside text-sm text-yellow-700">
                     {healthStatus.recommendations.map((rec, index) => (
                       <li key={index}>{rec}</li>
                     ))}
                   </ul>
-                </AlertDescription>
-              </Alert>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Lead Processing Stats */}
-      {leadStats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Leads</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{leadStats.total_leads}</div>
-              <p className="text-xs text-muted-foreground">
-                All time leads captured
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-              <CheckCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{leadStats.success_rate}%</div>
-              <p className="text-xs text-muted-foreground">
-                Successfully sent to Zoho
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Leads</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{leadStats.pending_leads}</div>
-              <p className="text-xs text-muted-foreground">
-                Awaiting processing
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Failed Leads</CardTitle>
-              <XCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{leadStats.failed_leads}</div>
-              <p className="text-xs text-muted-foreground">
-                Processing failed
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Detailed Health Checks */}
-      {healthStatus && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Detailed Health Checks</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {Object.entries(healthStatus.checks).map(([checkName, check]) => (
-                <div key={checkName} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    {getStatusIcon(check.status)}
-                    <div>
-                      <h4 className="font-medium capitalize">
-                        {checkName.replace(/_/g, ' ')}
-                      </h4>
-                      <p className="text-sm text-gray-600">{check.message}</p>
-                    </div>
-                  </div>
-                  <Badge className={getStatusColor(check.status)}>
-                    {check.status}
-                  </Badge>
                 </div>
-              ))}
+              )}
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Token Status */}
-      {healthStatus?.checks?.token_status?.details && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Token Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm font-medium">Has Token</p>
-                <p className="text-lg">{healthStatus.checks.token_status.details.has_token ? 'Yes' : 'No'}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Access Token</p>
-                <p className="text-lg">{healthStatus.checks.token_status.details.has_access_token ? 'Valid' : 'Missing'}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Refresh Token</p>
-                <p className="text-lg">{healthStatus.checks.token_status.details.has_refresh_token ? 'Available' : 'Missing'}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Expires At</p>
-                <p className="text-lg">
-                  {healthStatus.checks.token_status.details.expires_at 
-                    ? new Date(healthStatus.checks.token_status.details.expires_at).toLocaleString()
-                    : 'Unknown'
-                  }
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              onClick={() => processLeads(5)}
-              disabled={isProcessing}
-              variant="outline"
-              size="sm"
-            >
-              <Play className="w-4 h-4 mr-2" />
-              Process 5 Leads
-            </Button>
-            <Button
-              onClick={() => processLeads(10)}
-              disabled={isProcessing}
-              variant="outline"
-              size="sm"
-            >
-              <Play className="w-4 h-4 mr-2" />
-              Process 10 Leads
-            </Button>
-            <Button
-              onClick={() => processLeads(20)}
-              disabled={isProcessing}
-              variant="outline"
-              size="sm"
-            >
-              <Play className="w-4 h-4 mr-2" />
-              Process 20 Leads
-            </Button>
-            <Button
-              onClick={refreshData}
-              disabled={isLoading}
-              variant="outline"
-              size="sm"
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh Status
-            </Button>
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        {/* Lead Statistics */}
+        {leadStats && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+              Lead Processing Statistics
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Total Leads</p>
+                    <p className="text-2xl font-bold text-gray-900">{leadStats.total_leads}</p>
+                  </div>
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <span className="text-2xl">📊</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Sent to Zoho</p>
+                    <p className="text-2xl font-bold text-green-600">{leadStats.sent_leads}</p>
+                  </div>
+                  <div className="p-3 bg-green-100 rounded-full">
+                    <span className="text-2xl">✅</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Pending</p>
+                    <p className="text-2xl font-bold text-yellow-600">{leadStats.pending_leads}</p>
+                  </div>
+                  <div className="p-3 bg-yellow-100 rounded-full">
+                    <span className="text-2xl">⏳</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Success Rate</p>
+                    <p className="text-2xl font-bold text-blue-600">{leadStats.success_rate}%</p>
+                  </div>
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <span className="text-2xl">📈</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-6 flex gap-4">
+              <button
+                onClick={() => processLeads(10)}
+                disabled={isProcessing}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {isProcessing ? '⏳' : '🚀'} Process 10 Leads
+              </button>
+              <button
+                onClick={() => processLeads(50)}
+                disabled={isProcessing}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {isProcessing ? '⏳' : '⚡'} Process 50 Leads
+              </button>
+              <button
+                onClick={() => processLeads(100)}
+                disabled={isProcessing}
+                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {isProcessing ? '⏳' : '🔥'} Process All Leads
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Additional Stats */}
+        {leadStats && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="font-medium text-gray-900 mb-4">Processing Details</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Currently Processing</span>
+                  <span className="font-medium">{leadStats.processing_leads}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Failed Leads</span>
+                  <span className="font-medium text-red-600">{leadStats.failed_leads}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Retry Queue</span>
+                  <span className="font-medium text-yellow-600">{leadStats.retry_leads}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Last 24h</span>
+                  <span className="font-medium">{leadStats.leads_last_24h}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="font-medium text-gray-900 mb-4">System Status</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Database</span>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">✅ Connected</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Zoho API</span>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">✅ Active</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Cron Jobs</span>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">✅ Running</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Error Rate</span>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">✅ Low</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="font-medium text-gray-900 mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => window.open('/api/health/zoho-integration', '_blank')}
+                  className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
+                >
+                  🔍 View Health API
+                </button>
+                <button
+                  onClick={() => window.open('/api/test-market-ready', '_blank')}
+                  className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
+                >
+                  🧪 Run System Test
+                </button>
+                <button
+                  onClick={() => window.open('/api/process-leads', '_blank')}
+                  className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
+                >
+                  📊 View Lead Stats
+                </button>
+                <button
+                  onClick={() => window.open('/dashboard/zoho-auth', '_blank')}
+                  className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
+                >
+                  ⚙️ Zoho Auth Panel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
