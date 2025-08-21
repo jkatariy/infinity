@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { zohoIntegration } from '@/utils/zohoIntegration';
+import { perfectZohoIntegration } from '@/utils/perfectZohoIntegration';
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,11 +12,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('🕐 Starting daily Zoho sync at 9 AM IST...');
+    console.log('🕐 Starting PERFECT daily Zoho sync at 9 AM IST...');
     
-    // Get system health status first
-    const healthStatus = await zohoIntegration.getHealthStatus();
-    console.log('📊 System health status:', healthStatus);
+    // Get comprehensive system health status
+    const healthStatus = await perfectZohoIntegration.getPerfectHealthStatus();
+    console.log('📊 Perfect system health status:', healthStatus);
 
     // Check if we have any tokens at all
     if (!healthStatus.token_status.has_token) {
@@ -30,8 +30,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Try to get a valid access token (this will automatically refresh if needed)
-    console.log('🔑 Getting valid access token...');
-    const accessToken = await zohoIntegration.getValidAccessToken();
+    console.log('🔑 Getting valid access token with automatic refresh...');
+    const accessToken = await perfectZohoIntegration.getValidAccessToken();
     
     if (!accessToken) {
       console.log('❌ Failed to get valid access token');
@@ -45,19 +45,19 @@ export async function GET(request: NextRequest) {
 
     console.log('✅ Successfully obtained valid access token');
 
-    // Process pending leads
-    console.log('📋 Processing pending leads...');
-    const processingResult = await zohoIntegration.processPendingLeads(20); // Process up to 20 leads per run
+    // Process all pending leads from both tables
+    console.log('📋 Processing all pending leads from both tables...');
+    const processingResult = await perfectZohoIntegration.processAllPendingLeads(20); // Process up to 20 leads per run
     
-    console.log(`✅ Daily sync completed: ${processingResult.successful} successful, ${processingResult.failed} failed`);
+    console.log(`✅ Perfect daily sync completed: ${processingResult.successful} successful, ${processingResult.failed} failed`);
 
     // Get updated health status
-    const updatedHealthStatus = await zohoIntegration.getHealthStatus();
+    const updatedHealthStatus = await perfectZohoIntegration.getPerfectHealthStatus();
 
     return NextResponse.json({
       success: true,
-      message: 'Daily Zoho sync completed',
-      action: 'daily_sync_completed',
+      message: 'Perfect daily Zoho sync completed',
+      action: 'perfect_daily_sync_completed',
       summary: {
         totalProcessed: processingResult.processed,
         successful: processingResult.successful,
@@ -69,12 +69,12 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Error in daily Zoho sync:', error);
+    console.error('❌ Error in perfect daily Zoho sync:', error);
     
     // Try to get health status even if processing failed
     let healthStatus = null;
     try {
-      healthStatus = await zohoIntegration.getHealthStatus();
+      healthStatus = await perfectZohoIntegration.getPerfectHealthStatus();
     } catch (healthError) {
       console.error('❌ Error getting health status:', healthError);
     }
