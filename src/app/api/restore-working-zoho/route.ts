@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
     };
 
     // Determine which server to use based on environment
-    const isIndianServer = envStatus.ZOHO_API_DOMAIN?.includes('.in') || 
-                          envStatus.ZOHO_ACCOUNTS_URL?.includes('.in');
+    const isIndianServer = Boolean(envStatus.ZOHO_API_DOMAIN?.includes('.in') || 
+                          envStatus.ZOHO_ACCOUNTS_URL?.includes('.in'));
     
     const recommendedConfig = {
       accountsUrl: isIndianServer ? 'https://accounts.zoho.in' : 'https://accounts.zoho.com',
