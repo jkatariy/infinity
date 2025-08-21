@@ -66,13 +66,14 @@ const models: Record<CategoryKey, ModelLink[]> = {
 
 export default function FloatingAssistant() {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState<'welcome' | 'contact' | 'category' | 'model' | 'submitted'>('welcome');
+  const [currentStep, setCurrentStep] = useState<'welcome' | 'category' | 'model' | 'submitted'>('welcome');
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
   const [selectedModel, setSelectedModel] = useState<ModelLink | null>(null);
   const [contactInfo, setContactInfo] = useState({ company: '', phone: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [leadId, setLeadId] = useState<string | null>(null);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +91,8 @@ export default function FloatingAssistant() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/chatbot-leads', {
+      // First, create initial contact and get leadId
+      const initialResponse = await fetch('/api/chatbot-initial-contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,10 +101,58 @@ export default function FloatingAssistant() {
           name: contactInfo.company, // Using company name as the name field
           email: contactInfo.email,
           phone: contactInfo.phone,
+        }),
+      });
+
+      const initialResult = await initialResponse.json();
+
+      if (!initialResult.success) {
+        setSubmitStatus('error');
+        setErrorMessage(initialResult.error || 'Failed to create initial contact');
+        return;
+      }
+
+      // Store the leadId for later use
+      setLeadId(initialResult.leadId);
+
+      // Now proceed to category selection
+      setCurrentStep('category');
+      setSubmitStatus('idle');
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCategorySelect = (category: CategoryKey) => {
+    setSelectedCategory(category);
+    setCurrentStep('model');
+  };
+
+  const handleModelSelect = async (model: ModelLink) => {
+    setSelectedModel(model);
+    
+    // Update the lead with final details
+    if (!leadId) {
+      setSubmitStatus('error');
+      setErrorMessage('No lead ID found. Please start over.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/chatbot-leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          leadId: leadId,
           category: selectedCategory,
-          model_name: selectedModel?.name,
-          model_label: selectedModel?.label,
-          message: `Chatbot inquiry for ${selectedModel?.label || selectedCategory} from ${contactInfo.company}.`
+          model_name: model.name,
+          model_label: model.label,
+          message: `Chatbot inquiry for ${model.label} from ${contactInfo.company}.`
         }),
       });
 
@@ -118,19 +168,7 @@ export default function FloatingAssistant() {
     } catch (error) {
       setSubmitStatus('error');
       setErrorMessage('Network error. Please try again.');
-    } finally {
-      setIsSubmitting(false);
     }
-  };
-
-  const handleCategorySelect = (category: CategoryKey) => {
-    setSelectedCategory(category);
-    setCurrentStep('model');
-  };
-
-  const handleModelSelect = (model: ModelLink) => {
-    setSelectedModel(model);
-    setCurrentStep('contact');
   };
 
   const handleBack = () => {
@@ -142,10 +180,6 @@ export default function FloatingAssistant() {
         setCurrentStep('category');
         setSelectedCategory(null);
         break;
-      case 'contact':
-        setCurrentStep('model');
-        setSelectedModel(null);
-        break;
     }
   };
 
@@ -156,6 +190,7 @@ export default function FloatingAssistant() {
     setContactInfo({ company: '', phone: '', email: '' });
     setSubmitStatus('idle');
     setErrorMessage('');
+    setLeadId(null);
   };
 
   const handleShowPage = () => {
@@ -212,7 +247,7 @@ export default function FloatingAssistant() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-700">Let's start by getting your contact information:</p>
-                    <form onSubmit={(e) => { e.preventDefault(); setCurrentStep('category'); }} className="space-y-3">
+                    <form onSubmit={handleContactSubmit} className="space-y-3">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
                         <input
@@ -248,11 +283,19 @@ export default function FloatingAssistant() {
                       </div>
                       <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors"
                       >
-                        Continue
+                        {isSubmitting ? 'Processing...' : 'Continue'}
                       </button>
                     </form>
+                    
+                    {submitStatus === 'error' && (
+                      <div className="bg-red-50 p-4 rounded-lg">
+                        <p className="text-red-800 font-medium">❌ Error</p>
+                        <p className="text-red-700 text-sm mt-1">{errorMessage}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -311,43 +354,7 @@ export default function FloatingAssistant() {
                 </div>
               )}
 
-              {/* Contact Form */}
-              {currentStep === 'contact' && (
-                <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-blue-900 font-medium">Almost done! Please confirm your details:</p>
-                    <p className="text-blue-800 text-sm mt-1">Model: {selectedModel?.label}</p>
-                    <button
-                      onClick={handleBack}
-                      className="text-blue-700 text-sm hover:underline mt-2"
-                    >
-                      ← Back to models
-                    </button>
-                  </div>
 
-                  {submitStatus === 'error' && (
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <p className="text-red-800 font-medium">❌ Error</p>
-                      <p className="text-red-700 text-sm mt-1">{errorMessage}</p>
-                    </div>
-                  )}
-
-                  <div className="space-y-3">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-sm text-gray-600">Company: <span className="font-medium text-gray-900">{contactInfo.company}</span></p>
-                      <p className="text-sm text-gray-600">Phone: <span className="font-medium text-gray-900">{contactInfo.phone}</span></p>
-                      <p className="text-sm text-gray-600">Email: <span className="font-medium text-gray-900">{contactInfo.email}</span></p>
-                    </div>
-                    <button
-                      onClick={handleContactSubmit}
-                      disabled={isSubmitting}
-                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors"
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
-                    </button>
-                  </div>
-                </div>
-              )}
 
               {/* Submitted Success */}
               {currentStep === 'submitted' && (
