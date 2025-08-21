@@ -43,7 +43,7 @@ export default function DebugTokenDetailsPage() {
       const data = await response.json();
       
       if (data.success) {
-        setMessage(`🧪 ${data.message} - Status: ${data.status} - Success: ${data.success}`);
+        setMessage(`🧪 ${data.message} - Status: ${data.status} - Success: ${data.apiSuccess}`);
       } else {
         setMessage(`❌ Test failed: ${data.error}`);
       }
@@ -66,7 +66,7 @@ export default function DebugTokenDetailsPage() {
       const data = await response.json();
       
       if (data.success) {
-        setMessage(`🔧 ${data.message} - Status: ${data.status} - Success: ${data.success}`);
+        setMessage(`🔧 ${data.message} - Status: ${data.status} - Success: ${data.apiSuccess}`);
       } else {
         setMessage(`❌ Test failed: ${data.error}`);
       }

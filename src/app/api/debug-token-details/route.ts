@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
         status: response.status,
         statusText: response.statusText,
         response: responseData,
-        success: response.ok
+        apiSuccess: response.ok
       });
     }
     
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
         status: response.status,
         statusText: response.statusText,
         response: responseData,
-        success: response.ok
+        apiSuccess: response.ok
       });
     }
     
