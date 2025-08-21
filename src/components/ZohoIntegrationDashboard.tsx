@@ -117,7 +117,7 @@ export default function ZohoIntegrationDashboard() {
 
   useEffect(() => {
     refreshData();
-  }, []);
+  }, [refreshData]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

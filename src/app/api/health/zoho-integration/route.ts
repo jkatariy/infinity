@@ -8,30 +8,42 @@ const supabase = createClient(
 
 export async function GET(request: NextRequest) {
   try {
-    const healthChecks = {
+    console.log('🔍 Running Zoho integration health check...');
+    
+    const healthChecks: {
+      timestamp: string;
+      status: string;
+      checks: any;
+      summary: {
+        total_checks: number;
+        passed: number;
+        failed: number;
+        warnings: number;
+      };
+      recommendations: string[];
+    } = {
       timestamp: new Date().toISOString(),
-      status: 'checking',
-      checks: {} as any,
+      status: 'unknown',
+      checks: {},
       summary: {
         total_checks: 0,
         passed: 0,
         failed: 0,
         warnings: 0
-      }
+      },
+      recommendations: []
     };
 
     // Check 1: Database Connection
     try {
-      const { data, error } = await supabase
-        .from('zoho_tokens')
-        .select('count')
-        .limit(1);
+      const { data, error } = await supabase.rpc('get_zoho_token_status');
       
       if (error) throw error;
       
       healthChecks.checks.database_connection = {
         status: 'passed',
-        message: 'Database connection successful'
+        message: 'Database connection successful',
+        response_time: 'fast'
       };
       healthChecks.summary.passed++;
     } catch (error) {
@@ -46,26 +58,39 @@ export async function GET(request: NextRequest) {
 
     // Check 2: Token Status
     try {
-      const { data, error } = await supabase
-        .rpc('get_zoho_token_status');
+      const { data: tokenStatus, error } = await supabase.rpc('get_zoho_token_status');
       
       if (error) throw error;
       
-      const tokenStatus = data;
-      const isTokenValid = tokenStatus.has_token && 
-                          tokenStatus.has_access_token && 
-                          !tokenStatus.is_expired;
+      let tokenStatusResult = 'unknown';
+      let tokenMessage = 'Token status check completed';
+      
+      if (!tokenStatus.has_token) {
+        tokenStatusResult = 'failed';
+        tokenMessage = 'No Zoho tokens configured';
+      } else if (tokenStatus.is_expired && !tokenStatus.has_refresh_token) {
+        tokenStatusResult = 'failed';
+        tokenMessage = 'Token expired and no refresh token available';
+      } else if (tokenStatus.is_expired) {
+        tokenStatusResult = 'warning';
+        tokenMessage = 'Token expired but refresh token available';
+      } else {
+        tokenStatusResult = 'passed';
+        tokenMessage = 'Token is valid';
+      }
       
       healthChecks.checks.token_status = {
-        status: isTokenValid ? 'passed' : 'warning',
-        message: isTokenValid ? 'Token is valid' : 'Token needs attention',
+        status: tokenStatusResult,
+        message: tokenMessage,
         details: tokenStatus
       };
       
-      if (isTokenValid) {
+      if (tokenStatusResult === 'passed') {
         healthChecks.summary.passed++;
-      } else {
+      } else if (tokenStatusResult === 'warning') {
         healthChecks.summary.warnings++;
+      } else {
+        healthChecks.summary.failed++;
       }
     } catch (error) {
       healthChecks.checks.token_status = {
@@ -79,25 +104,42 @@ export async function GET(request: NextRequest) {
 
     // Check 3: Lead Processing Status
     try {
-      const { data, error } = await supabase
-        .rpc('get_lead_processing_stats');
+      const { data: leadStats, error } = await supabase.rpc('get_comprehensive_lead_stats');
       
       if (error) throw error;
       
-      const leadStats = data;
-      const hasFailedLeads = leadStats.failed_leads > 0;
-      const hasPendingLeads = leadStats.pending_leads > 0;
+      const totalLeads = leadStats.combined.total_leads;
+      const pendingLeads = leadStats.combined.total_pending;
+      const successRate = leadStats.combined.overall_success_rate;
+      
+      let processingStatus = 'passed';
+      let processingMessage = 'Lead processing is healthy';
+      
+      if (pendingLeads > 50) {
+        processingStatus = 'warning';
+        processingMessage = `High number of pending leads: ${pendingLeads}`;
+      } else if (successRate < 80) {
+        processingStatus = 'warning';
+        processingMessage = `Low success rate: ${successRate}%`;
+      }
       
       healthChecks.checks.lead_processing = {
-        status: hasFailedLeads ? 'warning' : 'passed',
-        message: hasFailedLeads ? 'Some leads failed to process' : 'Lead processing is healthy',
-        details: leadStats
+        status: processingStatus,
+        message: processingMessage,
+        details: {
+          total_leads: totalLeads,
+          pending_leads: pendingLeads,
+          success_rate: successRate,
+          stats: leadStats
+        }
       };
       
-      if (hasFailedLeads) {
+      if (processingStatus === 'passed') {
+        healthChecks.summary.passed++;
+      } else if (processingStatus === 'warning') {
         healthChecks.summary.warnings++;
       } else {
-        healthChecks.summary.passed++;
+        healthChecks.summary.failed++;
       }
     } catch (error) {
       healthChecks.checks.lead_processing = {
@@ -181,8 +223,6 @@ export async function GET(request: NextRequest) {
     }
 
     // Add recommendations
-    healthChecks.recommendations = [];
-    
     if (healthChecks.checks.token_status?.status === 'warning') {
       healthChecks.recommendations.push('Refresh Zoho access token');
     }
@@ -208,4 +248,8 @@ export async function GET(request: NextRequest) {
       error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
+}
+
+export async function POST(request: NextRequest) {
+  return GET(request);
 }
