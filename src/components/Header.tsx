@@ -272,7 +272,7 @@ const Header = () => {
       ]
     },
     {
-      name: 'EXPLORE BY INDUSTRY',
+      name: 'SOLUTIONS BY INDUSTRY',
       submenu: [
         {
           name: 'Food & Beverage',
@@ -320,35 +320,45 @@ const Header = () => {
           name: 'Pharmaceuticals',
           href: '/industries/pharmaceuticals',
           submenu: [
-            { name: 'ICP-120, ACM-40/100, Check Weighers ICW', href: '/products/case-packers/icp-120' }
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'ACM-40/100', href: '/products/cartoning/acm-40' },
+            { name: 'Check Weighers ICW', href: '/products/checkweighers-inspection' }
           ]
         },
         {
           name: 'Personal Care',
           href: '/industries/personal-care',
           submenu: [
-            { name: 'IBP-120, ICP-120, ACM-40/100', href: '/products/bundling-wrapping/ibp-120' }
+            { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'ACM-40/100', href: '/products/cartoning/acm-40' }
           ]
         },
         {
           name: 'Chemical',
           href: '/industries/chemical',
           submenu: [
-            { name: 'IBP-120, ICP-120', href: '/products/bundling-wrapping/ibp-120' }
+            { name: 'IBP-120', href: '/products/bundling-wrapping/ibp-120' },
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' }
           ]
         },
         {
           name: 'Automotive',
           href: '/industries/automotive',
           submenu: [
-            { name: 'ACM-40/100, ICP-120, Conveying Solutions', href: '/products/cartoning/acm-40' }
+            { name: 'ACM-40/100', href: '/products/cartoning/acm-40' },
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'Conveying Solutions', href: '/products/conveying' }
           ]
         },
         {
           name: 'E-commerce',
           href: '/industries/e-commerce',
           submenu: [
-            { name: 'ICP-120, Taping System, Check Weigher, Conveying Solutions', href: '/products/case-packers/icp-120' }
+            { name: 'ICP-120', href: '/products/case-packers/icp-120' },
+            { name: 'Taping System', href: '/products/case-packers/case-sealer' },
+            { name: 'Check Weigher', href: '/products/checkweighers-inspection' },
+            { name: 'Conveying Solutions', href: '/products/conveying' }
           ]
         }
       ]
