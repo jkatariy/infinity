@@ -13,9 +13,9 @@ export async function GET(request: NextRequest) {
     console.log('🔑 Checking token status...');
     const tokenStatus = health.token_status;
     
-    // Test 3: Get pending leads count
+    // Test 3: Get pending leads count from system health
     console.log('📋 Checking pending leads...');
-    const pendingLeads = await unifiedZohoIntegration.getPendingLeads(5);
+    const pendingLeadsCount = health.lead_processing.pending;
     
     // Test 4: Try to process leads if we have valid tokens
     let processingResult = null;
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
           is_expired: tokenStatus.is_expired,
           expires_at: tokenStatus.expires_at
         },
-        pending_leads_count: pendingLeads.length,
+        pending_leads_count: pendingLeadsCount,
         processing_result: processingResult,
         workflow_status: {
           quote_form_endpoint: '/api/leads/quote-form',
