@@ -101,6 +101,59 @@ interface ErrorAnalysis {
 }
 
 // ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'healthy':
+    case 'sent':
+      return 'bg-green-100 text-green-800 border-green-200';
+    case 'pending':
+    case 'processing':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    case 'failed':
+    case 'critical':
+    case 'unhealthy':
+      return 'bg-red-100 text-red-800 border-red-200';
+    case 'retry':
+      return 'bg-orange-100 text-orange-800 border-orange-200';
+    default:
+      return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+};
+
+const getStatusIcon = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'healthy':
+    case 'sent':
+      return '✅';
+    case 'pending':
+    case 'processing':
+      return '⏳';
+    case 'failed':
+    case 'critical':
+    case 'unhealthy':
+      return '❌';
+    case 'retry':
+      return '🔄';
+    default:
+      return '❓';
+  }
+};
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleString();
+};
+
+const formatDuration = (minutes: number) => {
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}h ${mins}m`;
+};
+
+// ============================================================================
 // COMPONENT
 // ============================================================================
 
@@ -288,58 +341,7 @@ export default function UnifiedZohoDashboard() {
     }
   };
 
-  // ============================================================================
-  // UTILITIES
-  // ============================================================================
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'healthy':
-      case 'sent':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'pending':
-      case 'processing':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'failed':
-      case 'critical':
-      case 'unhealthy':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'retry':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'healthy':
-      case 'sent':
-        return '✅';
-      case 'pending':
-      case 'processing':
-        return '⏳';
-      case 'failed':
-      case 'critical':
-      case 'unhealthy':
-        return '❌';
-      case 'retry':
-        return '🔄';
-      default:
-        return '❓';
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
-
-  const formatDuration = (minutes: number) => {
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
-  };
 
   // ============================================================================
   // EFFECTS
