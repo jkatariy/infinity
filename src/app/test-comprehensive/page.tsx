@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UnifiedZohoDashboard } from '@/components/UnifiedZohoDashboard';
+import UnifiedZohoDashboard from '@/components/UnifiedZohoDashboard';
 
 export default function TestComprehensivePage() {
   const [isLoading, setIsLoading] = useState(true);
