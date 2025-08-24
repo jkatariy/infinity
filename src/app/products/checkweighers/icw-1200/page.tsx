@@ -138,7 +138,6 @@ export default function ICW1200Page() {
     <ProductDetailPage
       id="icw-1200"
       title="ICW-1200 Dynamic Checkweigher"
-      subtitle="Medium-Range Precision Weighing Solution"
       description="The ICW-1200 is a dynamic checkweigher designed for medium-range weighing applications up to 1200 grams. With its reliable accuracy of ±1gm and processing speed up to 80 PPM, it provides effective quality control for various industries. The system features advanced load cell technology and flexible rejection mechanisms for comprehensive quality assurance."
       features={features}
       models={models}

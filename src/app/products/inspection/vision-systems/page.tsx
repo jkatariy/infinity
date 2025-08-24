@@ -153,7 +153,6 @@ export default function VisionSystemsPage() {
     <ProductDetailPage
       id="vision-systems"
       title="Vision Inspection Systems"
-      subtitle="Advanced Automated Quality Control"
       description="Our vision inspection systems utilize cutting-edge camera technology and AI-powered image processing to deliver unmatched quality control accuracy. From basic defect detection to complex multi-feature inspection, these systems ensure product quality and compliance across all manufacturing processes."
       features={features}
       models={models}

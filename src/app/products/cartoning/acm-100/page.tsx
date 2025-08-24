@@ -181,7 +181,6 @@ export default function ACM100Page() {
     <ProductDetailPage
       id="acm-100"
       title="ACM-100 Automatic Cartoning Machine"
-      subtitle="Advanced Continuous Motion Horizontal Cartoning System"
       description="The Automatic Cartoning Machine (ACM-100) from Infinity Automated Solutions brings cutting-edge technology to cartoning. This advanced Continuous Motion Horizontal Cartoning System efficiently erects cartons from the magazine, precisely inserts products, and securely seals them using either tuck or glue options. Designed for speed, precision, and reliability, it delivers consistent high-quality packaging for a wide range of applications. Equipped with interlock features that ensure a 'no carton, no product' process, the ACM-100 guarantees accuracy and reduces wastage. Its seamless integration with Infinity's product handling solutions makes it ideal for producing high-end products in folding cartons. Optional product visualization during packaging and an ergonomic operator-friendly design further enhance efficiency and usability on the production floor. To maintain the highest quality, each product is validated using counters and check weighers before final sealing, ensuring only verified items are packed."
       features={features}
       models={models}

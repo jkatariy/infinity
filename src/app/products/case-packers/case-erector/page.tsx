@@ -145,7 +145,6 @@ export default function CaseErectorPage() {
     <ProductDetailPage
       id="case-erector"
       title="Case Erector"
-      subtitle="Automatic Carton Erecting and Sealing System"
       description="The Case Erector is an automatic carton erecting machine that handles vertical forming, bottom flaps folding, and bottom tape sealing. Operating with air cylinder technology, it processes up to 15 cartons per minute with easily adjustable settings for varying carton sizes. Built with premium international brand components including SMC/Festo/Schmalz pneumatics and Sai Control safety switches, it ensures reliable operation with smart alerts for tape and carton monitoring and full carton sensor with stop control to prevent overflowing."
       features={features}
       models={models}

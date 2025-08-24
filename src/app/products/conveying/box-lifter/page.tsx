@@ -81,7 +81,6 @@ export default function BoxLifterPage() {
     <ProductDetailPage
       id="box-lifter"
       title="Box Lifter"
-      subtitle="High-Speed Vertical Material Transfer Solution"
       description="The Box Lifter is an efficient solution for vertical material transfer, providing automatic up and down movement of boxes at high speeds. With a capacity of up to 50 crates per minute and maximum box weight up to 30 Kg, it features discharge height up to 12 meters. Built with SS/MS powder coated construction and powered by a 3 Phase 440V AC / 50 Hz / 10 KW system, it ensures reliable operation for food, spices, dairy, pharmaceutical, and warehouse applications."
       features={features}
       models={models}

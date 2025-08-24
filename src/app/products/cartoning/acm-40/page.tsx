@@ -180,7 +180,6 @@ export default function ACM40Page() {
     <ProductDetailPage
       id="acm-40"
       title="ACM-40 Semi Automatic Cartoning Machine"
-      subtitle="Advanced Intermittent Motion Horizontal Cartoning System"
       description="The Semi Automatic Cartoning Machine (ACM-40) from Infinity Automated Solutions is an advanced intermittent motion horizontal cartoning system designed for precision and reliability. It gently erects cartons from the magazine, ensures accurate product insertion, and securely seals them with either tuck or glue options, making it ideal for high-quality folding carton applications. With interlock features providing a 'no carton, no product' safeguard, the ACM-40 boosts operational efficiency while maintaining product integrity. When paired with Infinity's superior product handling solutions, it delivers exceptional results for premium product packaging. At the final stage, each product is meticulously validated using counters and check weighers, ensuring only verified items make it into the shipper carton. The ACM-40 also offers optional product visualization during packaging and features an ergonomic, operator-friendly design to improve productivity and comfort."
       features={features}
       models={models}

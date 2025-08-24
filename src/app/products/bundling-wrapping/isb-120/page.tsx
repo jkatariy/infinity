@@ -137,7 +137,6 @@ export default function ISB120Page() {
     <ProductDetailPage
       id="isb-120"
       title="ISB-120 Shrink Wrapping for Bottles"
-      subtitle="High-Speed Shrink Wrapping System for Rigid Products"
       description="The ISB-120 is designed for rigid products like PET bottles, jars, and cans, providing neat shrink packs at high production speeds. Secondary packs are made in Heat Sealable Laminate and flow-wrapped packs travel through a shrink tunnel to produce ready-to-ship packs. The system handles high speed from primary lines with product collation for desired matrices, featuring sensor-based technology for exact product count and 100% QA products."
       features={features}
       models={models}

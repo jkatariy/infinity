@@ -203,7 +203,6 @@ export default function IMS800Page() {
     <ProductDetailPage
       id="ims-800"
       title="IMS-800/600 Multitrack VFFS System"
-      subtitle="Advanced Secondary Packaging for Multitrack VFFS"
       description="The IMS-800/600 series represents advanced multitrack VFFS technology, specifically engineered for collating strips of products or single pouches from multi-track primary lines. This comprehensive system provides further processing of bundling or stacking for flow-wrapping, utilizing Infinity's PICK & PLACE system for gentle product transfer and precise handling. With advanced control systems, sensor-based technology for exact product count, and 100% QA capabilities, the IMS series ensures maximum efficiency and reliability in demanding multitrack production environments."
       features={features}
       models={models}

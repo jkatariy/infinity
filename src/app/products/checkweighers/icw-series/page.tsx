@@ -316,7 +316,6 @@ function ICWSeriesPage() {
     <ProductDetailPage
       id="icw-series"
       title="ICW Series Checkweighers"
-      subtitle="Complete Range of Dynamic Checkweighing Solutions"
       description="The ICW series offers a comprehensive range of dynamic checkweighers from light-duty precision units to extra heavy industrial systems. With capacities from 50g to 50kg and industry-leading accuracy, these PLC-based checkweighers ensure quality control and compliance across all manufacturing sectors. Each model features advanced control systems, multiple rejection options, and seamless production line integration capabilities."
       features={features}
       models={models}

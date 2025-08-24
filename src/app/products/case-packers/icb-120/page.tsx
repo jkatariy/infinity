@@ -160,7 +160,6 @@ export default function ICB120Page() {
     <ProductDetailPage
       id="icb-120"
       title="ICB-120 Case Packer for Bottles"
-      subtitle="Fully Integrated Servo-Driven Bottle Case Packaging System"
       description="The ICB-120 is a fully integrated and 100% servo-driven case packaging system designed specifically for high-speed bottle filling line integration. Featuring advanced conveying technology for easy product pitch creation, state-of-the-art Lane Divider system for precise bottle handling, and project-specific Robotic Pick & Place application with specialized grippers and vacuum suction cups. The system delivers unbeatable flexibility in a compact footprint while achieving higher throughputs and multi-tasking capabilities."
       features={features}
       models={models}

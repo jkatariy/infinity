@@ -73,7 +73,6 @@ export default function Products() {
   return (
     <PageContainer
       title="Our Solutions"
-      subtitle="Comprehensive end-of-line packaging solutions for every industry"
     >
       {/* Enhanced Statistics Overview */}
       <motion.div

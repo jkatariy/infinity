@@ -143,7 +143,6 @@ export default function CaseSealerPage() {
     <ProductDetailPage
       id="case-sealer"
       title="Case Sealer"
-      subtitle="Automatic Case Sealing System"
       description="The Case Sealer is a side belt driven automatic case sealing machine that handles flap folding and seals both top and bottom simultaneously. Operating up to 15 cartons per minute, it features manual height and width adjustment for varying carton sizes and is protected by acrylic barriers on both sides. Built with premium international components including SMC/Festo/Schmalz pneumatics and Sai Control safety switches, it ensures reliable and consistent sealing performance with wide range of variant flexibility."
       features={features}
       models={models}

@@ -225,7 +225,6 @@ export default function IBGH8V8Page() {
     <ProductDetailPage
       id="ibg-h8-v8"
       title="IBG-H8 & IBG-V8 Automatic Bagging Machines"
-      subtitle="Horizontal & Vertical Models for Bulk Pouch Handling 0.2kg-5kg"
       description="At Infinity Automated Solutions, we specialize in automating bulk pouch handling with our Automatic Bagging Machines, available in horizontal (H8) and vertical (V8) models. Built for speed, accuracy, and seamless integration with primary packaging lines, these machines streamline your secondary packaging process by efficiently collating and packing pouches into durable HDPE bags. The IBG-H8 and IBG-V8 are designed to handle pouch sizes ranging from 0.2 kg to 5 kg. They can be equipped with optional check weighers and metal detectors to ensure the highest levels of quality assurance. With their robust construction and precise operation, these machines are ideal for high-volume production environments where consistency and efficiency are essential."
       features={features}
       models={models}

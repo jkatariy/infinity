@@ -140,7 +140,6 @@ export default function ICW600Page() {
     <ProductDetailPage
       id="icw-600"
       title="ICW-600 Dynamic Checkweigher"
-      subtitle="High-Precision Weight Verification System"
       description="The ICW-600 is a state-of-the-art dynamic checkweigher engineered for high-precision weight verification in continuous production environments. Featuring advanced load cell technology and intelligent rejection systems, it processes up to 120 products per minute with exceptional ±0.5gm accuracy. The system offers multiple rejection mechanisms, comprehensive data logging, and seamless integration capabilities for diverse industrial applications."
       features={features}
       models={models}

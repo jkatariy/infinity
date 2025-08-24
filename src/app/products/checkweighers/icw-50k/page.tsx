@@ -139,7 +139,6 @@ export default function ICW50KPage() {
     <ProductDetailPage
       id="icw-50k"
       title="ICW-50K Dynamic Checkweigher"
-      subtitle="Extra Heavy Industrial Weighing Solution"
       description="The ICW-50K is an extra heavy industrial dynamic checkweigher designed for the largest products up to 50 kg. With its ultra-robust construction and accuracy of ±50gm, it provides reliable quality control for the heaviest industrial applications. The system features advanced load cell technology and flexible rejection mechanisms for comprehensive quality assurance in the most demanding manufacturing environments."
       features={features}
       models={models}
