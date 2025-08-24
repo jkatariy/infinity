@@ -11,7 +11,7 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 const supabase = createClient(
-  'https://zxvhgpejwgrlxksnqtxk.supabase.co', // Updated to correct project
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
