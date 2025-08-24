@@ -3,86 +3,88 @@ import { unifiedZohoIntegration } from '@/utils/unifiedZohoIntegration';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify this is a legitimate cron request (optional security)
-    const authHeader = request.headers.get('authorization');
-    const cronSecret = process.env.CRON_SECRET;
+    console.log('🕘 Starting daily Zoho sync at 9 AM IST...');
+    console.log('📅 Current time:', new Date().toISOString());
     
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-      console.log('⚠️ Unauthorized cron request');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Step 1: Check system health
+    console.log('🔍 Step 1: Checking system health...');
+    const health = await unifiedZohoIntegration.getSystemHealth();
+    console.log('📊 System health:', {
+      token_status: health.token_status,
+      pending_leads: health.lead_processing.pending,
+      success_rate: health.lead_processing.success_rate
+    });
 
-    console.log('🕐 Starting daily Zoho sync at 9 AM IST...');
+    // Step 2: Refresh authentication (get valid access token)
+    console.log('🔑 Step 2: Refreshing authentication...');
+    const tokenResult = await unifiedZohoIntegration.getValidAccessToken();
     
-    // Get system health status first
-    const healthStatus = await unifiedZohoIntegration.getSystemHealth();
-    console.log('📊 System health status:', healthStatus);
-
-    // Check if we have any tokens at all
-    if (!healthStatus.token_status.has_token) {
-      console.log('❌ No Zoho tokens found');
+    if (!tokenResult.success) {
+      console.error('❌ Authentication refresh failed:', tokenResult.error);
       return NextResponse.json({
         success: false,
-        message: 'No Zoho tokens found',
-        action: 'manual_authentication_required',
-        health_status: healthStatus
-      });
+        error: 'Authentication refresh failed',
+        details: tokenResult.error,
+        timestamp: new Date().toISOString(),
+        step: 'authentication_refresh'
+      }, { status: 500 });
     }
 
-    // Try to get a valid access token (this will automatically refresh if needed)
-    console.log('🔑 Getting valid access token...');
-    const accessToken = await unifiedZohoIntegration.getValidAccessToken();
+    console.log('✅ Authentication refreshed successfully');
+    console.log('🕐 Token expires at:', tokenResult.expires_at);
+
+    // Step 3: Process all pending leads
+    console.log('📤 Step 3: Processing pending leads...');
+    const processingResult = await unifiedZohoIntegration.processAllPendingLeads(50); // Process up to 50 leads per run
     
-    if (!accessToken) {
-      console.log('❌ Failed to get valid access token');
-      return NextResponse.json({
-        success: false,
-        message: 'Failed to get valid access token - refresh token may be invalid',
-        action: 'manual_authentication_required',
-        health_status: healthStatus
-      });
-    }
+    console.log('📈 Processing results:', {
+      total_processed: processingResult.total_processed,
+      successful: processingResult.successful,
+      failed: processingResult.failed,
+      skipped: processingResult.skipped
+    });
 
-    console.log('✅ Successfully obtained valid access token');
+    // Step 4: Get final status
+    console.log('📊 Step 4: Getting final system status...');
+    const finalHealth = await unifiedZohoIntegration.getSystemHealth();
 
-    // Process pending leads
-    console.log('📋 Processing pending leads...');
-    const processingResult = await unifiedZohoIntegration.processAllPendingLeads(20); // Process up to 20 leads per run
-    
-    console.log(`✅ Daily sync completed: ${processingResult.successful} successful, ${processingResult.failed} failed`);
-
-    // Get updated health status
-    const updatedHealthStatus = await unifiedZohoIntegration.getSystemHealth();
+    // Step 5: Log completion
+    console.log('✅ Daily sync completed successfully!');
+    console.log('📅 Sync completed at:', new Date().toISOString());
 
     return NextResponse.json({
       success: true,
-      message: 'Daily Zoho sync completed',
-      action: 'daily_sync_completed',
-      summary: {
-        totalProcessed: processingResult.processed,
-        successful: processingResult.successful,
-        failed: processingResult.failed,
-        errors: processingResult.errors.length > 0 ? processingResult.errors : undefined
-      },
-      health_status: updatedHealthStatus,
-      syncedAt: new Date().toISOString()
+      message: 'Daily Zoho sync completed successfully',
+      timestamp: new Date().toISOString(),
+      timezone: 'IST (UTC+5:30)',
+      sync_details: {
+        authentication: {
+          status: 'success',
+          token_expires_at: tokenResult.expires_at
+        },
+        lead_processing: {
+          total_processed: processingResult.total_processed,
+          successful: processingResult.successful,
+          failed: processingResult.failed,
+          skipped: processingResult.skipped
+        },
+        final_status: {
+          pending_leads: finalHealth.lead_processing.pending,
+          success_rate: finalHealth.lead_processing.success_rate,
+          total_leads: finalHealth.lead_processing.total
+        }
+      }
     });
 
   } catch (error) {
-    console.error('❌ Error in daily Zoho sync:', error);
-    
-    // Try to get health status even if processing failed
-    let healthStatus = null;
-    try {
-      healthStatus = await unifiedZohoIntegration.getSystemHealth();
-    } catch (healthError) {
-      console.error('❌ Error getting health status:', healthError);
-    }
+    console.error('❌ Daily sync failed:', error);
     
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      health_status: healthStatus
+      error: 'Daily sync failed',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString(),
+      timezone: 'IST (UTC+5:30)'
     }, { status: 500 });
   }
 }

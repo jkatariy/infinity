@@ -448,7 +448,7 @@ class UnifiedZohoIntegrationService {
   }
 
   /**
-   * Update lead processing status
+   * Update lead processing status using the database function
    */
   private async updateLeadStatus(
     leadId: string, 
@@ -457,26 +457,12 @@ class UnifiedZohoIntegrationService {
     zohoId?: string
   ): Promise<void> {
     try {
-      const updateData: any = {
-        processing_status: status,
-        processed_at: new Date().toISOString()
-      };
-
-      if (status === 'sent') {
-        updateData.sent_to_zoho = true;
-        updateData.zoho_lead_id = zohoId;
-      } else if (status === 'failed') {
-        updateData.sent_to_zoho = false;
-        updateData.last_error = error;
-      } else if (status === 'retry') {
-        updateData.retry_count = (updateData.retry_count || 0) + 1;
-        updateData.last_error = error;
-      }
-
-      const { error: updateError } = await supabase
-        .from('zoho_leads')
-        .update(updateData)
-        .eq('id', leadId);
+      const { error: updateError } = await supabase.rpc('update_lead_processing_status', {
+        p_lead_id: leadId,
+        p_status: status,
+        p_error: error || null,
+        p_zoho_id: zohoId || null
+      });
 
       if (updateError) {
         console.error('❌ Error updating lead status:', updateError);

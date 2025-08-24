@@ -1,12 +1,13 @@
 {
   "crons": [
     {
-      "path": "/api/cron/unified-daily-sync",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/unified-daily-sync",
-      "schedule": "0 21 * * *"
+      "path": "/api/cron/daily-zoho-sync",
+      "schedule": "0 3 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "src/app/api/cron/daily-zoho-sync/route.ts": {
+      "maxDuration": 300
+    }
+  }
 }
