@@ -50,6 +50,7 @@ const Header = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [openNestedSubmenu, setOpenNestedSubmenu] = useState<string | null>(null);
+  const [openThirdLevelSubmenu, setOpenThirdLevelSubmenu] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -643,19 +644,71 @@ const Header = () => {
                                             className="ml-4 mt-1 overflow-hidden"
                                           >
                                             {subItem.submenu?.map((nestedItem) => (
-                                              <button
-                                                key={nestedItem.name}
-                                                onClick={() => {
-                                                  setIsMenuOpen(false);
-                                                  setOpenSubmenu(null);
-                                                  setOpenNestedSubmenu(null);
-                                                  router.push(nestedItem.href);
-                                                }}
-                                                className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
-                                                         transform-gpu hover:bg-white/40 text-sm"
-                                              >
-                                                {nestedItem.name}
-                                              </button>
+                                              <div key={nestedItem.name} className="mb-1">
+                                                {'submenu' in nestedItem ? (
+                                                  <>
+                                                    <button
+                                                      onClick={() => setOpenThirdLevelSubmenu(openThirdLevelSubmenu === nestedItem.name ? null : nestedItem.name)}
+                                                      className="flex items-center justify-between w-full p-2 text-left text-gray-600 
+                                                               rounded-md transition-gpu transform-gpu hover:bg-white/40 text-sm"
+                                                    >
+                                                      <span className="font-medium">{nestedItem.name}</span>
+                                                      <motion.svg
+                                                        animate={{ rotate: openThirdLevelSubmenu === nestedItem.name ? 180 : 0 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        className="h-3 w-3 text-gray-400 transform-gpu"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                      >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                      </motion.svg>
+                                                    </button>
+                                                    
+                                                    <AnimatePresence>
+                                                      {openThirdLevelSubmenu === nestedItem.name && (
+                                                        <motion.div
+                                                          initial={{ opacity: 0, height: 0 }}
+                                                          animate={{ opacity: 1, height: 'auto' }}
+                                                          exit={{ opacity: 0, height: 0 }}
+                                                          transition={{ duration: 0.3 }}
+                                                          className="ml-4 mt-1 overflow-hidden"
+                                                        >
+                                                          {nestedItem.submenu?.map((thirdLevelItem) => (
+                                                            <button
+                                                              key={thirdLevelItem.name}
+                                                              onClick={() => {
+                                                                setIsMenuOpen(false);
+                                                                setOpenSubmenu(null);
+                                                                setOpenNestedSubmenu(null);
+                                                                setOpenThirdLevelSubmenu(null);
+                                                                router.push(thirdLevelItem.href);
+                                                              }}
+                                                              className="w-full text-left p-2 text-gray-500 rounded-md transition-gpu 
+                                                                       transform-gpu hover:bg-white/40 text-sm"
+                                                            >
+                                                              {thirdLevelItem.name}
+                                                            </button>
+                                                          ))}
+                                                        </motion.div>
+                                                      )}
+                                                    </AnimatePresence>
+                                                  </>
+                                                ) : (
+                                                  <button
+                                                    onClick={() => {
+                                                      setIsMenuOpen(false);
+                                                      setOpenSubmenu(null);
+                                                      setOpenNestedSubmenu(null);
+                                                      router.push(nestedItem.href);
+                                                    }}
+                                                    className="w-full text-left p-2 text-gray-600 rounded-md transition-gpu 
+                                                             transform-gpu hover:bg-white/40 text-sm"
+                                                  >
+                                                    {nestedItem.name}
+                                                  </button>
+                                                )}
+                                              </div>
                                             ))}
                                           </motion.div>
                                         )}

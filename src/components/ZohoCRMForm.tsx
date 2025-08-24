@@ -94,31 +94,22 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
         submittedAt: new Date().toISOString()
       };
 
-      let response;
-      
-      if (isZohoCRMHours()) {
-        // Send directly to Zoho CRM (9 AM - 10 AM IST)
-        response = await fetch('/api/sendToZoho', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formDataToSend),
-        });
-      } else {
-        // Store in Supabase for later processing (10 AM - 9 AM IST)
-        response = await fetch('/api/store-lead', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...formDataToSend,
-            source: 'quote_form',
-            status: 'pending_zoho_sync'
-          }),
-        });
-      }
+      // Always send to our quote form endpoint which handles Supabase storage
+      const response = await fetch('/api/leads/quote-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          description: formData.message,
+          company: formDataToSend.leadSource,
+          product_name: productName,
+          product_url: productUrl
+        }),
+      });
 
       const result = await response.json();
 

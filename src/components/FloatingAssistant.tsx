@@ -90,7 +90,7 @@ export default function FloatingAssistant() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/chatbot-leads', {
+      const response = await fetch('/api/leads/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,10 +99,11 @@ export default function FloatingAssistant() {
           name: contactInfo.company, // Using company name as the name field
           email: contactInfo.email,
           phone: contactInfo.phone,
+          description: `Chatbot inquiry for ${selectedModel?.label || selectedCategory} from ${contactInfo.company}.`,
+          industry: selectedCategory,
           category: selectedCategory,
           model_name: selectedModel?.name,
-          model_label: selectedModel?.label,
-          message: `Chatbot inquiry for ${selectedModel?.label || selectedCategory} from ${contactInfo.company}.`
+          model_label: selectedModel?.label
         }),
       });
 
