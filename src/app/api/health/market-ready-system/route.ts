@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { perfectZohoIntegration } from '@/utils/perfectZohoIntegration';
+import { unifiedZohoIntegration } from '@/utils/unifiedZohoIntegration';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
     
     // Comprehensive health checks
     const healthChecks = await Promise.allSettled([
-      perfectZohoIntegration.getPerfectHealthStatus(),
-      perfectZohoIntegration.testTokenRefresh(),
+      unifiedZohoIntegration.getSystemHealth(),
+      unifiedZohoIntegration.testTokenRefresh(),
       checkDatabaseConnection(),
       checkEnvironmentVariables(),
       checkSystemPerformance()
@@ -238,11 +238,11 @@ function determineSystemStatus(checks: any) {
     if (health.token_status.has_token && health.token_status.is_expired && !health.token_status.has_refresh_token) {
       criticalAlerts.push('Token expired and no refresh token available');
     }
-    if (health.lead_processing.combined.total_pending > 50) {
-      warnings.push(`High number of pending leads: ${health.lead_processing.combined.total_pending}`);
+    if (health.lead_processing.pending > 50) {
+      warnings.push(`High number of pending leads: ${health.lead_processing.pending}`);
     }
-    if (health.lead_processing.combined.overall_success_rate < 80) {
-      warnings.push(`Low success rate: ${health.lead_processing.combined.overall_success_rate}%`);
+    if (health.lead_processing.success_rate < 80) {
+      warnings.push(`Low success rate: ${health.lead_processing.success_rate}%`);
     }
   }
   

@@ -190,7 +190,7 @@ const getLeadProcessingData = (healthStatus: SystemHealth | null) => {
       sent: lp.sent || 0,
       failed: lp.failed || 0,
       retry: lp.retry || 0,
-      success_rate: typeof lp.success_rate === 'number' ? lp.success_rate : parseFloat(lp.success_rate?.toString() || '0')
+      success_rate: typeof lp.success_rate === 'number' ? lp.success_rate : parseFloat(String(lp.success_rate || '0'))
     };
   }
   

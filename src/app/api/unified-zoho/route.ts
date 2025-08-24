@@ -166,12 +166,12 @@ async function getSystemStatus() {
       status.warnings.push('Token expired but refresh token available - will auto-refresh on next use');
     }
 
-    if (health.lead_processing.combined.pending > 50) {
-      status.warnings.push(`High number of pending leads: ${health.lead_processing.combined.pending}`);
+    if (health.lead_processing.pending > 50) {
+      status.warnings.push(`High number of pending leads: ${health.lead_processing.pending}`);
     }
 
-    if (health.lead_processing.combined.overall_success_rate < 80) {
-      status.warnings.push(`Low success rate: ${health.lead_processing.combined.overall_success_rate}%`);
+    if (health.lead_processing.success_rate < 80) {
+      status.warnings.push(`Low success rate: ${health.lead_processing.success_rate}%`);
     }
 
     return NextResponse.json({

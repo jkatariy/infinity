@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { perfectZohoIntegration } from '@/utils/perfectZohoIntegration';
+import { unifiedZohoIntegration } from '@/utils/unifiedZohoIntegration';
 
 interface ZohoFormData {
   name: string;
@@ -33,7 +33,7 @@ export function useZohoIntegration(options: UseZohoIntegrationOptions = {}) {
   // Check authentication status
   const checkAuth = useCallback(async () => {
     try {
-      const healthStatus = await perfectZohoIntegration.getPerfectHealthStatus();
+      const healthStatus = await unifiedZohoIntegration.getSystemHealth();
       const hasToken = healthStatus.token_status.has_token;
       setIsAuthenticated(hasToken);
       return { authenticated: hasToken, message: hasToken ? 'Authenticated' : 'Not authenticated' };

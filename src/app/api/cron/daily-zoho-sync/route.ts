@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { zohoIntegration } from '@/utils/zohoIntegration';
+import { unifiedZohoIntegration } from '@/utils/unifiedZohoIntegration';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     console.log('🕐 Starting daily Zoho sync at 9 AM IST...');
     
     // Get system health status first
-    const healthStatus = await zohoIntegration.getHealthStatus();
+    const healthStatus = await unifiedZohoIntegration.getSystemHealth();
     console.log('📊 System health status:', healthStatus);
 
     // Check if we have any tokens at all
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     // Try to get a valid access token (this will automatically refresh if needed)
     console.log('🔑 Getting valid access token...');
-    const accessToken = await zohoIntegration.getValidAccessToken();
+    const accessToken = await unifiedZohoIntegration.getValidAccessToken();
     
     if (!accessToken) {
       console.log('❌ Failed to get valid access token');
@@ -47,12 +47,12 @@ export async function GET(request: NextRequest) {
 
     // Process pending leads
     console.log('📋 Processing pending leads...');
-    const processingResult = await zohoIntegration.processPendingLeads(20); // Process up to 20 leads per run
+    const processingResult = await unifiedZohoIntegration.processAllPendingLeads(20); // Process up to 20 leads per run
     
     console.log(`✅ Daily sync completed: ${processingResult.successful} successful, ${processingResult.failed} failed`);
 
     // Get updated health status
-    const updatedHealthStatus = await zohoIntegration.getHealthStatus();
+    const updatedHealthStatus = await unifiedZohoIntegration.getSystemHealth();
 
     return NextResponse.json({
       success: true,
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     // Try to get health status even if processing failed
     let healthStatus = null;
     try {
-      healthStatus = await zohoIntegration.getHealthStatus();
+      healthStatus = await unifiedZohoIntegration.getSystemHealth();
     } catch (healthError) {
       console.error('❌ Error getting health status:', healthError);
     }

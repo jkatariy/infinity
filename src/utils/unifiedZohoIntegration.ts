@@ -88,32 +88,15 @@ interface SystemHealth {
     is_expired: boolean;
     expires_at?: string;
     last_refresh?: string;
+    access_token?: string;
   };
   lead_processing: {
-    zoho_leads: {
-      total: number;
-      pending: number;
-      sent: number;
-      failed: number;
-      retry: number;
-      success_rate: number;
-    };
-    chatbot_leads: {
-      total: number;
-      pending: number;
-      sent: number;
-      failed: number;
-      retry: number;
-      success_rate: number;
-    };
-    combined: {
-      total: number;
-      pending: number;
-      sent: number;
-      failed: number;
-      retry: number;
-      overall_success_rate: number;
-    };
+    total: number;
+    pending: number;
+    sent: number;
+    failed: number;
+    retry: number;
+    success_rate: number;
   };
   environment: {
     has_client_id: boolean;
@@ -615,29 +598,35 @@ class UnifiedZohoIntegrationService {
     try {
       const startTime = Date.now();
       
-      // Get token status
-      const { data: tokenStatus, error: tokenError } = await supabase.rpc('get_zoho_token_status');
+      // Get system health from database function
+      const { data: systemHealth, error } = await supabase.rpc('get_system_health');
       
-      // Get lead processing stats
-      const { data: leadStats, error: leadError } = await supabase.rpc('get_comprehensive_lead_stats');
-      
+      if (error) {
+        console.error('❌ Error getting system health:', error);
+        throw error;
+      }
+
       // Get performance metrics
       const performance = await this.getPerformanceMetrics();
       
       const systemUptime = Date.now() - startTime;
 
+      // Build the response with the actual database structure
       return {
-        timestamp: new Date().toISOString(),
-        token_status: tokenStatus || {
+        timestamp: systemHealth.timestamp || new Date().toISOString(),
+        token_status: systemHealth.token_status || {
           has_token: false,
           has_access_token: false,
           has_refresh_token: false,
           is_expired: false
         },
-        lead_processing: leadStats || {
-          zoho_leads: { total: 0, pending: 0, sent: 0, failed: 0, retry: 0, success_rate: 0 },
-          chatbot_leads: { total: 0, pending: 0, sent: 0, failed: 0, retry: 0, success_rate: 0 },
-          combined: { total: 0, pending: 0, sent: 0, failed: 0, retry: 0, overall_success_rate: 0 }
+        lead_processing: systemHealth.lead_processing || {
+          total: 0,
+          pending: 0,
+          sent: 0,
+          failed: 0,
+          retry: 0,
+          success_rate: 0
         },
         environment: {
           has_client_id: !!process.env.ZOHO_CLIENT_ID,
@@ -647,10 +636,10 @@ class UnifiedZohoIntegrationService {
           has_redirect_uri: !!process.env.ZOHO_REDIRECT_URI
         },
         system_status: {
-          token_valid: tokenStatus?.has_token && tokenStatus?.has_access_token && !tokenStatus?.is_expired,
-          can_refresh: tokenStatus?.has_refresh_token,
-          leads_pending: (leadStats?.combined?.pending || 0),
-          overall_success_rate: leadStats?.combined?.overall_success_rate || 0,
+          token_valid: systemHealth.token_status?.has_token && systemHealth.token_status?.has_access_token && !systemHealth.token_status?.is_expired,
+          can_refresh: systemHealth.token_status?.has_refresh_token,
+          leads_pending: (systemHealth.lead_processing?.pending || 0),
+          overall_success_rate: (systemHealth.lead_processing?.success_rate || 0),
           last_sync: new Date().toISOString(),
           system_uptime: systemUptime
         },

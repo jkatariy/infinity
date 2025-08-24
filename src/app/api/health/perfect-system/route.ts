@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { perfectZohoIntegration } from '@/utils/perfectZohoIntegration';
+import { unifiedZohoIntegration } from '@/utils/unifiedZohoIntegration';
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,10 +8,10 @@ export async function GET(request: NextRequest) {
     const startTime = Date.now();
     
     // Get comprehensive health status
-    const healthStatus = await perfectZohoIntegration.getPerfectHealthStatus();
+    const healthStatus = await unifiedZohoIntegration.getSystemHealth();
     
     // Test token refresh capability
-    const tokenRefreshTest = await perfectZohoIntegration.testTokenRefresh();
+    const tokenRefreshTest = await unifiedZohoIntegration.testTokenRefresh();
     
     const endTime = Date.now();
     const responseTime = endTime - startTime;
@@ -44,12 +44,12 @@ export async function GET(request: NextRequest) {
       systemStatus.warnings.push('Token expired but refresh token available - will auto-refresh on next use');
     }
     
-    if (healthStatus.lead_processing.combined.total_pending > 50) {
-      systemStatus.warnings.push(`High number of pending leads: ${healthStatus.lead_processing.combined.total_pending}`);
+    if (healthStatus.lead_processing.pending > 50) {
+      systemStatus.warnings.push(`High number of pending leads: ${healthStatus.lead_processing.pending}`);
     }
     
-    if (healthStatus.lead_processing.combined.overall_success_rate < 80) {
-      systemStatus.warnings.push(`Low success rate: ${healthStatus.lead_processing.combined.overall_success_rate}%`);
+    if (healthStatus.lead_processing.success_rate < 80) {
+      systemStatus.warnings.push(`Low success rate: ${healthStatus.lead_processing.success_rate}%`);
     }
     
     // If no critical issues, check if healthy
@@ -81,11 +81,11 @@ export async function GET(request: NextRequest) {
       response.recommendations.push('Test token refresh functionality');
     }
     
-    if (healthStatus.lead_processing.combined.total_pending > 0) {
+    if (healthStatus.lead_processing.pending > 0) {
       response.recommendations.push('Run manual lead processing to clear pending leads');
     }
     
-    if (healthStatus.lead_processing.combined.overall_success_rate < 80) {
+    if (healthStatus.lead_processing.success_rate < 80) {
       response.recommendations.push('Investigate failed lead processing');
     }
     
