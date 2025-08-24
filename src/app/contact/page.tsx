@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import PageContainer from '@/components/PageContainer';
 import SocialLinks from '@/components/SocialLinks';
 
@@ -66,6 +67,60 @@ const internationalContacts = [
 ];
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(result.error || 'Failed to send message');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   return (
     <PageContainer
       title="Contact Us"
@@ -122,46 +177,77 @@ export default function Contact() {
           className="bg-gray-50 rounded-2xl p-8"
         >
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Send us a message</h2>
-          <form className="space-y-6">
+          
+          {/* Success Message */}
+          {submitStatus === 'success' && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+              <p className="text-green-800">Thank you for your message! We will get back to you soon.</p>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {submitStatus === 'error' && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+              <p className="text-red-800">{errorMessage}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Name
+                Name *
               </label>
               <input
                 type="text"
                 id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Your name"
               />
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+                Email *
               </label>
               <input
                 type="email"
                 id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="your@email.com"
               />
             </div>
             <div>
               <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                Subject
+                Subject *
               </label>
               <input
                 type="text"
                 id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="How can we help?"
               />
             </div>
             <div>
               <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                Message
+                Message *
               </label>
               <textarea
                 id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Your message..."
@@ -169,9 +255,10 @@ export default function Contact() {
             </div>
             <button
               type="submit"
-              className="w-full bg-brand-blue-500 text-white py-3 rounded-xl hover:bg-brand-blue-600 transition-colors duration-200"
+              disabled={isSubmitting}
+              className="w-full bg-brand-blue-500 text-white py-3 rounded-xl hover:bg-brand-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send Message
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
             <a
               href="https://wa.me/918080372892"

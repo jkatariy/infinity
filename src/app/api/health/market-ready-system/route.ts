@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unifiedZohoIntegration } from '@/utils/unifiedZohoIntegration';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,10 +6,8 @@ export async function GET(request: NextRequest) {
     
     const startTime = Date.now();
     
-    // Comprehensive health checks
+    // Basic health checks
     const healthChecks = await Promise.allSettled([
-      unifiedZohoIntegration.getSystemHealth(),
-      unifiedZohoIntegration.testTokenRefresh(),
       checkDatabaseConnection(),
       checkEnvironmentVariables(),
       checkSystemPerformance()
@@ -20,16 +17,12 @@ export async function GET(request: NextRequest) {
     const responseTime = endTime - startTime;
     
     // Process health check results
-    const healthStatus = healthChecks[0].status === 'fulfilled' ? healthChecks[0].value : null;
-    const tokenRefreshTest = healthChecks[1].status === 'fulfilled' ? healthChecks[1].value : null;
-    const dbConnection = healthChecks[2].status === 'fulfilled' ? healthChecks[2].value : null;
-    const envCheck = healthChecks[3].status === 'fulfilled' ? healthChecks[3].value : null;
-    const performanceCheck = healthChecks[4].status === 'fulfilled' ? healthChecks[4].value : null;
+    const dbConnection = healthChecks[0].status === 'fulfilled' ? healthChecks[0].value : null;
+    const envCheck = healthChecks[1].status === 'fulfilled' ? healthChecks[1].value : null;
+    const performanceCheck = healthChecks[2].status === 'fulfilled' ? healthChecks[2].value : null;
     
     // Determine overall system status
     const systemStatus = determineSystemStatus({
-      healthStatus,
-      tokenRefreshTest,
       dbConnection,
       envCheck,
       performanceCheck
@@ -41,8 +34,6 @@ export async function GET(request: NextRequest) {
       response_time_ms: responseTime,
       system_status: systemStatus,
       health_checks: {
-        main_health: healthStatus,
-        token_refresh: tokenRefreshTest,
         database: dbConnection,
         environment: envCheck,
         performance: performanceCheck
@@ -101,7 +92,7 @@ async function checkDatabaseConnection() {
     const supabase = createClient(supabaseUrl, supabaseKey);
     
     const startTime = Date.now();
-    const { data, error } = await supabase.rpc('get_zoho_token_status');
+    const { data, error } = await supabase.from('career_applications').select('count').limit(1);
     const responseTime = Date.now() - startTime;
     
     return {
@@ -122,16 +113,12 @@ async function checkDatabaseConnection() {
 
 async function checkEnvironmentVariables() {
   const requiredVars = [
-    'ZOHO_CLIENT_ID',
-    'ZOHO_CLIENT_SECRET', 
-    'ZOHO_ACCOUNTS_URL',
-    'ZOHO_API_DOMAIN',
     'NEXT_PUBLIC_SUPABASE_URL',
     'SUPABASE_SERVICE_ROLE_KEY'
   ];
   
   const missingVars = requiredVars.filter(varName => !process.env[varName]);
-  const optionalVars = ['CRON_SECRET', 'ZOHO_REDIRECT_URI'];
+  const optionalVars = ['CRON_SECRET', 'ZOHO_CLIENT_ID', 'ZOHO_CLIENT_SECRET'];
   const missingOptional = optionalVars.filter(varName => !process.env[varName]);
   
   return {
@@ -179,7 +166,7 @@ async function checkSystemPerformance() {
     
     // Test database performance
     const startTime = Date.now();
-    const { data: leadStats, error } = await supabase.rpc('get_comprehensive_lead_stats');
+    const { data, error } = await supabase.from('career_applications').select('count').limit(1);
     const dbResponseTime = Date.now() - startTime;
     
     // Check memory usage
@@ -226,32 +213,6 @@ function determineSystemStatus(checks: any) {
   const issues: string[] = [];
   const warnings: string[] = [];
   const criticalAlerts: string[] = [];
-  
-  // Check main health status
-  if (!checks.healthStatus) {
-    criticalAlerts.push('Main health check failed');
-  } else {
-    const health = checks.healthStatus;
-    if (!health.token_status.has_token) {
-      criticalAlerts.push('No Zoho tokens configured');
-    }
-    if (health.token_status.has_token && health.token_status.is_expired && !health.token_status.has_refresh_token) {
-      criticalAlerts.push('Token expired and no refresh token available');
-    }
-    if (health.lead_processing.pending > 50) {
-      warnings.push(`High number of pending leads: ${health.lead_processing.pending}`);
-    }
-    if (health.lead_processing.success_rate < 80) {
-      warnings.push(`Low success rate: ${health.lead_processing.success_rate}%`);
-    }
-  }
-  
-  // Check token refresh
-  if (!checks.tokenRefreshTest) {
-    warnings.push('Token refresh test failed');
-  } else if (!checks.tokenRefreshTest.success) {
-    warnings.push('Token refresh test unsuccessful');
-  }
   
   // Check database connection
   if (!checks.dbConnection) {
@@ -302,17 +263,7 @@ function generateRecommendations(systemStatus: any): string[] {
   
   if (systemStatus.overall === 'critical') {
     recommendations.push('Immediate action required: Address critical alerts');
-    recommendations.push('Set up Zoho authentication if not configured');
     recommendations.push('Check database connectivity');
-  }
-  
-  if (systemStatus.warnings.includes('High number of pending leads')) {
-    recommendations.push('Run manual lead processing to clear backlog');
-  }
-  
-  if (systemStatus.warnings.includes('Low success rate')) {
-    recommendations.push('Investigate failed lead processing');
-    recommendations.push('Check Zoho API connectivity');
   }
   
   if (systemStatus.warnings.includes('Slow database response')) {

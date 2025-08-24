@@ -99,12 +99,20 @@ export default function CareersPage() {
     setErrorMessage('');
 
     try {
-      // Insert application into database
-      const { error: dbError } = await supabase
-        .from('career_applications')
-        .insert([formData]);
+      // Submit application via API route
+      const response = await fetch('/api/career-application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-      if (dbError) throw dbError;
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit application');
+      }
 
       // Create email draft
       const emailSubject = `Job Application: ${formData.position_interested_in}`;
