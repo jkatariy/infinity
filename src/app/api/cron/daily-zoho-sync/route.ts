@@ -17,31 +17,31 @@ export async function GET(request: NextRequest) {
 
     // Step 2: Refresh authentication (get valid access token)
     console.log('🔑 Step 2: Refreshing authentication...');
-    const tokenResult = await unifiedZohoIntegration.getValidAccessToken();
+    const accessToken = await unifiedZohoIntegration.getValidAccessToken();
     
-    if (!tokenResult.success) {
-      console.error('❌ Authentication refresh failed:', tokenResult.error);
+    if (!accessToken) {
+      console.error('❌ Authentication refresh failed: No access token returned');
       return NextResponse.json({
         success: false,
         error: 'Authentication refresh failed',
-        details: tokenResult.error,
+        details: 'No access token returned',
         timestamp: new Date().toISOString(),
         step: 'authentication_refresh'
       }, { status: 500 });
     }
 
     console.log('✅ Authentication refreshed successfully');
-    console.log('🕐 Token expires at:', tokenResult.expires_at);
+    console.log('🕐 Access token obtained');
 
     // Step 3: Process all pending leads
     console.log('📤 Step 3: Processing pending leads...');
     const processingResult = await unifiedZohoIntegration.processAllPendingLeads(50); // Process up to 50 leads per run
     
     console.log('📈 Processing results:', {
-      total_processed: processingResult.total_processed,
+      processed: processingResult.processed,
       successful: processingResult.successful,
       failed: processingResult.failed,
-      skipped: processingResult.skipped
+      errors: processingResult.errors.length
     });
 
     // Step 4: Get final status
@@ -60,13 +60,13 @@ export async function GET(request: NextRequest) {
       sync_details: {
         authentication: {
           status: 'success',
-          token_expires_at: tokenResult.expires_at
+          access_token_obtained: true
         },
         lead_processing: {
-          total_processed: processingResult.total_processed,
+          processed: processingResult.processed,
           successful: processingResult.successful,
           failed: processingResult.failed,
-          skipped: processingResult.skipped
+          errors: processingResult.errors.length
         },
         final_status: {
           pending_leads: finalHealth.lead_processing.pending,
