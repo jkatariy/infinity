@@ -17,7 +17,7 @@ export default function ZohoAdminPanel({ className = '' }: ZohoAdminPanelProps) 
   const checkAuthStatus = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/sendToZoho', { method: 'GET' });
+      const response = await fetch('/api/unified-zoho?action=health');
       const result = await response.json();
       setAuthStatus(result);
     } catch (error) {

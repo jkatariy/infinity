@@ -54,7 +54,7 @@ export default function ZohoAuthPage() {
   const checkAuthStatus = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/zoho-tokens');
+      const response = await fetch('/api/unified-zoho?action=health');
       const data = await response.json();
       setAuthStatus(data);
     } catch (error) {
@@ -72,10 +72,10 @@ export default function ZohoAuthPage() {
   const handleRefreshToken = async () => {
     try {
       setActionLoading(true);
-      const response = await fetch('/api/zoho-tokens', {
+      const response = await fetch('/api/unified-zoho', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'refresh' }),
+        body: JSON.stringify({ action: 'refresh-token' }),
       });
       const data = await response.json();
       
@@ -99,8 +99,10 @@ export default function ZohoAuthPage() {
     
     try {
       setActionLoading(true);
-      const response = await fetch('/api/zoho-tokens', {
-        method: 'DELETE',
+      const response = await fetch('/api/unified-zoho', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'clear-tokens' }),
       });
       const data = await response.json();
       

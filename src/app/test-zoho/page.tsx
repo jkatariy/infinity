@@ -14,7 +14,7 @@ export default function TestZohoPage() {
   const checkAuth = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/sendToZoho', { method: 'GET' });
+      const response = await fetch('/api/unified-zoho?action=health');
       const result = await response.json();
       setAuthStatus(result);
     } catch (error) {
@@ -43,10 +43,17 @@ export default function TestZohoPage() {
 
     try {
       setIsLoading(true);
-      const response = await fetch('/api/sendToZoho', {
+      const response = await fetch('/api/leads/quote-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testData)
+        body: JSON.stringify({
+          name: `${testData.firstName} ${testData.lastName}`,
+          email: testData.email,
+          phone: testData.phone,
+          description: testData.message,
+          company: testData.company,
+          product_name: testData.productInterest
+        })
       });
       
       const result = await response.json();

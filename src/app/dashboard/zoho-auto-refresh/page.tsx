@@ -33,11 +33,11 @@ export default function ZohoAutoRefreshPage() {
       setLoading(true);
       
       // Check token status
-      const tokenResponse = await fetch('/api/zoho-tokens');
+      const tokenResponse = await fetch('/api/unified-zoho?action=health');
       const tokenData = await tokenResponse.json();
       
       // Check cron job status
-      const cronResponse = await fetch('/api/cron/refresh-zoho-tokens');
+              const cronResponse = await fetch('/api/cron/daily-zoho-sync');
       const cronData = await cronResponse.json();
       
       // Calculate next refresh time (45 minutes from now)
@@ -62,7 +62,7 @@ export default function ZohoAutoRefreshPage() {
   const triggerManualRefresh = async () => {
     try {
       setRefreshing(true);
-      const response = await fetch('/api/cron/refresh-zoho-tokens', {
+              const response = await fetch('/api/cron/daily-zoho-sync', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

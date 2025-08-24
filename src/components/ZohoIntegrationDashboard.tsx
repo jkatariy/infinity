@@ -41,7 +41,7 @@ export default function ZohoIntegrationDashboard() {
 
   const fetchHealthStatus = async () => {
     try {
-      const response = await fetch('/api/health/zoho-integration');
+      const response = await fetch('/api/unified-zoho?action=health');
       if (response.ok) {
         const data = await response.json();
         setHealthStatus(data);
@@ -53,7 +53,7 @@ export default function ZohoIntegrationDashboard() {
 
   const fetchLeadStats = async () => {
     try {
-      const response = await fetch('/api/process-leads');
+      const response = await fetch('/api/unified-zoho?action=pending');
       if (response.ok) {
         const data = await response.json();
         if (data.health_status?.lead_processing) {
@@ -75,7 +75,7 @@ export default function ZohoIntegrationDashboard() {
   const processLeads = async (limit: number = 10) => {
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/process-leads', {
+      const response = await fetch('/api/unified-zoho?action=pending', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export default function ZohoIntegrationDashboard() {
 
   const testMarketReady = async () => {
     try {
-      const response = await fetch('/api/test-market-ready');
+      const response = await fetch('/api/test-lead-workflow');
       if (response.ok) {
         const data = await response.json();
         console.log('Market ready test results:', data);
