@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import Recaptcha, { RecaptchaRef } from './Recaptcha';
 
 interface ZohoCRMFormProps {
   productName?: string;
@@ -59,6 +60,9 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
+  const [recaptchaError, setRecaptchaError] = useState<string>('');
+  const recaptchaRef = useRef<RecaptchaRef>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -66,6 +70,21 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleRecaptchaVerify = (token: string) => {
+    setRecaptchaToken(token);
+    setRecaptchaError('');
+  };
+
+  const handleRecaptchaError = () => {
+    setRecaptchaToken('');
+    setRecaptchaError('Please complete the reCAPTCHA verification');
+  };
+
+  const handleRecaptchaReset = () => {
+    setRecaptchaToken('');
+    setRecaptchaError('');
   };
 
   // Check if current time is within Zoho CRM hours (9 AM - 10 AM IST)
@@ -78,9 +97,17 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate reCAPTCHA
+    if (!recaptchaToken) {
+      setRecaptchaError('Please complete the reCAPTCHA verification');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
+    setRecaptchaError('');
 
     try {
       const formDataToSend = {
@@ -107,7 +134,8 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
           description: formData.message,
           company: formDataToSend.leadSource,
           product_name: productName,
-          product_url: productUrl
+          product_url: productUrl,
+          recaptchaToken
         }),
       });
 
@@ -122,6 +150,11 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
           phone: '',
           message: ''
         });
+        
+        // Reset reCAPTCHA
+        recaptchaRef.current?.reset();
+        setRecaptchaToken('');
+        
         // Close modal after 2 seconds
         setTimeout(() => {
           onClose();
@@ -129,10 +162,18 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
       } else {
         setSubmitStatus('error');
         setErrorMessage(result.error || 'Failed to submit request');
+        
+        // Reset reCAPTCHA on error
+        recaptchaRef.current?.reset();
+        setRecaptchaToken('');
       }
     } catch (error) {
       setSubmitStatus('error');
       setErrorMessage('Network error. Please try again.');
+      
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setRecaptchaToken('');
     } finally {
       setIsSubmitting(false);
     }
@@ -269,6 +310,23 @@ const ZohoCRMForm: React.FC<ZohoCRMFormProps> = ({
               placeholder="Tell us about your requirements..."
             />
           </div>
+
+          {/* reCAPTCHA Component */}
+          <Recaptcha
+            ref={recaptchaRef}
+            onVerify={handleRecaptchaVerify}
+            onError={handleRecaptchaError}
+            onReset={handleRecaptchaReset}
+          />
+
+          {/* reCAPTCHA Error Message */}
+          {recaptchaError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm text-red-800">
+                {recaptchaError}
+              </p>
+            </div>
+          )}
 
           {submitStatus === 'success' && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-md">
