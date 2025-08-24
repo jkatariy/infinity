@@ -14,6 +14,7 @@ export interface RecaptchaRef {
 
 const Recaptcha = forwardRef<RecaptchaRef, RecaptchaProps>(({ onVerify, onError, onReset }, ref) => {
   const recaptchaRef = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<number | null>(null);
 
   useEffect(() => {
     // Set up global callbacks
@@ -23,6 +24,20 @@ const Recaptcha = forwardRef<RecaptchaRef, RecaptchaProps>(({ onVerify, onError,
       if (onReset) onReset();
       if (onError) onError();
     };
+
+    // Render reCAPTCHA when component mounts
+    if (window.grecaptcha && recaptchaRef.current) {
+      try {
+        widgetId.current = window.grecaptcha.render(recaptchaRef.current, {
+          sitekey: '6Lf8qKwrAAAAAAGybd9R6bg3zeLdXOCdrGDYiYNVO',
+          callback: 'recaptchaCallback',
+          'error-callback': 'recaptchaErrorCallback',
+          'expired-callback': 'recaptchaExpiredCallback'
+        });
+      } catch (error) {
+        console.error('reCAPTCHA render error:', error);
+      }
+    }
 
     return () => {
       // Clean up global callbacks
@@ -34,8 +49,12 @@ const Recaptcha = forwardRef<RecaptchaRef, RecaptchaProps>(({ onVerify, onError,
 
   // Method to reset reCAPTCHA externally
   const reset = () => {
-    if (window.grecaptcha) {
-      window.grecaptcha.reset();
+    if (window.grecaptcha && widgetId.current !== null) {
+      try {
+        window.grecaptcha.reset(widgetId.current);
+      } catch (error) {
+        console.error('reCAPTCHA reset error:', error);
+      }
     }
   };
 
