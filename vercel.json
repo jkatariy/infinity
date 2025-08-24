@@ -1,8 +1,12 @@
 {
   "crons": [
     {
-      "path": "/api/cron/daily-zoho-sync",
-      "schedule": "0 3 * * *"
+      "path": "/api/cron/unified-daily-sync",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/unified-daily-sync",
+      "schedule": "0 21 * * *"
     }
   ]
 }

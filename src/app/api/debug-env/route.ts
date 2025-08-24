@@ -46,8 +46,8 @@ export async function GET(request: NextRequest) {
         missing_critical: missingCritical.length,
         status: missingCritical.length > 0 ? 'CRITICAL' : missingVars.length > 0 ? 'WARNING' : 'HEALTHY'
       },
-      missing_vars,
-      missing_critical,
+      missing_vars: missingVars,
+      missing_critical: missingCritical,
       recommendations: missingCritical.length > 0 ? [
         'Add missing critical environment variables to Vercel',
         'Redeploy after adding environment variables'
