@@ -83,7 +83,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0f4277" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="color-scheme" content="light" />
-        <link rel="preload" as="image" href="/videos/videoplayback-poster.jpg" fetchPriority="high" />
+        {/* Preload critical resources only on home page */}
         <link rel="preload" as="image" href="/logos/logo.png" fetchPriority="high" />
       </head>
       <body className={inter.className + ' antialiased'} suppressHydrationWarning>
