@@ -132,7 +132,7 @@ interface ModelSelectorProps {
 interface ProductDetailPageProps {
   id: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   description: string;
   features: Feature[];
   models: Model[];
@@ -157,7 +157,7 @@ interface ProductDetailPageProps {
 export default function ProductDetailPage({
   id,
   title,
-  subtitle,
+  subtitle = '',
   description,
   features,
   models,
@@ -290,9 +290,11 @@ export default function ProductDetailPage({
             </h1>
             
             {/* Subtitle with Enhanced Typography */}
-            <p className="text-xl sm:text-2xl lg:text-3xl text-gray-600 font-light leading-relaxed tracking-wide max-w-4xl mx-auto">
-              {subtitle}
-            </p>
+            {subtitle && (
+              <p className="text-xl sm:text-2xl lg:text-3xl text-gray-600 font-light leading-relaxed tracking-wide max-w-4xl mx-auto">
+                {subtitle}
+              </p>
+            )}
             
             {/* Elegant Divider */}
             <div className="flex items-center justify-center mt-8">
