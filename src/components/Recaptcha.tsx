@@ -14,45 +14,28 @@ export interface RecaptchaRef {
 
 const Recaptcha = forwardRef<RecaptchaRef, RecaptchaProps>(({ onVerify, onError, onReset }, ref) => {
   const recaptchaRef = useRef<HTMLDivElement>(null);
-  const widgetId = useRef<number | null>(null);
 
   useEffect(() => {
-    const loadRecaptcha = () => {
-      if (window.grecaptcha && recaptchaRef.current && !widgetId.current) {
-        widgetId.current = window.grecaptcha.render(recaptchaRef.current, {
-          sitekey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '',
-          callback: onVerify,
-          'error-callback': onError,
-          'expired-callback': () => {
-            onReset && onReset();
-            onError && onError();
-          }
-        });
-      }
+    // Set up global callbacks
+    (window as any).recaptchaCallback = onVerify;
+    (window as any).recaptchaErrorCallback = onError || (() => {});
+    (window as any).recaptchaExpiredCallback = () => {
+      if (onReset) onReset();
+      if (onError) onError();
     };
 
-    if (window.grecaptcha) {
-      loadRecaptcha();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js';
-      script.async = true;
-      script.defer = true;
-      script.onload = loadRecaptcha;
-      document.head.appendChild(script);
-    }
-
     return () => {
-      if (widgetId.current && window.grecaptcha) {
-        window.grecaptcha.reset(widgetId.current);
-      }
+      // Clean up global callbacks
+      delete (window as any).recaptchaCallback;
+      delete (window as any).recaptchaErrorCallback;
+      delete (window as any).recaptchaExpiredCallback;
     };
   }, [onVerify, onError, onReset]);
 
   // Method to reset reCAPTCHA externally
   const reset = () => {
-    if (widgetId.current && window.grecaptcha) {
-      window.grecaptcha.reset(widgetId.current);
+    if (window.grecaptcha) {
+      window.grecaptcha.reset();
     }
   };
 
@@ -63,7 +46,14 @@ const Recaptcha = forwardRef<RecaptchaRef, RecaptchaProps>(({ onVerify, onError,
 
   return (
     <div className="recaptcha-container flex justify-center my-4">
-      <div ref={recaptchaRef}></div>
+      <div 
+        ref={recaptchaRef}
+        className="g-recaptcha" 
+        data-sitekey="6Lf8qKwrAAAAAAGybd9R6bg3zeLdXOCdrGDYiYNVO"
+        data-callback="recaptchaCallback"
+        data-error-callback="recaptchaErrorCallback"
+        data-expired-callback="recaptchaExpiredCallback"
+      ></div>
     </div>
   );
 });
