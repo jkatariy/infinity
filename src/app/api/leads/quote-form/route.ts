@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { verifyRecaptcha } from '@/utils/verifyRecaptcha';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,31 +11,13 @@ export async function POST(request: NextRequest) {
     console.log('📝 Processing quote form submission...');
     
     const body = await request.json();
-    const { name, email, phone, description, company, product_name, product_url, recaptchaToken } = body;
+    const { name, email, phone, description, company, product_name, product_url } = body;
 
     // Validate required fields
     if (!name || !email || !description) {
       return NextResponse.json({
         success: false,
         error: 'Missing required fields: name, email, and description are required'
-      }, { status: 400 });
-    }
-
-    // Verify reCAPTCHA
-    if (!recaptchaToken) {
-      return NextResponse.json({
-        success: false,
-        error: 'reCAPTCHA verification required'
-      }, { status: 400 });
-    }
-
-    const recaptchaResult = await verifyRecaptcha(recaptchaToken);
-
-    if (!recaptchaResult.success) {
-      return NextResponse.json({
-        success: false,
-        error: 'reCAPTCHA verification failed',
-        details: recaptchaResult.errors
       }, { status: 400 });
     }
 

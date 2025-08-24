@@ -263,24 +263,3 @@ body.modal-open {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-
-/* reCAPTCHA Styles */
-.recaptcha-container {
-  margin: 1rem 0;
-}
-
-/* Mobile responsiveness for reCAPTCHA */
-@media (max-width: 640px) {
-  .recaptcha-container iframe {
-    transform: scale(0.9);
-    transform-origin: 0 0;
-  }
-}
-
-/* Error styling for reCAPTCHA */
-.recaptcha-error {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  text-align: center;
-}

@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../../lib/supabase';
-import Recaptcha, { RecaptchaRef } from '@/components/Recaptcha';
 import { 
   BriefcaseIcon, 
   MapPinIcon, 
@@ -53,10 +52,7 @@ export default function CareersPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
-  const [recaptchaError, setRecaptchaError] = useState<string>('');
   const formRef = useRef<HTMLDivElement>(null);
-  const recaptchaRef = useRef<RecaptchaRef>(null);
 
   useEffect(() => {
     fetchJobPositions();
@@ -96,54 +92,23 @@ export default function CareersPage() {
     scrollToForm();
   };
 
-  const handleRecaptchaVerify = (token: string) => {
-    setRecaptchaToken(token);
-    setRecaptchaError('');
-  };
-
-  const handleRecaptchaError = () => {
-    setRecaptchaToken('');
-    setRecaptchaError('Please complete the reCAPTCHA verification');
-  };
-
-  const handleRecaptchaReset = () => {
-    setRecaptchaToken('');
-    setRecaptchaError('');
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate reCAPTCHA
-    if (!recaptchaToken) {
-      setRecaptchaError('Please complete the reCAPTCHA verification');
-      return;
-    }
-
     setSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
-    setRecaptchaError('');
 
     try {
-      // Submit to API route with reCAPTCHA verification
-      const response = await fetch('/api/career-application', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          recaptchaToken
-        }),
-      });
+      // Insert application into database
+      const { error: dbError } = await supabase
+        .from('career_applications')
+        .insert([formData]);
 
-      const result = await response.json();
+      if (dbError) throw dbError;
 
-      if (result.success) {
-        // Create email draft
-        const emailSubject = `Job Application: ${formData.position_interested_in}`;
-        const emailBody = `
+      // Create email draft
+      const emailSubject = `Job Application: ${formData.position_interested_in}`;
+      const emailBody = `
 Dear HR Team,
 
 A new job application has been submitted:
@@ -160,40 +125,24 @@ Submitted on: ${new Date().toLocaleString()}
 
 Best regards,
 Infinity Automated Solutions Careers System
-        `;
+      `;
 
-        // Open email client with draft
-        const mailtoLink = `mailto:hr@infinitysols.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-        window.open(mailtoLink);
+      // Open email client with draft
+      const mailtoLink = `mailto:hr@infinitysols.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      window.open(mailtoLink);
 
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          position_interested_in: '',
-          additional_info: ''
-        });
-        
-        // Reset reCAPTCHA
-        recaptchaRef.current?.reset();
-        setRecaptchaToken('');
-      } else {
-        setSubmitStatus('error');
-        setErrorMessage(result.error || 'Failed to submit application. Please try again.');
-        
-        // Reset reCAPTCHA on error
-        recaptchaRef.current?.reset();
-        setRecaptchaToken('');
-      }
+      setSubmitStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        position_interested_in: '',
+        additional_info: ''
+      });
     } catch (error) {
       console.error('Error submitting application:', error);
       setSubmitStatus('error');
-      setErrorMessage('Network error. Please try again.');
-      
-      // Reset reCAPTCHA on error
-      recaptchaRef.current?.reset();
-      setRecaptchaToken('');
+      setErrorMessage('Failed to submit application. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -482,23 +431,6 @@ Infinity Automated Solutions Careers System
                     />
                   </div>
                 </div>
-
-                {/* reCAPTCHA Component */}
-                <Recaptcha
-                  ref={recaptchaRef}
-                  onVerify={handleRecaptchaVerify}
-                  onError={handleRecaptchaError}
-                  onReset={handleRecaptchaReset}
-                />
-
-                {/* reCAPTCHA Error Message */}
-                {recaptchaError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                    <p className="text-sm text-red-800">
-                      {recaptchaError}
-                    </p>
-                  </div>
-                )}
 
                 <button
                   type="submit"

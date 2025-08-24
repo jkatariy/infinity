@@ -85,8 +85,6 @@ export default function RootLayout({
         <meta name="color-scheme" content="light" />
         {/* Preload critical resources only on home page */}
         <link rel="preload" as="image" href="/logos/logo.png" fetchPriority="high" />
-        {/* reCAPTCHA Script */}
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
       </head>
       <body className={inter.className + ' antialiased'} suppressHydrationWarning>
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-white focus:text-blue-700 focus:px-3 focus:py-2 focus:rounded">Skip to main content</a>

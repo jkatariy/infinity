@@ -1,36 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { verifyRecaptcha } from '@/utils/verifyRecaptcha';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, position_interested_in, additional_info, recaptchaToken } = body;
+    const { name, email, phone, position_interested_in, additional_info } = body;
 
     // Validate required fields
     if (!name || !email || !phone || !position_interested_in) {
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    // Verify reCAPTCHA
-    if (!recaptchaToken) {
-      return NextResponse.json(
-        { error: 'reCAPTCHA verification required' },
-        { status: 400 }
-      );
-    }
-
-    const recaptchaResult = await verifyRecaptcha(recaptchaToken);
-
-    if (!recaptchaResult.success) {
-      return NextResponse.json(
-        { 
-          error: 'reCAPTCHA verification failed',
-          details: recaptchaResult.errors 
-        },
         { status: 400 }
       );
     }
