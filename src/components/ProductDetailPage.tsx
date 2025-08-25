@@ -315,10 +315,78 @@ export default function ProductDetailPage({
           </motion.div>
 
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 lg:flex-row lg:gap-8">
-            {/* Left: Content */}
-            <div className="flex-1 space-y-4">
+            {/* Product Image - First on mobile, right on desktop */}
+            <div className="w-full lg:w-[450px] space-y-3 order-1 lg:order-2">
+              {/* Main Product Image */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="group relative aspect-[4/3] overflow-hidden bg-white"
+              >
+                <Image
+                  src={image}
+                  alt={title}
+                  fill
+                  className="object-contain transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+              </motion.div>
 
+              {/* Quick Model Access */}
+              {categoryModels.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="rounded-xl border bg-white p-4 shadow-sm"
+                  style={{ borderColor: `${colors.accent}15` }}
+                >
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                    <svg className="h-4 w-4 mr-2" style={{ color: colors.accent }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    Quick Model Access
+                  </h3>
+                  {/* Responsive grid: single column on mobile, 2 columns on larger screens */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                    {categoryModels.slice(0, 4).map((model, index) => (
+                      <button
+                        key={model.href}
+                        onClick={() => router.push(model.href)}
+                        className="text-left p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-white hover:shadow-sm transition-all duration-200 text-sm w-full"
+                      >
+                        <div className="font-medium text-gray-900 truncate">{model.name}</div>
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => router.push('/products')}
+                    className="w-full py-3 px-4 rounded-lg border-2 transition-all duration-300 font-medium text-sm flex items-center justify-center space-x-2"
+                    style={{ 
+                      borderColor: colors.accent,
+                      color: colors.accent
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = colors.accent;
+                      e.currentTarget.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = colors.accent;
+                    }}
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span>Explore More Models</span>
+                  </button>
+                </motion.div>
+              )}
+            </div>
 
+            {/* Content - Second on mobile, left on desktop */}
+            <div className="flex-1 space-y-4 order-2 lg:order-1">
               {/* Category Overview */}
               <div className="space-y-6">
                 <div 
@@ -345,8 +413,6 @@ export default function ProductDetailPage({
                   
                   <p className="text-lg sm:text-xl leading-relaxed text-gray-700 font-normal">{description}</p>
                 </div>
-
-
               </div>
 
               {/* Action Buttons */}
@@ -419,76 +485,6 @@ export default function ProductDetailPage({
                       </div>
                     ))}
                   </div>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Right: Product Image */}
-            <div className="w-full lg:w-[450px] space-y-3">
-              {/* Main Product Image */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="group relative aspect-[4/3] overflow-hidden bg-white"
-              >
-                <Image
-                  src={image}
-                  alt={title}
-                  fill
-                  className="object-contain transition-transform duration-300 group-hover:scale-105"
-                  priority
-                />
-              </motion.div>
-
-              {/* Quick Model Access */}
-              {categoryModels.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="rounded-xl border bg-white p-4 shadow-sm"
-                  style={{ borderColor: `${colors.accent}15` }}
-                >
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
-                    <svg className="h-4 w-4 mr-2" style={{ color: colors.accent }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    Quick Model Access
-                  </h3>
-                  {/* Responsive grid: single column on mobile, 2 columns on larger screens */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-                    {categoryModels.slice(0, 4).map((model, index) => (
-                      <button
-                        key={model.href}
-                        onClick={() => router.push(model.href)}
-                        className="text-left p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-white hover:shadow-sm transition-all duration-200 text-sm w-full"
-                      >
-                        <div className="font-medium text-gray-900 truncate">{model.name}</div>
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => router.push('/products')}
-                    className="w-full py-3 px-4 rounded-lg border-2 transition-all duration-300 font-medium text-sm flex items-center justify-center space-x-2"
-                    style={{ 
-                      borderColor: colors.accent,
-                      color: colors.accent
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = colors.accent;
-                      e.currentTarget.style.color = 'white';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = colors.accent;
-                    }}
-                  >
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    <span>Explore More Models</span>
-                  </button>
                 </motion.div>
               )}
             </div>

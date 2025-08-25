@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ContactMessage {
   id: string;
@@ -120,6 +119,26 @@ export default function ContactQueriesPage() {
     fetchMessages();
   }, []);
 
+  // Add keyboard event listener for closing modal with Escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showModal) {
+        setShowModal(false);
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
+
   const handleStatusFilterChange = (newStatus: string) => {
     setStatusFilter(newStatus);
     fetchMessages(1, newStatus);
@@ -130,11 +149,17 @@ export default function ContactQueriesPage() {
   };
 
   const handleViewMessage = (message: ContactMessage) => {
-    setSelectedMessage(message);
-    setShowModal(true);
-    // Mark as read if it's new
-    if (message.status === 'new') {
-      updateMessageStatus(message.id, 'read');
+    try {
+      console.log('Opening modal for message:', message);
+      setSelectedMessage(message);
+      setShowModal(true);
+      // Mark as read if it's new
+      if (message.status === 'new') {
+        updateMessageStatus(message.id, 'read');
+      }
+    } catch (error) {
+      console.error('Error opening modal:', error);
+      alert('Error opening message details. Please try again.');
     }
   };
 
@@ -209,10 +234,8 @@ export default function ContactQueriesPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {messages.map((message) => (
-                <motion.tr
+                <tr
                   key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
                   className="hover:bg-gray-50 transition-colors duration-200"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -258,7 +281,7 @@ export default function ContactQueriesPage() {
                       </select>
                     </div>
                   </td>
-                </motion.tr>
+                </tr>
               ))}
             </tbody>
           </table>
@@ -311,80 +334,72 @@ export default function ContactQueriesPage() {
       )}
 
       {/* Message Detail Modal */}
-      <AnimatePresence>
-        {showModal && selectedMessage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 overflow-y-auto"
-          >
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setShowModal(false)}></div>
-              
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
-              >
-                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">Message Details</h3>
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                    >
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">From:</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedMessage.name} ({selectedMessage.email})</p>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Subject:</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedMessage.subject}</p>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Date:</label>
-                      <p className="mt-1 text-sm text-gray-900">{formatDate(selectedMessage.created_at)}</p>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Message:</label>
-                      <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                        <p className="text-sm text-gray-900 whitespace-pre-wrap">{selectedMessage.message}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button
-                    onClick={() => openEmailClient(selectedMessage.email, selectedMessage.subject)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  >
-                    Reply via Email
-                  </button>
+      {showModal && selectedMessage && (
+        <div className="fixed inset-0 z-[9999] overflow-y-auto" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div 
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+              onClick={() => setShowModal(false)}
+              style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+            ></div>
+            
+            <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full" style={{ position: 'relative', zIndex: 10000 }}>
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Message Details</h3>
                   <button
                     onClick={() => setShowModal(false)}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
                   >
-                    Close
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 </div>
-              </motion.div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">From:</label>
+                    <p className="mt-1 text-sm text-gray-900">{selectedMessage.name} ({selectedMessage.email})</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Subject:</label>
+                    <p className="mt-1 text-sm text-gray-900">{selectedMessage.subject}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Date:</label>
+                    <p className="mt-1 text-sm text-gray-900">{formatDate(selectedMessage.created_at)}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Message:</label>
+                    <div className="mt-1 p-3 bg-gray-50 rounded-md">
+                      <p className="text-sm text-gray-900 whitespace-pre-wrap">{selectedMessage.message}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  onClick={() => openEmailClient(selectedMessage.email, selectedMessage.subject)}
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                >
+                  Reply via Email
+                </button>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                >
+                  Close
+                </button>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
